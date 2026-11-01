@@ -1,0 +1,159 @@
+/* ヘッドレスのブラウザ（画面を出さないブラウザ）で dist/index.html を開いて確かめます。
+ *   node tests/browser.js */
+'use strict';
+const path = require('path');
+const { chromium } = require('playwright');
+const FILE = 'file://' + path.join(__dirname, '..', 'dist', 'index.html');
+let fail = 0, pass = 0;
+const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  失敗: ' + m); } };
+
+async function page(browser, viewport, initScript) {
+  const ctx = await browser.newContext({ viewport, deviceScaleFactor: 1 });
+  const p = await ctx.newPage();
+  const errors = [];
+  p.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+  p.on('pageerror', e => errors.push(String(e)));
+  if (initScript) await p.addInitScript(initScript);
+  await p.goto(FILE);
+  await p.waitForFunction(() => window.__app);
+  return { p, ctx, errors };
+}
+
+async function conditionSearch(p) {
+  await p.fill('#skill-input', '見切り');
+  await p.selectOption('#skill-lv', '3');
+  await p.click('#add-skill');
+  await p.fill('#skill-input', '弱点特効');
+  await p.click('#add-skill');
+  await p.click('summary:has-text("くわしい条件")');
+  await p.selectOption('#time-limit', '5');
+  await p.click('#go');
+  await p.waitForSelector('#results .card', { timeout: 60000 });
+  return p.$$eval('#results .card', els => els.length);
+}
+
+(async () => {
+  const browser = await chromium.launch();
+  for (const [name, vp] of [['パソコンの幅', { width: 1280, height: 900 }], ['スマホの幅', { width: 375, height: 760 }]]) {
+    console.log('■ ' + name);
+    const { p, ctx, errors } = await page(browser, vp);
+    await p.waitForTimeout(500);
+    ok(await p.evaluate(() => window.__app.workerOk()), name + ': Web Worker が動く');
+    ok(await p.$eval('#nl', e => e.hidden), name + ': window.claude がないので言葉の入り口は隠れる');
+    ok(!(await p.$eval('#nl-off', e => e.hidden)), name + ': 代わりの案内が出る');
+    ok((await p.$$eval('#preset-out .card', e => e.length)) >= 3, name + ': 作っておいた案が出る');
+    const n = await conditionSearch(p);
+    ok(n >= 1, name + ': 条件検索で案が出る（' + n + '）');
+    const st = await p.textContent('#status');
+    console.log('  ' + st.slice(0, 160));
+    const sw = await p.evaluate(() => document.documentElement.scrollWidth);
+    ok(sw <= vp.width + 1, name + ': 横にはみ出さない（' + sw + 'px）');
+    // コピーと URL
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
+    await p.click('#results .card [data-share]');
+    await p.waitForTimeout(300);
+    const url = await p.evaluate(() => navigator.clipboard.readText().catch(() => ''));
+    ok(/#b=/.test(url), name + ': 案の URL ができる');
+    if (url) {
+      const p2 = await ctx.newPage();
+      const e2 = []; p2.on('pageerror', e => e2.push(String(e)));
+      await p2.goto(url); await p2.waitForSelector('#shared-out .card');
+      ok(!(await p2.$eval('#shared', e => e.hidden)), name + ': URL から案を開ける');
+      const a1 = await p.$eval('#results .card', e => e.querySelector('table.parts').textContent);
+      const a2 = await p2.$eval('#shared-out .card', e => e.querySelector('table.parts').textContent);
+      ok(a1 === a2, name + ': URL で開いた案が同じ');
+      ok(e2.length === 0, name + ': URL のページでエラーがない ' + e2.join(' '));
+      await p2.close();
+    }
+    await p.click('#results .card [data-copy]');
+    await p.waitForTimeout(300);
+    const txt = await p.evaluate(() => navigator.clipboard.readText().catch(() => ''));
+    ok(/【MHW:IB 装備案】/.test(txt) && /頭: /.test(txt), name + ': 一覧をコピーできる');
+    // 作っておいた案を全部の武器・目的で開く
+    for (const t of await p.$$eval('#preset-type option', os => os.map(o => o.value))) {
+      for (const o of ['fire', 'balance', 'comfort']) {
+        await p.selectOption('#preset-type', t); await p.selectOption('#preset-obj', o);
+        const c = await p.$$eval('#preset-out .card', e => e.length);
+        ok(c >= 3 && c <= 5, name + ': ' + t + ' ' + o + ' の案が 3〜5 個（' + c + '）');
+      }
+    }
+    if (vp.width < 500) await p.screenshot({ path: path.join(__dirname, '..', 'tmp', 'mobile.png'), fullPage: false });
+    ok(errors.length === 0, name + ': コンソールにエラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
+  console.log('■ Web Worker が使えないとき');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => { window.Worker = undefined; });
+    const n = await conditionSearch(p);
+    ok(n >= 1, 'Worker なしでも案が出る');
+    ok(errors.length === 0, 'Worker なしでエラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
+  console.log('■ まねた window.claude（use が null を返す）');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => { window.claude = { use: () => Promise.resolve(null) }; });
+    await p.waitForTimeout(300);
+    ok(await p.$eval('#nl', e => e.hidden), 'null のとき入り口は隠れる');
+    ok(errors.length === 0, 'エラーがない');
+    await ctx.close();
+  }
+
+  console.log('■ まねた window.claude（not_granted で断られる）');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => {
+      const s = function () { return Promise.reject({ code: 'not_granted', message: 'no' }); };
+      window.claude = { use: () => Promise.resolve(s) };
+    });
+    await p.waitForSelector('#nl:not([hidden])');
+    await p.click('#nl-go');
+    await p.waitForSelector('#nl', { state: 'hidden' });
+    ok(await p.$eval('#nl', e => e.hidden), 'not_granted のとき入り口を閉じる');
+    ok(!(await p.$eval('#nl-off', e => e.hidden)), '代わりの案内が出る');
+    ok(errors.length === 0, 'エラーがない');
+    await ctx.close();
+  }
+
+  console.log('■ まねた window.claude（道具を使って答える）');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 375, height: 760 }, () => {
+      window.__calls = [];
+      const s = async function (input, opts) {
+        window.__calls.push({ input, model: opts.model, tier: opts.modelTier, tools: opts.tools.map(t => t.name) });
+        const T = n => opts.tools.find(t => t.name === n);
+        const f = await T('findSkills').execute({ query: '見切り' });
+        window.__findSize = JSON.stringify(f).length;
+        const r = await T('searchBuilds').execute({ weaponType: 'long-sword', objective: 'fire', skills: [{ name: '見切り', level: 4 }, { name: '超会心', level: 3 }, { name: '弱点特効', level: 3 }] });
+        window.__searchSize = JSON.stringify(r).length;
+        const g = await T('getBuild').execute({ buildId: r.builds[0].buildId });
+        window.__getSize = JSON.stringify(g).length;
+        let bad = null; try { await T('searchBuilds').execute({ weaponType: 'long-sword', objective: 'fire', skills: [{ name: 'ありえない', level: 1 }] }); } catch (e) { bad = e.message; }
+        window.__bad = bad;
+        opts.onText({ text: '...', delta: '...' });
+        return { text: '考えました。\n' + JSON.stringify({ summary: '太刀・火力で探しました。', ranking: [{ buildId: r.builds[1].buildId, reason: '理由1' }, { buildId: 's99-b1', reason: 'ない案' }, { buildId: r.builds[0].buildId, reason: '理由2' }], relax: '' }), truncated: false, modelTierApplied: 'default' };
+      };
+      window.claude = { use: (n) => Promise.resolve(n === 'sample' ? s : null) };
+    });
+    await p.waitForSelector('#nl:not([hidden])');
+    ok(await p.evaluate(() => window.__calls.length === 0), 'ボタンを押す前は呼ばない');
+    await p.click('#nl-go');
+    await p.waitForSelector('#nl-out .card', { timeout: 60000 });
+    const calls = await p.evaluate(() => window.__calls);
+    ok(calls.length === 1, '1 回だけ呼ぶ');
+    ok(calls[0].model === 'claude-opus-5-5', 'model に claude-opus-5-5 を渡す');
+    ok(['findSkills', 'searchBuilds', 'getBuild'].every(n => calls[0].tools.includes(n)), '道具を渡す');
+    const sizes = await p.evaluate(() => [window.__findSize, window.__searchSize, window.__getSize]);
+    ok(sizes.every(x => x < 32000), '道具の答えが 32KB 以内（' + sizes.join(', ') + '）');
+    ok(await p.evaluate(() => /見つからないスキル名/.test(window.__bad)), 'ない名前は道具がエラーで返す');
+    ok((await p.$$eval('#nl-out .card', e => e.length)) === 2, '検索結果にない buildId は出さない');
+    ok(/ない案が 1 個/.test(await p.textContent('#nl-out')), '出さなかったことを書く');
+    ok(/別のモデル/.test(await p.textContent('#nl-status')), 'Opus でないときにそのことを出す');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await p.screenshot({ path: path.join(__dirname, '..', 'tmp', 'nl-mock.png') });
+    await ctx.close();
+  }
+  await browser.close();
+  console.log('\n合格 ' + pass + '、失敗 ' + fail);
+  process.exit(fail ? 1 : 0);
+})().catch(e => { console.error(e); process.exit(1); });
