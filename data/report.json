@@ -1,0 +1,517 @@
+{
+ "commit": "be7362213d7d1e30b794e3b58d3f87712035658d",
+ "rows": {
+  "skills/skill_base.csv": 178,
+  "skills/skill_base_translations.csv": 178,
+  "skills/skill_levels.csv": 418,
+  "armors/armorset_bonus_base_translations.csv": 65,
+  "armors/armorset_bonus_base.csv": 69,
+  "armors/armorset_base_translations.csv": 343,
+  "armors/armorset_base.csv": 351,
+  "armors/armor_base_translations.csv": 1555,
+  "armors/armor_skills_ext.csv": 1595,
+  "armors/armor_base.csv": 1595,
+  "decorations/decoration_base_translations.csv": 397,
+  "decorations/decoration_base.csv": 404,
+  "charms/charm_base_translations.csv": 303,
+  "charms/charm_base.csv": 317,
+  "weapons/weapon_base_translations.csv": 3514,
+  "weapons/weapon_base.csv": 3544
+ },
+ "missing_ref": [],
+ "missing_ja": [
+  {
+   "kind": "skill",
+   "name_en": "Clutch Claw Boost"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Inheritance"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Transcendance"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gift"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gratitude"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gift"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gratitude"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Coldproof"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Provoker"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Safe Landing"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "New World"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fatalis Legend"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fun Fright Blessing"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Sizzling Blessing"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Namielle γ+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Velkhana γ+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Passionate α+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Demonlord α+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon α+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon β+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Azure Age α+"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Artemis α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Cowl  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Cloak  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Gloves  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Coil  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Greaves  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Helm  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Mail γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Vambraces  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Coil  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Greaves  γ+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Headdress α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Body α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Arms α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Belt α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Leggings α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Hair α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Cloak α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Blackarm α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Leather Belt α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Boots α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead β+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide β+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws β+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs β+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet β+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Hair α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Haori α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Sleeve α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Obi α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Geta α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Head α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Mail α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Guards α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Coil α+"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Greaves α+"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Survival Jewel 1"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Guardian Jewel 2"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Cooling Jewel 2"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Warming Jewel 2"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Diversion Jewel 3"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Acrobat Jewel 3"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Shaver Jewel 3"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Attack Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Windproof Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm I"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm II"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm III"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Master's Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Evasion Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Handicraft Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Earplugs Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Exploiter Charm III"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Grit Charm V"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Unscathed Charm III"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Critical Charm III"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Shaver Charm"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Blade"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Black Fatalis Blade"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw \"Demise\""
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sickle"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Zaggespanon"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sword"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Sword"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Blades"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Skies"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Buster"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Demolisher"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace Wailer"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Lance"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Lance"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Gunlance"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Gunlance"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis End"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis End"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Charger"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Charger"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Glaive"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Dyaus"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Pit"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Depths"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Cannon"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Buster"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Rack & Ruin"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Vice & Violence"
+  }
+ ],
+ "notes": [],
+ "counts": {
+  "armors": 1595,
+  "sets": 351,
+  "bonuses": 69,
+  "decos": 404,
+  "charms": 317,
+  "charms_final": 110,
+  "skills": 178,
+  "skill_levels": 418,
+  "weapons": 3544
+ },
+ "parsed_skills": [
+  "Agitator",
+  "Attack Boost",
+  "Coalescence",
+  "Critical Boost",
+  "Critical Draw",
+  "Critical Eye",
+  "Defense Boost",
+  "Divine Blessing",
+  "Dragon Attack",
+  "Dragon Resistance",
+  "Fire Attack",
+  "Fire Resistance",
+  "Fortify",
+  "Health Boost",
+  "Heroics",
+  "Ice Attack",
+  "Ice Resistance",
+  "Latent Power",
+  "Maximum Might",
+  "Offensive Guard",
+  "Peak Performance",
+  "Resentment",
+  "Thunder Attack",
+  "Thunder Resistance",
+  "Water Attack",
+  "Water Resistance",
+  "Weakness Exploit"
+ ]
+}
