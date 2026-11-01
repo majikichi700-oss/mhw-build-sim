@@ -64,7 +64,9 @@ table.kv td{padding:3px 0;font-size:.9rem}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
 .copied{color:var(--muted);font-size:.88rem}
 pre.copytext{white-space:pre-wrap;font-size:.85rem;background:var(--bg);padding:8px;border-radius:6px;width:100%}
-.doc table{font-size:.9rem}
+.doc table{font-size:.9rem;table-layout:fixed}
+.doc td,.doc th{overflow-wrap:anywhere;word-break:break-word}
+code{overflow-wrap:anywhere;word-break:break-all}
 .doc table th,.doc table td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
 .doc ul{padding-left:1.3em}
 footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}

@@ -41,7 +41,7 @@ function reasonFor(b, ev, first, q, accRank, access) {
   parts.push(bonusText(ev));
   if (q.objective === 'fire') parts.push('火力点 ' + f1(sc.fire) + '、会心率 ' + Math.round(sc.detail.affinity) + '%。');
   if (q.objective === 'balance') parts.push('火力点 ' + f1(sc.fire) + '、守り点 ' + f1(sc.def) + '（防御力 ' + Math.round(sc.detail.defense) + '、体力 +' + Math.round(sc.detail.health) + '）。');
-  if (q.objective === 'comfort') parts.push('快適点 ' + f1(sc.comfort) + '、余るスロット ' + (ev.spare.length ? ev.spare.map(s => s.size).join('・') : 'なし') + '。');
+  if (q.objective === 'comfort') parts.push('快適点 ' + f1(sc.comfort) + '、余るスロット ' + (ev.spare.length ? ev.spare.map(s => s.size).sort((a, b) => b - a).join('・') : 'なし') + '。');
   if (first && first !== ev) {
     let diff = 0; for (let i = 0; i < 5; i++) if (first.armor[i] !== ev.armor[i]) diff++;
     const d = [];
