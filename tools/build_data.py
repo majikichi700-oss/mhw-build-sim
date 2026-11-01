@@ -95,6 +95,9 @@ def parse_effect(desc_ja):
     m = re.search(r'全属性耐性値\+(\d+)', d)
     if m:
         e['resAll'] = int(m.group(1))
+    m = re.search(r'耐性値(\d+(?:\.\d+)?)倍', d)
+    if m:
+        e['resMul'] = float(m.group(1))
     m = re.search(r'体力\+(\d+)', d)
     if m:
         e['health'] = int(m.group(1))
