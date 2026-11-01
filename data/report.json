@@ -78,14 +78,6 @@
   },
   {
    "kind": "armor_set",
-   "name_en": "Namielle γ+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Velkhana γ+"
-  },
-  {
-   "kind": "armor_set",
    "name_en": "Passionate α+"
   },
   {
@@ -107,46 +99,6 @@
   {
    "kind": "armor_set",
    "name_en": "Artemis α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Tentacle Cowl  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Tentacle Cloak  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Tentacle Gloves  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Tentacle Coil  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Tentacle Greaves  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Rimeguard Helm  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Rimeguard Mail γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Rimeguard Vambraces  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Rimeguard Coil  γ+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Rimeguard Greaves  γ+"
   },
   {
    "kind": "armor",
@@ -298,14 +250,6 @@
   },
   {
    "kind": "charm",
-   "name_en": "Attack Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Windproof Charm V"
-  },
-  {
-   "kind": "charm",
    "name_en": "Survival Charm I"
   },
   {
@@ -315,38 +259,6 @@
   {
    "kind": "charm",
    "name_en": "Survival Charm III"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Master's Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Evasion Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Handicraft Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Earplugs Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Exploiter Charm III"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Grit Charm V"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Unscathed Charm III"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Critical Charm III"
   },
   {
    "kind": "charm",
@@ -471,6 +383,140 @@
   {
    "kind": "weapon",
    "name_en": "Bow of Vice & Violence"
+  }
+ ],
+ "derived_ja": [
+  {
+   "kind": "armor_set",
+   "name_en": "Namielle γ+",
+   "name_ja": "EXテンタクルγ",
+   "from": "Namielle β+（EXテンタクルβ）"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Velkhana γ+",
+   "name_ja": "EXラヴィーナγ",
+   "from": "Velkhana β+（EXラヴィーナβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Cowl  γ+",
+   "name_ja": "EXテンタクルヘルムγ",
+   "from": "Tentacle Cowl β+（EXテンタクルヘルムβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Cloak  γ+",
+   "name_ja": "EXテンタクルメイルγ",
+   "from": "Tentacle Cloak β+（EXテンタクルメイルβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Gloves  γ+",
+   "name_ja": "EXテンタクルアームγ",
+   "from": "Tentacle Gloves β+（EXテンタクルアームβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Coil  γ+",
+   "name_ja": "EXテンタクルコイルγ",
+   "from": "Tentacle Coil β+（EXテンタクルコイルβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Tentacle Greaves  γ+",
+   "name_ja": "EXテンタクルグリーヴγ",
+   "from": "Tentacle Greaves β+（EXテンタクルグリーヴβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Helm  γ+",
+   "name_ja": "EXラヴィーナヘルムγ",
+   "from": "Rimeguard Helm β+（EXラヴィーナヘルムβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Mail γ+",
+   "name_ja": "EXラヴィーナメイルγ",
+   "from": "Rimeguard Mail β+（EXラヴィーナメイルβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Vambraces  γ+",
+   "name_ja": "EXラヴィーナアームγ",
+   "from": "Rimeguard Vambraces β+（EXラヴィーナアームβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Coil  γ+",
+   "name_ja": "EXラヴィーナコイルγ",
+   "from": "Rimeguard Coil β+（EXラヴィーナコイルβ）"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Rimeguard Greaves  γ+",
+   "name_ja": "EXラヴィーナグリーヴγ",
+   "from": "Rimeguard Greaves β+（EXラヴィーナグリーヴβ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Attack Charm V",
+   "name_ja": "攻撃の護石Ⅴ",
+   "from": "Attack Charm IV（攻撃の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Windproof Charm V",
+   "name_ja": "防風の護石Ⅴ",
+   "from": "Windproof Charm IV（防風の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Master's Charm V",
+   "name_ja": "達人の護石Ⅴ",
+   "from": "Master's Charm IV（達人の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Evasion Charm V",
+   "name_ja": "回避の護石Ⅴ",
+   "from": "Evasion Charm IV（回避の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Handicraft Charm V",
+   "name_ja": "匠の護石Ⅴ",
+   "from": "Handicraft Charm IV（匠の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Earplugs Charm V",
+   "name_ja": "耳栓の護石Ⅴ",
+   "from": "Earplugs Charm IV（耳栓の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Exploiter Charm III",
+   "name_ja": "痛撃の護石Ⅲ",
+   "from": "Exploiter Charm II（痛撃の護石Ⅱ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Grit Charm V",
+   "name_ja": "底力の護石Ⅴ",
+   "from": "Grit Charm IV（底力の護石Ⅳ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Unscathed Charm III",
+   "name_ja": "無傷の護石Ⅲ",
+   "from": "Unscathed Charm II（無傷の護石Ⅱ）"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Critical Charm III",
+   "name_ja": "超心の護石Ⅲ",
+   "from": "Critical Charm II（超心の護石Ⅱ）"
   }
  ],
  "notes": [],

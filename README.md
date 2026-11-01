@@ -7,7 +7,7 @@
 ## 使い方
 
 - `dist/index.html` をブラウザで開きます。スマホでも使えます。
-- 「条件で探す」：武器・ほしいスキルとレベル・目的（火力、守りとの両立、守り、快適さ）・ランクを選んで「探す」を押します。くわしい条件では、外せない防具、使わない防具、持っていない装飾品、防御力や耐性の下限、レア度の上限（入手しやすさ）、探す時間を決められます。
+- 「条件で探す」：武器（レア度 11 と 12 の武器だけを一覧に出します）・ほしいスキルとレベル・目的（火力、守りとの両立、守り、快適さ）・ランクを選んで「探す」を押します。くわしい条件では、外せない防具、使わない防具、持っていない装飾品、防御力や耐性の下限、レア度の上限（入手しやすさ）、探す時間（30 秒から 10 分。はじめは 60 秒）を決められます。
 - 「作っておいた案」：14 種類の武器 × 3 つの目的で、あらかじめ検索しておいた案を見られます。
 - 「言葉で頼む」：Claude の Artifact（Claude の中で公開されたページ）として開いたときだけ出ます。「太刀で火力重視、見切りと超会心は外したくない。弱点特効は 3 以上」のように書くと、Claude が検索条件に直して、ページの検索結果から順位と理由を決めます。
 
@@ -58,16 +58,24 @@
 
 ひとつだけ注意があります。武器の `skill` 列には、スキル名ではなくシリーズスキルの名前（`Kulve Taroth Essence`）が入っている武器が 362 個ありました。これは「その武器がシリーズの 1 部位として数えられる」という意味だと判断し、そのように扱っています。
 
-### 日本語の翻訳がない名前（113 件）
+### 日本語名
 
-翻訳の行がない、または `name_ja` が空のものです。画面では英語の名前のまま出します。
+画面の名前は、データの `name_ja` の列の日本語名です。翻訳の行がない、または `name_ja` が空の名前は 113 件ありました。このうち 22 件は、データの中のほかの名前から日本語名を作りました。残りの 91 件は、記憶で埋めずに英語名のまま表示し、「日本語名なし」の印を付けています。
+
+データの中のほかの名前から作った日本語名（22 件）は、次の決まりで作りました。
+
+- γ+ の防具とシリーズ（12 件）：同じ名前の β+ の日本語名の、最後の「β」を「γ」に変えました（例：Rimeguard Helm β+ は EXラヴィーナヘルムβ なので、Rimeguard Helm γ+ は EXラヴィーナヘルムγ）。
+- 護石（10 件）：一つ前の段階の日本語名の、最後の数字を変えました（例：攻撃の護石Ⅳ の次の段階は 攻撃の護石Ⅴ）。
+- 作った名前の一覧は、画面の「データについて」と `data/report.json` の `derived_ja` にあります。
+
+日本語名がデータにない名前（91 件）は次のとおりです。
 
 - スキル（10 件）：Clutch Claw Boost、Inheritance、Transcendance、Fun Fright's Gift、Fun Fright's Gratitude、Sizzling Gift、Sizzling Gratitude、Coldproof、Provoker、Safe Landing
 - シリーズスキル（4 件）：New World、Fatalis Legend、Fun Fright Blessing、Sizzling Blessing
-- シリーズ（8 件）：Namielle γ+、Velkhana γ+、Passionate α+、Demonlord α+、Dragon α+、Dragon β+、Azure Age α+、Artemis α+
-- 防具（40 件）：上の 8 シリーズの各部位（Tentacle … γ+、Rimeguard … γ+、Passionate … α+、Demonlord … α+、Dragon… α+ と β+、Azure Age … α+、Artemis … α+）
+- シリーズ（6 件）：Passionate α+、Demonlord α+、Dragon α+、Dragon β+、Azure Age α+、Artemis α+
+- 防具（30 件）：上の 6 シリーズの各部位（Passionate … α+、Demonlord … α+、Dragon… α+ と β+、Azure Age … α+、Artemis … α+）
 - 装飾品（7 件）：Survival Jewel 1、Guardian Jewel 2、Cooling Jewel 2、Warming Jewel 2、Diversion Jewel 3、Acrobat Jewel 3、Shaver Jewel 3
-- 護石（14 件）：Attack Charm V、Windproof Charm V、Survival Charm I〜III、Master's Charm V、Evasion Charm V、Handicraft Charm V、Earplugs Charm V、Exploiter Charm III、Grit Charm V、Unscathed Charm III、Critical Charm III、Shaver Charm
+- 護石（4 件）：Survival Charm I〜III、Shaver Charm
 - 武器（30 件）：Fatalis の武器など（全部の名前は `data/report.json` にあります）
 
 ## 守っているルール
@@ -111,7 +119,7 @@
 ## 言葉で頼む入り口（Claude）
 
 - Claude の Artifact として開いたとき、`window.claude` の `claude.use("sample")` を使います。公開するときの宣言は `capabilities: {sample: {}}` です。
-- 呼ぶときは `model: "claude-opus-5-5"` を指定します。答えの `modelApplied` が `claude-opus-5-5` でないときは、別のモデル（`modelTierApplied` の段階）が答えたことを画面に出します。
+- 呼ぶときは `model: "claude-opus-5-5"` と、よく考えてもらうための `effort: "high"` を指定します。ページの中の検索は 1 回 40 秒です。答えの `modelApplied` が `claude-opus-5-5` でないときは、別のモデル（`modelTierApplied` の段階）が答えたことを画面に出します。
 - Claude には、ページの中の関数を道具（tools）として渡します。`findSkills`（スキル名を探す）、`findWeapons`（武器を探す）、`searchBuilds`（条件で検索する）、`getBuild`（案の中身を見る）です。道具の答えは 32KB 以内にしています。
 - 装備名と数値は、Claude の文章ではなくページのデータから表示します。Claude の答えの `buildId` が検索結果にないときは表示しません。
 - `claude.use("sample")` が `null`（GitHub Pages など）のときや、`not_granted`（使う許可がない）のときは、この入り口を隠し、作っておいた案と条件検索に案内します。
@@ -119,10 +127,11 @@
 
 ## 作っておいた案
 
-`tools/make_presets.js` が、14 種類の武器 × 3 つの目的（火力、守りとの両立、快適さ）× 2 つの入手しやすさで、検索プログラムを 1 回 30 秒ずつ実際に動かしました。各目的に、入手が難しい装備も使う案を 3 つ、入手しやすい案を 2 つ入れています（合わせて 210 案）。理由の文は `tools/finish_presets.js` が、検索プログラムが計算した数だけを使って組み立てます。
+`tools/make_presets.js` が、14 種類の武器 × 3 つの目的（火力、守りとの両立、快適さ）× 2 つの入手しやすさで、検索プログラムを 1 回 120 秒ずつ実際に動かしました。各目的に、入手が難しい装備も使う案を 3 つ、入手しやすい案を 2 つ入れています（合わせて 210 案）。理由の文は `tools/finish_presets.js` が、検索プログラムが計算した数だけを使って組み立てます。
 
-- 入手が難しい装備も使う案：レア度 12 まで、全部使います。武器は、条件の中で「スキルなしの期待値」が一番高いものです。
-- 入手しやすい案：武器・防具・護石・装飾品のレア度を 10 以下にしました（レア度が高いほど手に入れにくい、という判断です）。
+- 武器は、レア度 11 と 12 の武器だけを使います（依頼による）。武器は、その中で「スキルなしの期待値」が一番高いものです。
+- 入手が難しい装備も使う案：レア度 12 まで、全部使います。
+- 入手しやすい案：防具・護石・装飾品のレア度を 10 以下にし、武器はレア度 11 にしました（レア度が高いほど手に入れにくい、という判断です）。
 - ランス・ガンランスの「守りとの両立」だけは、ガード性能 Lv3 を必ず付ける条件にしました（ガードで受ける武器のため）。ほかは、外せないスキルを決めず、点数だけで選んでいます。
 
 ## 確かめ方
@@ -152,7 +161,7 @@ python3 tools/build_data.py
 ```
 
 ```bash
-node tools/make_presets.js 30 4
+node tools/make_presets.js 120 4
 ```
 
 ```bash

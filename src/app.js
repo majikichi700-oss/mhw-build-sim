@@ -68,11 +68,13 @@
 
   /* ---------- 名前 ---------- */
   function skillName(id) { var s = I.skillById[id]; return s ? s.ja : '?'; }
+  // データに日本語名がない装備には印を付けます（記憶で日本語名を作りません）
+  function noJa(x) { return x && x.jaMissing ? ' <span class="tag" title="MHWorldData に日本語名がないため英語名で表示しています">日本語名なし</span>' : ''; }
   function armorName(id) { var a = I.armorById[id]; return a ? a.ja : '?'; }
   function decoName(id) { var d = I.decoById[id]; return d ? d.ja : '?'; }
   function charmName(id) { if (id == null) return 'なし'; var c = I.charmById[id]; return c ? c.ja : '?'; }
   function weaponLabel(b) {
-    if (b.weapon != null) { var w = I.weaponById[b.weapon]; return w.ja + '（' + E.WEAPON_JA[w.type] + '）'; }
+    if (b.weapon != null) { var w = I.weaponById[b.weapon]; return w.ja + (w.jaMissing ? '［日本語名なし］' : '') + '（' + E.WEAPON_JA[w.type] + '）'; }
     return 'スロットだけ指定した武器';
   }
   function slotsLabel(sl) { return sl && sl.length ? sl.map(function (s) { return NUM[s]; }).join('') : 'なし'; }
@@ -85,16 +87,16 @@
     function slotCells(prefix, slots) {
       return slots.map(function (sz, j) {
         var d = byslot[prefix + '#' + j];
-        return '<span class="slot">' + NUM[sz] + ' ' + (d ? esc(decoName(d.deco)) : '<span class="muted">空き</span>') + '</span>';
+        return '<span class="slot">' + NUM[sz] + ' ' + (d ? esc(decoName(d.deco)) + noJa(I.decoById[d.deco]) : '<span class="muted">空き</span>') + '</span>';
       }).join('');
     }
     var wsl = b.weapon != null ? I.weaponById[b.weapon].slots : (b.weaponSlots || []);
     rows.push('<tr><th>武器</th><td>' + esc(weaponLabel(b)) + '<div class="slots">' + slotCells('weapon', wsl) + '</div></td></tr>');
     E.PARTS.forEach(function (p, i) {
       var a = I.armorById[b.armor[i]];
-      rows.push('<tr><th>' + E.PART_JA[p] + '</th><td>' + esc(a.ja) + ' <span class="muted">レア' + a.rarity + '</span><div class="slots">' + slotCells(p, a.slots) + '</div></td></tr>');
+      rows.push('<tr><th>' + E.PART_JA[p] + '</th><td>' + esc(a.ja) + noJa(a) + ' <span class="muted">レア' + a.rarity + '</span><div class="slots">' + slotCells(p, a.slots) + '</div></td></tr>');
     });
-    rows.push('<tr><th>護石</th><td>' + esc(charmName(b.charm)) + (b.charm != null ? ' <span class="muted">' + I.charmById[b.charm].skills.map(function (x) { return esc(skillName(x[0])) + x[1]; }).join('・') + '</span>' : '') + '</td></tr>');
+    rows.push('<tr><th>護石</th><td>' + esc(charmName(b.charm)) + noJa(b.charm != null && I.charmById[b.charm]) + (b.charm != null ? ' <span class="muted">' + I.charmById[b.charm].skills.map(function (x) { return esc(skillName(x[0])) + x[1]; }).join('・') + '</span>' : '') + '</td></tr>');
     return rows.join('');
   }
   function bonusSkillSet(b) { var s = {}; (b.bonuses || []).forEach(function (x) { x.active.forEach(function (k) { s[k] = 1; }); }); return s; }
@@ -208,11 +210,12 @@
   function ranks() { return Array.prototype.slice.call(form.querySelectorAll('input[name=rank]:checked')).map(function (x) { return x.value; }); }
   function fillWeapons() {
     var t = wtSel.value, rk = ranks();
-    var list = GAME.weapons.filter(function (w) { return w.type === t && rk.indexOf(E.rankOfRarity(w.rarity)) >= 0; });
+    // 武器はレア度 11 と 12 だけを候補にします（依頼による）
+    var list = GAME.weapons.filter(function (w) { return w.type === t && w.rarity >= 11; });
     list.sort(function (a, b) { return b.rarity - a.rarity || b.attack - a.attack; });
     wSel.innerHTML = '<option value="">武器を選ばず、スロットだけ指定する</option>' + list.map(function (w) {
       var el = w.elements.map(function (x) { return (w.elemHidden ? '(' : '') + (E.ELEM_JA[x[0]] || x[0]) + x[1] + (w.elemHidden ? ')' : ''); }).join(' ');
-      return '<option value="' + w.id + '">' + esc(w.ja) + '｜レア' + w.rarity + '｜攻' + w.attack + (w.affinity ? '｜会心' + w.affinity + '%' : '') + (el ? '｜' + esc(el) : '') + '｜' + slotsLabel(w.slots) + '</option>';
+      return '<option value="' + w.id + '">' + esc(w.ja) + (w.jaMissing ? '［日本語名なし］' : '') + '｜レア' + w.rarity + '｜攻' + w.attack + (w.affinity ? '｜会心' + w.affinity + '%' : '') + (el ? '｜' + esc(el) : '') + '｜' + slotsLabel(w.slots) + '</option>';
     }).join('');
     $('#weapon-slots').hidden = !!wSel.value;
   }
@@ -356,7 +359,7 @@
   function toolWeapons(input) {
     var t = String(input.weaponType || ''); if (!E.WEAPON_JA[t]) throw new Error('weaponType は次のどれか: ' + E.WEAPON_TYPES.join(', '));
     var maxR = +input.maxRarity || 12;
-    var list = GAME.weapons.filter(function (w) { return w.type === t && w.rarity <= maxR && w.rarity >= 9; });
+    var list = GAME.weapons.filter(function (w) { return w.type === t && w.rarity <= maxR && w.rarity >= 11; });
     list.sort(function (a, b) { return b.attack - a.attack; });
     if (input.element) list = list.filter(function (w) { return w.elements.some(function (x) { return x[0] === input.element || E.ELEM_JA[x[0]] === input.element; }); });
     return list.slice(0, 20).map(function (w) { return { weaponId: w.id, name: w.ja, rarity: w.rarity, attack: w.attack, affinity: w.affinity, element: w.elements.map(function (x) { return (E.ELEM_JA[x[0]] || x[0]) + x[1] + (w.elemHidden ? '(隠し)' : ''); }).join(' '), slots: w.slots }; });
@@ -384,7 +387,7 @@
       objective: E.OBJECTIVES[input.objective] ? input.objective : 'fire',
       ranks: (input.ranks && input.ranks.length ? input.ranks : ['MR']).filter(function (r) { return E.RANK_JA[r]; }),
       skills: skills, minDefense: +input.minDefense || 0, maxRarity: +input.maxRarity || 12, decoMaxRarity: +input.decoMaxRarity || 12,
-      timeLimitMs: 8000
+      timeLimitMs: 40000
     };
     var sid = 's' + (++nlSeq);
     nlStatus.textContent = 'ページの中で検索しています（' + sid + '）…';
@@ -438,7 +441,7 @@
     if (!text) { nlStatus.textContent = '頼みを書いてください。'; return; }
     nlBusy = true; $('#nl-go').disabled = true; nlOut.innerHTML = ''; nlStatus.textContent = 'Claude に頼んでいます…（時間がかかることがあります）';
     nlCtl = new AbortController(); $('#nl-stop').hidden = false;
-    var opts = { model: 'claude-opus-5-5', modelTier: 'complex', tools: TOOLS, signal: nlCtl.signal, onText: function () { nlStatus.textContent = 'Claude が答えを書いています…'; } };
+    var opts = { model: 'claude-opus-5-5', modelTier: 'complex', effort: 'high', tools: TOOLS, signal: nlCtl.signal, onText: function () { nlStatus.textContent = 'Claude が答えを書いています…'; } };
     sample(nlPrompt(text), opts).then(function (res) {
       var note = '';
       if (res.modelApplied !== 'claude-opus-5-5') note = '⚠ Opus（claude-opus-5-5）は使えなかったため、別のモデル（段階：' + esc(res.modelTierApplied || '不明') + '）が答えました。';

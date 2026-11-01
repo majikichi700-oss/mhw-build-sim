@@ -181,7 +181,7 @@
     q.weakUptime = q.weakUptime == null ? 1 : q.weakUptime;
     q.maxRarity = q.maxRarity || 12;        // 防具・護石の上限レア度
     q.decoMaxRarity = q.decoMaxRarity || 12; // 装飾品の上限レア度
-    q.timeLimitMs = q.timeLimitMs || 8000;
+    q.timeLimitMs = q.timeLimitMs || 60000;
     q.topK = q.topK || 120;
     q.resultCount = q.resultCount || 10;
     return q;

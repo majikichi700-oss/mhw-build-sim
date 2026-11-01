@@ -24,7 +24,7 @@ MELEE = {'great-sword', 'long-sword', 'sword-and-shield', 'dual-blades', 'hammer
          'lance', 'gunlance', 'switch-axe', 'charge-blade', 'insect-glaive'}
 
 report = {'commit': open(os.path.join(SRC, 'COMMIT')).read().strip(), 'rows': {}, 'missing_ref': [],
-          'missing_ja': [], 'notes': []}
+          'missing_ja': [], 'derived_ja': [], 'notes': []}
 
 
 def read(rel):
@@ -50,6 +50,44 @@ def need_ja(m, key, kind):
         report['missing_ja'].append({'kind': kind, 'name_en': key if isinstance(key, str) else key[0]})
         return None
     return v
+
+
+# ---- 日本語名がデータにないときに、データの中の「兄弟」の名前から作る（記憶では埋めません）
+ROMAN = {'I': 'Ⅰ', 'II': 'Ⅱ', 'III': 'Ⅲ', 'IV': 'Ⅳ', 'V': 'Ⅴ'}
+
+
+def derive_gamma(m, kind, names):
+    """γ+ の装備：同じ名前の β+（なければ α+）の日本語名の最後の β（α）を γ に変えます。"""
+    for en in names:
+        if m.get(en):
+            continue
+        base = re.sub(r'\s+', ' ', en).strip()
+        if not base.endswith('γ+'):
+            continue
+        stem = base[:-2].strip()
+        for sib, ch in ((stem + ' β+', 'β'), (stem + ' α+', 'α')):
+            sj = None
+            for k in m:
+                if re.sub(r'\s+', ' ', k).strip() == sib:
+                    sj = m[k]
+            if sj and sj.endswith(ch):
+                m[en] = sj[:-1] + 'γ'
+                report['derived_ja'].append({'kind': kind, 'name_en': en, 'name_ja': m[en], 'from': sib + '（' + sj + '）'})
+                break
+
+
+def derive_charm(m, rows):
+    """護石：一つ前の段階の日本語名の最後のローマ数字を、この段階の数字に変えます。"""
+    for r in rows:
+        en = r['name_en']
+        if m.get(en) or not r['previous_en']:
+            continue
+        pj = m.get(r['previous_en'])
+        num = en.split(' ')[-1]
+        pnum = r['previous_en'].split(' ')[-1]
+        if pj and num in ROMAN and pnum in ROMAN and pj.endswith(ROMAN[pnum]):
+            m[en] = pj[:-1] + ROMAN[num]
+            report['derived_ja'].append({'kind': 'charm', 'name_en': en, 'name_ja': m[en], 'from': r['previous_en'] + '（' + pj + '）'})
 
 
 def norm(s):
@@ -180,9 +218,11 @@ def main():
 
     # ---- armor sets
     set_ja = ja_map('armors/armorset_base_translations.csv', 'set')
+    set_rows = read('armors/armorset_base.csv')
+    derive_gamma(set_ja, 'armor_set', [r['name_en'] for r in set_rows])
     sets = []
     piece_set = {}
-    for r in read('armors/armorset_base.csv'):
+    for r in set_rows:
         bonus = None
         if r['bonus']:
             bonus = bid.get(r['bonus'])
@@ -208,7 +248,9 @@ def main():
                 lst.append([s, int(r['skill%s_level' % k])])
         ar_sk[r['base_name_en']] = lst
     armors = []
-    for r in read('armors/armor_base.csv'):
+    armor_rows = read('armors/armor_base.csv')
+    derive_gamma(ar_ja, 'armor', [r['name_en'] for r in armor_rows])
+    for r in armor_rows:
         en = r['name_en']
         st = piece_set.get(en)
         if st is None:
@@ -243,6 +285,7 @@ def main():
     # ---- charms
     ch_ja = ja_map('charms/charm_base_translations.csv', 'charm')
     rows = read('charms/charm_base.csv')
+    derive_charm(ch_ja, rows)
     names = {r['name_en'] for r in rows}
     has_next = {r['previous_en'] for r in rows if r['previous_en']}
     charms = []

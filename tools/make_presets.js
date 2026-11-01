@@ -13,8 +13,9 @@ const sk = n => I.skillByEn[n].id;
 const CRIT_BASE = (E.prepare(game, { ranks: ['LR'], maxRarity: 1 }), game._critBase);
 
 const OBJ = ['fire', 'balance', 'comfort'];
-// 入手のしやすさ（判断）：hard はすべて使う。easy は武器・防具・護石・装飾品のレア度 10 以下。
-const ACCESS = { hard: { maxRarity: 12, decoMaxRarity: 12 }, easy: { maxRarity: 10, decoMaxRarity: 10 } };
+// 入手のしやすさ（判断）：hard はすべて使う。easy は防具・護石・装飾品のレア度 10 以下で、武器はレア度 11。
+// 武器はレア度 11 と 12 だけを候補にします（依頼による）。
+const ACCESS = { hard: { maxRarity: 12, decoMaxRarity: 12, weaponMaxRarity: 12 }, easy: { maxRarity: 10, decoMaxRarity: 10, weaponMaxRarity: 11 } };
 // 目的ごとに外せないスキル（判断）。ガードで受ける武器の「守りとの両立」だけ、ガード性能 Lv3 を条件にします。
 function required(type, obj) {
   if (obj === 'balance' && (type === 'lance' || type === 'gunlance')) return [{ id: sk('Guard'), lv: 3 }];
@@ -24,7 +25,7 @@ function pickWeapon(type, maxRarity) {
   // 武器の基準の火力（スキルなしの期待値）が一番高いもの。同じなら スロットの合計が多いもの。
   let best = null, bestV = -1;
   for (const w of game.weapons) {
-    if (w.type !== type || w.rarity > maxRarity || w.rarity < 9) continue;
+    if (w.type !== type || w.rarity > maxRarity || w.rarity < 11) continue;
     const wi = E.weaponInfo(game, { weaponId: w.id });
     const crit = CRIT_BASE;
     const v = wi.raw * (wi.aff >= 0 ? 1 + wi.aff / 100 * (crit - 1) : 1 + wi.aff / 100 * E.NEG_CRIT) + wi.elems.reduce((a, x) => a + x[1] / E.ELEM_DIV / wi.elems.length, 0);
@@ -37,8 +38,8 @@ function pickWeapon(type, maxRarity) {
 function jobs() {
   const out = [];
   for (const type of E.WEAPON_TYPES) for (const obj of OBJ) for (const acc of Object.keys(ACCESS)) {
-    const w = pickWeapon(type, ACCESS[acc].maxRarity);
-    out.push({ type, obj, acc, query: Object.assign({ weaponId: w.id, weaponType: type, objective: obj, ranks: ['MR'], skills: required(type, obj) }, ACCESS[acc]) });
+    const w = pickWeapon(type, ACCESS[acc].weaponMaxRarity);
+    out.push({ type, obj, acc, query: { weaponId: w.id, weaponType: type, objective: obj, ranks: ['MR'], skills: required(type, obj), maxRarity: ACCESS[acc].maxRarity, decoMaxRarity: ACCESS[acc].decoMaxRarity } });
   }
   return out;
 }

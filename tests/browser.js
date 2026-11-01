@@ -26,6 +26,8 @@ async function conditionSearch(p) {
   await p.fill('#skill-input', '弱点特効');
   await p.click('#add-skill');
   await p.click('summary:has-text("くわしい条件")');
+  // 試験を短くするため、試験の中だけ 5 秒の選択肢を足します（画面の選択肢は 30 秒から）
+  await p.evaluate(() => { const o = document.createElement('option'); o.value = '5'; o.textContent = '5 秒（試験用）'; document.getElementById('time-limit').appendChild(o); });
   await p.selectOption('#time-limit', '5');
   await p.click('#go');
   await p.waitForSelector('#results .card', { timeout: 60000 });
@@ -42,6 +44,8 @@ async function conditionSearch(p) {
     ok(await p.$eval('#nl', e => e.hidden), name + ': window.claude がないので言葉の入り口は隠れる');
     ok(!(await p.$eval('#nl-off', e => e.hidden)), name + ': 代わりの案内が出る');
     ok((await p.$$eval('#preset-out .card', e => e.length)) >= 3, name + ': 作っておいた案が出る');
+    const rar = await p.$$eval('#weapon option', os => os.slice(1).map(o => +(/レア(\d+)/.exec(o.textContent) || [0, 0])[1]));
+    ok(rar.length > 0 && rar.every(r => r === 11 || r === 12), name + ': 武器の一覧はレア度 11 と 12 だけ');
     const n = await conditionSearch(p);
     ok(n >= 1, name + ': 条件検索で案が出る（' + n + '）');
     const st = await p.textContent('#status');

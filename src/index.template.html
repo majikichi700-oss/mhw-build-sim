@@ -105,7 +105,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>1つ目 <select id="ws1"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
 <label>2つ目 <select id="ws2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
 <label>3つ目 <select id="ws3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
-<p class="muted">武器を選ばないときは、火力点を「基礎攻撃力 200・会心率 0%・属性なし」の武器として計算します。</p></div>
+<p class="muted">武器の一覧は、レア度 11 と 12 の武器だけです。武器を選ばないときは、火力点を「基礎攻撃力 200・会心率 0%・属性なし」の武器として計算します。</p></div>
 </fieldset>
 <fieldset><legend>ほしいスキル</legend>
 <div class="row"><input id="skill-input" list="skill-list" placeholder="スキル名（例：見切り）" aria-label="スキル名"><label>Lv <select id="skill-lv"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label><button type="button" id="add-skill">追加</button></div>
@@ -137,7 +137,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>防具・護石のレア度の上限 <select id="max-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option></select></label>
 <label>装飾品のレア度の上限 <select id="deco-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option></select></label>
 <label>条件付きスキルの見込み <select id="uptime"><option value="0">数えない</option><option value="0.5">表の半分</option><option value="1" selected>表のとおり</option><option value="1.5">表の 1.5 倍</option></select></label>
-<label>探す時間 <select id="time-limit"><option value="5">5 秒</option><option value="10" selected>10 秒</option><option value="20">20 秒</option><option value="40">40 秒</option><option value="90">90 秒</option></select></label>
+<label>探す時間 <select id="time-limit"><option value="30">30 秒</option><option value="60" selected>60 秒</option><option value="120">2 分</option><option value="300">5 分</option><option value="600">10 分</option></select></label>
 </fieldset>
 </details>
 <div class="row" style="margin-top:10px"><button type="submit" class="primary" id="go">探す</button><button type="button" id="stop" hidden>止める</button></div>
@@ -148,7 +148,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 
 <section id="presets">
 <h2>作っておいた案</h2>
-<p>14 種類の武器それぞれについて、「火力」「守りとの両立」「快適さ」の 3 つの目的で、このページの検索プログラムを実際に動かして作った案です。入手が難しい装備（レア度 12 まで）も使う案と、入手しやすい案（武器・防具・護石・装飾品のレア度 10 以下）の両方を入れています。案の中身は、表示のたびにページのデータで計算し直しています。</p>
+<p>14 種類の武器それぞれについて、「火力」「守りとの両立」「快適さ」の 3 つの目的で、このページの検索プログラムを実際に動かして作った案です。入手が難しい装備（レア度 12 まで、武器はレア度 12 まで）も使う案と、入手しやすい案（防具・護石・装飾品のレア度 10 以下、武器はレア度 11）の両方を入れています。案の中身は、表示のたびにページのデータで計算し直しています。</p>
 <div class="row"><label>武器 <select id="preset-type"></select></label><label>目的 <select id="preset-obj"><option value="fire">火力</option><option value="balance">守りとの両立</option><option value="comfort">快適さ</option></select></label></div>
 <div id="preset-out"></div>
 </section>

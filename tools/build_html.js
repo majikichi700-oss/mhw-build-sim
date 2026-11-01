@@ -89,7 +89,7 @@ function unsupported() {
 <li>装飾品を持っている個数。持っていない装飾品を指定することはできますが、「1 個だけ持っている」は扱えません。</li>
 <li>重ね着、性別ごとの見た目、モンスターごとの弱点。</li>
 <li>武器のデータの「skill」列にシリーズスキルの名前（例：Kulve Taroth Essence）がある武器は、そのシリーズの 1 部位として数えます。これはデータの書き方から作者が判断したものです。</li>
-<li>日本語の翻訳がデータにない装備（${report.missing_ja.length} 件）は、英語の名前のまま表示します。一覧は「データについて」にあります。</li>
+<li>日本語名がデータにない装備（${report.missing_ja.length} 件。Fatalis の防具と武器など）は、記憶で埋めず、英語の名前のまま「日本語名なし」の印を付けて表示します。一覧は「データについて」にあります。</li>
 </ul>`;
 }
 
@@ -103,7 +103,8 @@ function dataSec() {
 <table><tr><th>ファイル</th><th>行数（見出しを除く）</th></tr>${rows}</table>
 <p>取り込んだ数：防具 ${report.counts.armors}、シリーズ ${report.counts.sets}、シリーズスキル ${report.counts.bonuses}、装飾品 ${report.counts.decos}、護石 ${report.counts.charms}（うち最終段階 ${report.counts.charms_final}）、スキル ${report.counts.skills}、武器 ${report.counts.weapons}。</p>
 <p>参照先のない名前：${report.missing_ref.length ? report.missing_ref.length + ' 件' : 'ありません'}。</p>
-<details><summary>日本語の翻訳がない名前（${report.missing_ja.length} 件）</summary><ul>${miss}</ul></details>`;
+<details><summary>データの中のほかの名前から作った日本語名（${report.derived_ja.length} 件）</summary><p>翻訳の行がない γ+ の防具とシリーズは、同じ名前の β+ の日本語名の最後の「β」を「γ」に変えました。護石は、一つ前の段階の日本語名の最後の数字を、この段階の数字に変えました。どちらもデータの中の名前から作ったもので、記憶では埋めていません。</p><ul>${report.derived_ja.map(x => '<li>' + esc(x.name_en) + '：' + esc(x.name_ja) + '（もと：' + esc(x.from) + '）</li>').join('')}</ul></details>
+<details><summary>日本語名がデータにない名前（${report.missing_ja.length} 件）</summary><p>データのどこにも日本語名がなく、ほかの名前から作ることもできなかったものです。記憶で埋めず、英語名のまま「日本語名なし」の印を付けて表示します。</p><ul>${miss}</ul></details>`;
 }
 
 const jsonSafe = s => s.replace(/</g, '\\u003c');

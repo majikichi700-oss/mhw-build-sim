@@ -36,7 +36,7 @@ function reasonFor(b, ev, first, q, accRank, access) {
   const sc = ev.score;
   const objLabel = OBJ_JA[q.objective];
   parts.push((access === 'easy' ? '入手しやすい装備だけで' : '入手が難しい装備も使って') + '、「' + objLabel + '」の合計が ' + (accRank === 1 ? '一番高かった' : accRank + ' 番目に高かった') + '案です（合計 ' + f1(sc.total) + '）。');
-  parts.push('武器は ' + w.ja + '（スキルなしの期待値が条件の中で一番高い武器）。');
+  parts.push('武器は ' + w.ja + (I.weaponById[b.weapon].jaMissing ? '［日本語名なし］' : '') + '（レア度 ' + (access === 'easy' ? '11' : '11〜12') + ' の中で、スキルなしの期待値が一番高い武器）。');
   parts.push('主なスキルは ' + topSkills(ev, 6) + '。');
   parts.push(bonusText(ev));
   if (q.objective === 'fire') parts.push('火力点 ' + f1(sc.fire) + '、会心率 ' + Math.round(sc.detail.affinity) + '%。');
