@@ -86,6 +86,17 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <p>たとえば「太刀で火力重視、見切りと超会心は外したくない。弱点特効は 3 以上」のように書いて、ボタンを押してください。Claude が頼みを検索条件に直し、このページの検索プログラムが見つけた案の中から順位と理由を決めます。装備名や数値は、Claude の文章ではなくページのデータから表示します。</p>
 <p class="muted">ボタンを押したときだけ Claude を 1 回呼びます。使われるのは、このページを見ている人の Claude の利用枠です。</p>
 <textarea id="nl-text" aria-label="頼みたいこと">太刀で火力重視、見切りと超会心は外したくない。弱点特効は 3 以上</textarea>
+<div class="row">
+<label>Claude の性能 <select id="nl-model">
+<option value="claude-opus-5-5" selected>Opus 5.5（一番よく考える・標準）</option>
+<option value="claude-fable-5-1">Fable 5.1（新しいモデル）</option>
+<option value="claude-sonnet-5-5">Sonnet 5.5（速さと考える力のバランス）</option>
+<option value="claude-haiku-5-5">Haiku 5.5（一番速い）</option>
+<option value="">おまかせ（Claude が決める標準の段階）</option>
+</select></label>
+<label>考える深さ <select id="nl-effort"><option value="high" selected>深く</option><option value="medium">ふつう</option><option value="low">浅く（速い）</option></select></label>
+</div>
+<p class="muted">性能の高いモデルや深く考える設定ほど、時間がかかり、利用枠も多く使います。選んだモデルが使えないときは、別のモデルが答え、そのことを下に表示します。</p>
 <div class="row"><button type="button" class="primary" id="nl-go">Claude に頼む</button><button type="button" id="nl-stop" hidden>止める</button></div>
 <p id="nl-status" class="muted" aria-live="polite"></p>
 <div id="nl-out"></div>
@@ -137,7 +148,9 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>防具・護石のレア度の上限 <select id="max-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option></select></label>
 <label>装飾品のレア度の上限 <select id="deco-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option></select></label>
 <label>条件付きスキルの見込み <select id="uptime"><option value="0">数えない</option><option value="0.5">表の半分</option><option value="1" selected>表のとおり</option><option value="1.5">表の 1.5 倍</option></select></label>
-<label>探す時間 <select id="time-limit"><option value="30">30 秒</option><option value="60" selected>60 秒</option><option value="120">2 分</option><option value="300">5 分</option><option value="600">10 分</option></select></label>
+<label>探す時間 <select id="time-limit"><option value="30">30 秒</option><option value="60" selected>60 秒</option><option value="120">2 分</option><option value="300">5 分</option><option value="600">10 分</option><option value="0">最後まで（止めるまで）</option></select></label>
+<label>防具のレア度の下限 <select id="min-rarity"><option value="1">なし</option><option value="9">9</option><option value="10" selected>10（マスターランク序盤の防具を外す）</option><option value="11">11</option><option value="12">12</option></select></label>
+<p class="muted">探している間も、いまの上位の案を 1 秒ごとに表示します。「止める」を押すと、そこまでに見つけた中の上位を出します。考えているのは Claude ではなく、このページの検索プログラム（ブラウザの中の計算）です。</p>
 </fieldset>
 </details>
 <div class="row" style="margin-top:10px"><button type="submit" class="primary" id="go">探す</button><button type="button" id="stop" hidden>止める</button></div>

@@ -181,7 +181,9 @@
     q.weakUptime = q.weakUptime == null ? 1 : q.weakUptime;
     q.maxRarity = q.maxRarity || 12;        // 防具・護石の上限レア度
     q.decoMaxRarity = q.decoMaxRarity || 12; // 装飾品の上限レア度
-    q.timeLimitMs = q.timeLimitMs || 60000;
+    q.minRarity = q.minRarity || 1;         // 防具の下限レア度（マスターランク序盤の防具を外すときに使う）
+    // untilDone のときは時間で止めず、最後まで探します（止めるのは画面の「止める」だけ）
+    q.timeLimitMs = q.untilDone ? Infinity : (q.timeLimitMs || 60000);
     q.topK = q.topK || 120;
     q.resultCount = q.resultCount || 10;
     return q;
@@ -291,7 +293,7 @@
       var list;
       if (q.fixedArmor[p] != null) list = [mkCand(I.armorById[q.fixedArmor[p]])];
       else list = g.armors.filter(function (a) {
-        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity;
+        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && a.rarity >= q.minRarity;
       }).map(mkCand);
       poolSizes[p] = list.length;
       pools[p] = q.fixedArmor[p] != null ? list : prune(list);
@@ -726,7 +728,9 @@
     var stats = { nodes: 0, leaves: 0, feasible: 0, pruned: 0, truncated: false, poolSizes: {}, poolSizesBefore: P.poolSizes, timeMs: 0 };
     order.forEach(function (p, i) { stats.poolSizes[p] = pools[i].length; });
     function threshold() { return heap.length >= q.topK ? heap[heap.length - 1].score.total : -Infinity; }
+    var heapVer = 0;
     function insert(b) {
+      heapVer++;
       var key = b.armor.join(',') + '|' + b.charm;
       if (seenKey[key]) return; seenKey[key] = 1;
       var i = heap.length; heap.push(b);
@@ -804,6 +808,7 @@
     var widths = [2, 3, 4, 6, 9, 14, 20, 30, 45, 70, 100, 150, 250, 400].filter(function (w) { return w < maxLen; }).concat([maxLen]);
     var idx = new Array(D);
     var stopped = false;
+    var snapVer = 0, lastSnap = 0;
     stats.passes = 0;
     for (var pass = 0; pass < widths.length && !stopped; pass++) {
       var w = widths[pass], prevW = pass ? widths[pass - 1] : 0;
@@ -820,8 +825,18 @@
         stats.nodes++;
         if ((stats.nodes & 63) === 0) {
           var now = Date.now();
-          if (now - t0 > q.timeLimitMs) { stats.truncated = true; stopped = true; break; }
-          if (now - lastYield > 100) { lastYield = now; yield { progress: true, nodes: stats.nodes, found: heap.length, ms: now - t0, pass: pass + 1, passes: widths.length }; }
+          var userStop = q.stopSignal && q.stopSignal();
+          if (now - t0 > q.timeLimitMs || userStop) { stats.truncated = true; stats.stoppedByUser = !!userStop; stopped = true; break; }
+          if (now - lastYield > 100) {
+            lastYield = now;
+            var pr = { progress: true, nodes: stats.nodes, leaves: stats.leaves, feasible: stats.feasible, found: heap.length, ms: now - t0, pass: pass + 1, passes: widths.length };
+            // 途中の結果：上位が変わっていて、前の途中の結果から 1 秒以上たったら付けます
+            if (q.live && heapVer !== snapVer && now - lastSnap >= 1000) {
+              snapVer = heapVer; lastSnap = now;
+              pr.snapshot = diversify(heap, q.resultCount).map(function (x, i) { return Object.assign({}, x, { rank: i + 1, id: 'b' + (i + 1) }); });
+            }
+            yield pr;
+          }
         }
         chosen[top.d] = c; apply(c, 1);
         var d1 = top.d + 1;
@@ -848,7 +863,7 @@
     stats.passTotal = widths.length;
     stats.timeMs = Date.now() - t0;
     var picked = diversify(heap, q.resultCount);
-    picked.forEach(function (b, i) { b.rank = i + 1; b.id = 'b' + (i + 1); });
+    picked = picked.map(function (b, i) { return Object.assign({}, b, { rank: i + 1, id: 'b' + (i + 1) }); });
     return { builds: picked, all: heap, stats: stats, query: q, relCount: R };
   }
 

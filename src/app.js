@@ -33,36 +33,52 @@
   }
   makeWorker();
 
+  // 検索を始めます。返り値の promise は、最後まで探し終えたときか、「止める」を押したときに、
+  // それまでに見つけた案を返します（止めても途中の結果は消えません）。
+  var currentJob = null, stopFlag = false;
   function runSearch(q, onProgress) {
     if (worker && workerOk) {
       return new Promise(function (resolve, reject) {
         var id = ++jobSeq;
         jobs[id] = { resolve: resolve, reject: reject, onProgress: onProgress };
+        currentJob = id;
         worker.postMessage({ type: 'search', job: id, query: q });
       });
     }
     // Web Worker が使えないとき：少しずつ処理して、そのたびに画面へ戻ります
     return new Promise(function (resolve, reject) {
       var it;
-      stopFlag = false;
-      try { it = E.searchGen(GAME, q); } catch (e) { reject(e); return; }
+      stopFlag = false; currentJob = 'main';
+      var q2 = Object.assign({}, q, { stopSignal: function () { return stopFlag; } });
+      try { it = E.searchGen(GAME, q2); } catch (e) { reject(e); return; }
       (function step() {
-        if (stopFlag) { reject(new Error('止めました')); return; }
         try {
-          var r = it.next();
-          if (r.done) { resolve(stripResult(r.value)); return; }
-          onProgress && onProgress(r.value);
+          var t = Date.now(), r;
+          while (true) {
+            r = it.next();
+            if (r.done) { resolve(stripResult(r.value)); return; }
+            onProgress && onProgress(r.value);
+            if (Date.now() - t > 40) break;
+          }
           setTimeout(step, 0);
         } catch (e) { reject(e); }
       })();
     });
   }
-  var stopFlag = false;
+  // 「止める」：検索プログラムに止まるよう知らせ、それまでの結果を受け取ります。
+  // 3 秒たっても返事がないときだけ、Web Worker ごと止めます。
   function stopWorker() {
     stopFlag = true;
-    if (worker) worker.terminate();
-    for (var k in jobs) { jobs[k].reject(new Error('止めました')); delete jobs[k]; }
-    makeWorker();
+    if (currentJob === 'main' || currentJob == null) return;
+    var id = currentJob;
+    if (worker) worker.postMessage({ type: 'stop', job: id });
+    setTimeout(function () {
+      if (!jobs[id]) return;
+      if (worker) worker.terminate();
+      jobs[id].reject(new Error('止めました'));
+      delete jobs[id];
+      makeWorker();
+    }, 3000);
   }
   function stripResult(r) { return { builds: r.builds, stats: r.stats }; }
 
@@ -271,7 +287,8 @@
       fixedArmor: Object.assign({}, fixedArmor), excludeArmor: excludeArmor.slice(), excludeDecos: excludeDecos.slice(),
       minDefense: +$('#min-def').value || 0, minRes: minRes,
       maxRarity: +$('#max-rarity').value, decoMaxRarity: +$('#deco-rarity').value,
-      uptimeScale: +$('#uptime').value, timeLimitMs: +$('#time-limit').value * 1000
+      uptimeScale: +$('#uptime').value, timeLimitMs: +$('#time-limit').value * 1000,
+      untilDone: $('#time-limit').value === '0', minRarity: +$('#min-rarity').value
     };
   }
 
@@ -279,9 +296,15 @@
   function describeStats(st) {
     var t = '調べた組み合わせ ' + st.leaves.toLocaleString() + ' 通り、条件を満たしたもの ' + st.feasible.toLocaleString() + ' 通り、' + fmt(st.timeMs / 1000) + ' 秒。';
     t += '候補の防具（各部位、外せるものを外した後）：' + E.PARTS.map(function (p) { return E.PART_JA[p] + st.poolSizes[p]; }).join('・') + '、護石 ' + st.poolSizes.charm + '。';
-    if (st.truncated) t += ' ⚠ 時間切れで途中で打ち切りました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。もっと良い案が残っているかもしれません。探す時間を長くすると、さらに調べます。';
-    else t += ' 最後まで調べ終わりました。';
+    if (st.stoppedByUser) t += ' ⚠ 「止める」で途中で止めました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。ここまでに見つけた中の上位を出しています。';
+    else if (st.truncated) t += ' ⚠ 時間切れで途中で打ち切りました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。もっと良い案が残っているかもしれません。探す時間を長くするか、「最後まで」を選ぶと、さらに調べます。';
+    else t += ' 最後まで調べ終わりました（全部の組み合わせを調べたのと同じ結果です）。';
     return t;
+  }
+  function progressText(p) {
+    // ここで考えているのは Claude ではなく、このページの検索プログラム（ブラウザの中の計算）です
+    return 'このページの検索プログラムが探しています（Claude ではありません）… 調べた枝 ' + p.nodes.toLocaleString() +
+      '、調べた組み合わせ ' + (p.leaves || 0).toLocaleString() + ' 通り、いまの上位の候補 ' + p.found + '（' + fmt(p.ms / 1000) + ' 秒、' + p.passes + ' 段のうち ' + p.pass + ' 段目）';
   }
   var searchCount = 0;
   form.addEventListener('submit', function (ev) {
@@ -292,12 +315,22 @@
     $('#stop').hidden = false; $('#go').disabled = true;
     resultsEl.innerHTML = '';
     var n = ++searchCount;
-    runSearch(q, function (p) { statusEl.textContent = '探しています… ' + p.nodes.toLocaleString() + ' 手、見つけた案 ' + p.found + '（' + fmt(p.ms / 1000) + ' 秒）'; })
+    q.live = true;
+    var liveCount = 0;
+    runSearch(q, function (p) {
+      statusEl.textContent = progressText(p);
+      if (p.snapshot && p.snapshot.length) {
+        // 探しながら、いまの上位を表示します（まだ探しています）
+        liveCount++;
+        resultsEl.innerHTML = '<p class="note">途中の結果です（' + fmt(p.ms / 1000) + ' 秒の時点、更新 ' + liveCount + ' 回目）。探し続けているので、順位や中身はまだ変わります。</p>' +
+          p.snapshot.map(function (b, i) { return buildCard(b, { id: 'q' + n + '-live-' + (i + 1), title: (i + 1) + '位（途中）', query: q }); }).join('');
+      }
+    })
       .then(function (r) {
         $('#stop').hidden = true; $('#go').disabled = false;
         statusEl.textContent = describeStats(r.stats);
         if (!r.builds.length) {
-          resultsEl.innerHTML = '<p class="warn">条件をすべて満たす組み合わせは見つかりませんでした。スキルのレベルを下げる、ランクを広げる、使わない装備や持っていない装飾品を減らす、などを試してください。</p>';
+          resultsEl.innerHTML = '<p class="warn">条件をすべて満たす組み合わせは見つかりませんでした。スキルのレベルを下げる、ランクを広げる、使わない装備や持っていない装飾品を減らす、防具のレア度の下限を下げる、などを試してください。</p>';
           return;
         }
         resultsEl.innerHTML = r.builds.map(function (b, i) { return buildCard(b, { id: 'q' + n + '-' + (i + 1), title: (i + 1) + '位', query: q }); }).join('');
@@ -386,7 +419,7 @@
       weaponSlots: (input.weaponSlots || []).map(Number).filter(function (x) { return x > 0 && x <= 4; }),
       objective: E.OBJECTIVES[input.objective] ? input.objective : 'fire',
       ranks: (input.ranks && input.ranks.length ? input.ranks : ['MR']).filter(function (r) { return E.RANK_JA[r]; }),
-      skills: skills, minDefense: +input.minDefense || 0, maxRarity: +input.maxRarity || 12, decoMaxRarity: +input.decoMaxRarity || 12,
+      skills: skills, minDefense: +input.minDefense || 0, maxRarity: +input.maxRarity || 12, decoMaxRarity: +input.decoMaxRarity || 12, minRarity: input.minRarity != null ? +input.minRarity : 10,
       timeLimitMs: 40000
     };
     var sid = 's' + (++nlSeq);
@@ -410,7 +443,7 @@
   var TOOLS = [
     { name: 'findSkills', description: 'スキルを日本語名・英語名・説明文の一部で探し、正しい日本語名と最大レベルを返します。searchBuilds に渡す前に名前を確かめるために使います。', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'たとえば「見切り」「会心」「回避」' } }, required: ['query'] }, execute: function (i) { return limitSize(toolSkills(i)); } },
     { name: 'findWeapons', description: '武器種の中から、マスターランクの武器を攻撃力の高い順に最大 20 個返します（weaponId・名前・レア度・攻撃力・会心率・属性・スロット）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, maxRarity: { type: 'number' }, element: { type: 'string', description: '火・水・雷・氷・龍 など（任意）' } }, required: ['weaponType'] }, execute: function (i) { return limitSize(toolWeapons(i)); } },
-    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
+    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, minRarity: { type: 'number', description: '防具のレア度の下限。はじめは 10（マスターランク序盤の防具を外す）' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
     { name: 'getBuild', description: 'searchBuilds が返した buildId の案の中身（装飾品の場所・シリーズスキル・点数の内訳）を返します。', inputSchema: { type: 'object', properties: { buildId: { type: 'string' } }, required: ['buildId'] }, execute: function (i) { return limitSize(toolGet(i)); } }
   ];
   function nlPrompt(text) {
@@ -441,11 +474,18 @@
     if (!text) { nlStatus.textContent = '頼みを書いてください。'; return; }
     nlBusy = true; $('#nl-go').disabled = true; nlOut.innerHTML = ''; nlStatus.textContent = 'Claude に頼んでいます…（時間がかかることがあります）';
     nlCtl = new AbortController(); $('#nl-stop').hidden = false;
-    var opts = { model: 'claude-opus-5-5', modelTier: 'complex', effort: 'high', tools: TOOLS, signal: nlCtl.signal, onText: function () { nlStatus.textContent = 'Claude が答えを書いています…'; } };
+    var chosenModel = $('#nl-model').value, chosenEffort = $('#nl-effort').value;
+    var TIER = { 'claude-opus-5-5': 'complex', 'claude-fable-5-1': 'complex', 'claude-sonnet-5-5': 'default', 'claude-haiku-5-5': 'quick' };
+    var MODEL_JA = { 'claude-opus-5-5': 'Opus 5.5', 'claude-fable-5-1': 'Fable 5.1', 'claude-sonnet-5-5': 'Sonnet 5.5', 'claude-haiku-5-5': 'Haiku 5.5' };
+    var TIER_JA = { complex: '一番よく考える段階', 'default': '標準の段階', quick: '速い段階' };
+    var opts = { modelTier: chosenModel ? TIER[chosenModel] : 'default', effort: chosenEffort, tools: TOOLS, signal: nlCtl.signal, onText: function () { nlStatus.textContent = 'Claude が答えを書いています…'; } };
+    if (chosenModel) opts.model = chosenModel;
     sample(nlPrompt(text), opts).then(function (res) {
       var note = '';
-      if (res.modelApplied !== 'claude-opus-5-5') note = '⚠ Opus（claude-opus-5-5）は使えなかったため、別のモデル（段階：' + esc(res.modelTierApplied || '不明') + '）が答えました。';
-      else note = 'Opus（claude-opus-5-5）が答えました。';
+      var tierTxt = TIER_JA[res.modelTierApplied] || res.modelTierApplied || '不明';
+      if (chosenModel && res.modelApplied !== chosenModel) note = '⚠ 選んだ ' + esc(MODEL_JA[chosenModel]) + '（' + esc(chosenModel) + '）は使えなかったため、別のモデル（' + esc(tierTxt) + '）が答えました。';
+      else if (chosenModel) note = esc(MODEL_JA[chosenModel]) + '（' + esc(chosenModel) + '）が答えました。';
+      else note = 'おまかせの指定で、' + esc(tierTxt) + 'のモデルが答えました。';
       var ans = parseAnswer(res.text);
       if (!ans) { nlStatus.innerHTML = note + ' 答えの形が読めませんでした。言い方を変えてもう一度試すか、下の「条件で探す」を使ってください。'; return; }
       var html = '<p>' + esc(ans.summary || '') + '</p>' + (ans.relax ? '<p class="warn">緩めた条件：' + esc(ans.relax) + '</p>' : '');
