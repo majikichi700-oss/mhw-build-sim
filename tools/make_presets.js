@@ -39,7 +39,7 @@ function jobs() {
   const out = [];
   for (const type of E.WEAPON_TYPES) for (const obj of OBJ) for (const acc of Object.keys(ACCESS)) {
     const w = pickWeapon(type, ACCESS[acc].weaponMaxRarity);
-    out.push({ type, obj, acc, query: { weaponId: w.id, weaponType: type, objective: obj, ranks: ['MR'], skills: required(type, obj), maxRarity: ACCESS[acc].maxRarity, decoMaxRarity: ACCESS[acc].decoMaxRarity } });
+    out.push({ type, obj, acc, query: { weaponId: w.id, weaponType: type, objective: obj, ranks: ['MR'], skills: required(type, obj), maxRarity: ACCESS[acc].maxRarity, decoMaxRarity: ACCESS[acc].decoMaxRarity, minRarity: 10 } });
   }
   return out;
 }

@@ -30,7 +30,12 @@ async function conditionSearch(p) {
   await p.evaluate(() => { const o = document.createElement('option'); o.value = '5'; o.textContent = '5 秒（試験用）'; document.getElementById('time-limit').appendChild(o); });
   await p.selectOption('#time-limit', '5');
   await p.click('#go');
+  // 探している間に「途中の結果」が出ることと、終わったあとの結果を確かめます
+  let liveSeen = false;
+  try { await p.waitForSelector('#results .note:has-text("途中の結果")', { timeout: 8000 }); liveSeen = true; } catch (e) { liveSeen = false; }
+  await p.waitForSelector('#go:not([disabled])', { timeout: 60000 });
   await p.waitForSelector('#results .card', { timeout: 60000 });
+  p.__liveSeen = liveSeen;
   return p.$$eval('#results .card', els => els.length);
 }
 
@@ -48,6 +53,17 @@ async function conditionSearch(p) {
     ok(rar.length > 0 && rar.every(r => r === 11 || r === 12), name + ': 武器の一覧はレア度 11 と 12 だけ');
     const n = await conditionSearch(p);
     ok(n >= 1, name + ': 条件検索で案が出る（' + n + '）');
+    ok(p.__liveSeen, name + ': 探している間に途中の結果が出る');
+    // 止めるボタン：止めても、それまでの結果が残る
+    await p.evaluate(() => { document.getElementById('time-limit').value = '0'; });
+    await p.click('#go');
+    await p.waitForSelector('#results .note:has-text("途中の結果")', { timeout: 15000 });
+    await p.click('#stop');
+    await p.waitForSelector('#go:not([disabled])', { timeout: 15000 });
+    ok(/止めました/.test(await p.textContent('#status')) && (await p.$$eval('#results .card', e => e.length)) >= 1, name + ': 「最後まで」で探して止めると、それまでの結果が残る');
+    await p.selectOption('#time-limit', '5');
+    await p.click('#go');
+    await p.waitForSelector('#go:not([disabled])', { timeout: 60000 });
     const st = await p.textContent('#status');
     console.log('  ' + st.slice(0, 160));
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);
@@ -124,7 +140,7 @@ async function conditionSearch(p) {
     const { p, ctx, errors } = await page(browser, { width: 375, height: 760 }, () => {
       window.__calls = [];
       const s = async function (input, opts) {
-        window.__calls.push({ input, model: opts.model, tier: opts.modelTier, tools: opts.tools.map(t => t.name) });
+        window.__calls.push({ input, model: opts.model, tier: opts.modelTier, effort: opts.effort, tools: opts.tools.map(t => t.name) });
         const T = n => opts.tools.find(t => t.name === n);
         const f = await T('findSkills').execute({ query: '見切り' });
         window.__findSize = JSON.stringify(f).length;
@@ -153,7 +169,15 @@ async function conditionSearch(p) {
     ok((await p.$$eval('#nl-out .card', e => e.length)) === 2, '検索結果にない buildId は出さない');
     ok(/ない案が 1 個/.test(await p.textContent('#nl-out')), '出さなかったことを書く');
     ok(/別のモデル/.test(await p.textContent('#nl-status')), 'Opus でないときにそのことを出す');
-    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    // Claude の性能を選ぶ
+    await p.selectOption('#nl-model', 'claude-haiku-5-5');
+    await p.selectOption('#nl-effort', 'low');
+    await p.click('#nl-go');
+    await p.waitForFunction(() => window.__calls.length === 2, null, { timeout: 60000 });
+    await p.waitForSelector('#nl-go:not([disabled])', { timeout: 60000 });
+    const c2 = await p.evaluate(() => window.__calls[1]);
+    ok(c2.model === 'claude-haiku-5-5' && c2.tier === 'quick' && c2.effort === 'low', '選んだモデル・段階・考える深さを渡す（' + JSON.stringify([c2.model, c2.tier, c2.effort]) + '）');
+        ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
     await p.screenshot({ path: path.join(__dirname, '..', 'tmp', 'nl-mock.png') });
     await ctx.close();
   }

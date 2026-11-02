@@ -137,6 +137,35 @@
     });
     return out.length ? out.join('') : '<li class="muted">なし</li>';
   }
+  function elemText(d) {
+    if (!d.elemShown || !d.elemShown.length) return '属性なし（毒などの状態異常は数えません）';
+    var t = d.elemShown.map(function (x) { return (E.ELEM_JA[x[0]] || x[0]) + ' ' + fmt(x[1], 0); }).join('・');
+    var parts = [fmt(d.elem0) + ' から ' + fmt(d.elem) + '（スキル込みの属性値 ' + t + '）'];
+    if (d.hiddenFrac > 0 && d.hiddenFrac < 1) parts.push('隠し属性は ' + Math.round(d.hiddenFrac * 100) + '% 出る見込み');
+    if (d.critElem) parts.push('会心時の属性 ' + fmt(d.critElem, 2) + ' 倍');
+    if (d.elemWeight !== 1) parts.push('属性の重み ' + d.elemWeight + ' 倍');
+    return parts.join('、');
+  }
+  function partsText(d) {
+    var P = d.parts || {}, out = [];
+    if (P.art > 0) out.push('爆発を伴う攻撃 ' + Math.round(P.art * 100) + '%（砲術 ' + fmt(d.art, 2) + ' 倍）');
+    if (P.special > 0) out.push('特殊弾など ' + Math.round(P.special * 100) + '%（' + fmt(d.special, 2) + ' 倍）');
+    if (P.jump > 0) out.push('ジャンプ攻撃 ' + Math.round(P.jump * 100) + '%（飛燕 ' + fmt(d.jump, 2) + ' 倍）');
+    return out.length ? '<tr><th>　攻撃の内わけ</th><td>' + out.join('、') + '</td></tr>' : '';
+  }
+  function modsText(m) {
+    if (!m) return '';
+    var t = [];
+    if (m.weaponOverride) {
+      var w = m.weaponOverride, x = [];
+      if (w.attack) x.push('表示攻撃力 ' + w.attack); if (w.affinity != null) x.push('会心率 ' + w.affinity + '%');
+      if (w.element) x.push((E.ELEM_JA[w.element[0]] || '') + ' ' + w.element[1]); if (w.slots) x.push('スロット ' + slotsLabel(w.slots)); if (w.defense != null) x.push('防御 ' + w.defense);
+      t.push('武器（入力した値）：' + x.join('、'));
+    }
+    if (m.armorAugMax) t.push('防具の防御力はカスタム強化の最大');
+    if (m.armorOverrides) t.push('強化した防具（入力した値）：' + Object.keys(m.armorOverrides).map(function (id) { var o = m.armorOverrides[id]; return armorName(+id) + '［' + slotsLabel(o.slots) + (o.addSkills ? '・' + o.addSkills.map(function (y) { return skillName(y[0]) + '+' + y[1]; }).join('・') : '') + '］'; }).join('、'));
+    return t.join('。');
+  }
   function scoreBlock(b) {
     var sc = b.score, d = sc.detail;
     var obj = E.OBJECTIVES[b.objective || 'fire'];
@@ -146,7 +175,8 @@
       '<table class="kv">' +
       '<tr><th>火力点</th><td>' + fmt(sc.fire) + '（スキルなしを 100 とした期待値）</td></tr>' +
       '<tr><th>　物理期待値</th><td>' + fmt(d.phys0) + ' から ' + fmt(d.phys) + '（基礎攻撃力 ' + fmt(d.raw) + '、攻撃の倍率 ' + fmt(d.atkMul, 3) + '、会心率 ' + fmt(d.affinity, 0) + '%、会心の倍率 ' + fmt(d.critMul, 2) + '）</td></tr>' +
-      '<tr><th>　属性期待値</th><td>' + (d.elem0 ? fmt(d.elem0) + ' から ' + fmt(d.elem) : '属性なし（または数えない属性）') + '</td></tr>' +
+      '<tr><th>　属性期待値</th><td>' + elemText(d) + '</td></tr>' +
+      partsText(d) +
       '<tr><th>守り点</th><td>' + fmt(sc.def) + '（防御力 ' + fmt(d.defense, 0) + '、耐性 ' + resTxt + '、体力 +' + fmt(d.health, 0) + '、生存スキル Lv 計 ' + d.survLv + '）</td></tr>' +
       '<tr><th>快適点</th><td>' + fmt(sc.comfort) + '（余りスロット ' + d.spareP + ' 点、便利スキル Lv 計 ' + d.comfortLv + '）</td></tr>' +
       '<tr><th>数値に入れていないスキル</th><td>' + (nc.length ? esc(nc.join('、')) : 'なし') + '</td></tr>' +
@@ -162,6 +192,7 @@
       '<header><h3>' + esc(opt.title || ('案 ' + (b.rank || ''))) + '</h3>' +
       '<div class="pts"><span>合計 <b>' + fmt(b.score.total) + '</b></span><span>火力 ' + fmt(b.score.fire) + '</span><span>守り ' + fmt(b.score.def) + '</span><span>快適 ' + fmt(b.score.comfort) + '</span></div></header>' +
       (opt.reason ? '<p class="reason">' + esc(opt.reason) + '</p>' : '') +
+      (b.mods ? '<p class="note">' + esc(modsText(b.mods)) + '</p>' : '') +
       '<table class="parts">' + partRows(b) + '</table>' +
       '<div class="cols"><div><h4>発動スキル</h4><ul class="skills">' + skillList(b, opt.query && opt.query.skills) + '</ul></div>' +
       '<div><h4>シリーズスキル</h4><ul class="skills">' + bonusList(b) + '</ul>' +
@@ -183,11 +214,12 @@
     lines.push('発動スキル: ' + Object.keys(b.levels).filter(function (k) { return b.levels[k] > 0; }).sort(function (x, y) { return b.levels[y] - b.levels[x]; }).map(function (k) { return skillName(k) + ' Lv' + b.levels[k]; }).join('、'));
     var bo = (b.bonuses || []).filter(function (x) { return x.active.length; }).map(function (x) { return I.bonusById[x.id].ja + '（' + x.active.map(skillName).join('・') + '）'; });
     if (bo.length) lines.push('シリーズスキル: ' + bo.join('、'));
-    lines.push('防御力 ' + Math.round(b.score.detail.defense) + '（強化最大の値。ゲーム内で確かめてください）');
+    if (b.mods) lines.push('強化：' + modsText(b.mods));
+    lines.push('防御力 ' + Math.round(b.score.detail.defense) + '（' + (b.mods && b.mods.armorAugMax ? 'カスタム強化の最大' : '強化最大') + 'の値。ゲーム内で確かめてください）');
     return lines.join('\n');
   }
   function shareUrl(b, q) {
-    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale };
+    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale, m: b.mods || undefined };
     var s = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return location.href.split('#')[0] + '#b=' + s;
   }
@@ -196,7 +228,7 @@
     try {
       var s = m[1].replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
       var o = JSON.parse(decodeURIComponent(escape(atob(s))));
-      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }) };
+      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }), mods: o.m || null };
       var q = { objective: o.o, uptimeScale: o.u, weaponId: spec.weapon, weaponSlots: spec.weaponSlots };
       var b = E.evaluateBuild(GAME, spec, q);
       return b ? { b: b, q: q } : null;
@@ -235,7 +267,11 @@
     }).join('');
     $('#weapon-slots').hidden = !!wSel.value;
   }
-  wtSel.addEventListener('change', fillWeapons);
+  function resetParts() {
+    var d = E.PARTS_DEFAULT[wtSel.value] || { art: 0, special: 0, jump: 0 };
+    $('#part-art').value = Math.round(d.art * 100); $('#part-special').value = Math.round(d.special * 100); $('#part-jump').value = Math.round(d.jump * 100);
+  }
+  wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); });
   wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; });
   form.querySelectorAll('input[name=rank]').forEach(function (x) { x.addEventListener('change', fillWeapons); });
 
@@ -246,7 +282,7 @@
   GAME.armors.forEach(function (a) { armorDl.insertAdjacentHTML('beforeend', '<option value="' + esc(a.ja + '｜' + E.PART_JA[a.part] + '｜' + (E.RANK_JA[a.rank] || '') + '｜#' + a.id) + '">'); });
   var decoDl = $('#deco-list');
   GAME.decos.forEach(function (d) { decoDl.insertAdjacentHTML('beforeend', '<option value="' + esc(d.ja + '｜#' + d.id) + '">'); });
-  var chosenSkills = [], fixedArmor = {}, excludeArmor = [], excludeDecos = [];
+  var chosenSkills = [], fixedArmor = {}, excludeArmor = [], excludeDecos = [], armorOverrides = {};
   function findSkillByName(n) { n = (n || '').trim(); return GAME.skills.filter(function (s) { return s.ja === n || s.en.toLowerCase() === n.toLowerCase(); })[0]; }
   function idFromLabel(v) { var m = /#(\d+)\s*$/.exec(v || ''); return m ? +m[1] : null; }
   function renderChips() {
@@ -257,6 +293,10 @@
     }).join('') || '<span class="muted">まだありません</span>';
     $('#fixed-chips').innerHTML = Object.keys(fixedArmor).map(function (p) { return '<span class="chip">' + E.PART_JA[p] + '：' + esc(armorName(fixedArmor[p])) + '<button type="button" data-rm-fixed="' + p + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#ex-chips').innerHTML = excludeArmor.map(function (id, i) { return '<span class="chip">' + esc(armorName(id)) + '<button type="button" data-rm-ex="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
+    $('#ao-chips').innerHTML = Object.keys(armorOverrides).map(function (id) {
+      var o = armorOverrides[id];
+      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + slotsLabel(o.slots) + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
+    }).join('') || '<span class="muted">なし</span>';
     $('#exd-chips').innerHTML = excludeDecos.map(function (id, i) { return '<span class="chip">' + esc(decoName(id)) + '<button type="button" data-rm-exd="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
   }
   form.addEventListener('click', function (ev) {
@@ -265,6 +305,7 @@
     if (d.rmFixed != null) { delete fixedArmor[d.rmFixed]; renderChips(); }
     if (d.rmEx != null) { excludeArmor.splice(+d.rmEx, 1); renderChips(); }
     if (d.rmExd != null) { excludeDecos.splice(+d.rmExd, 1); renderChips(); }
+    if (d.rmAo != null) { delete armorOverrides[d.rmAo]; renderChips(); }
   });
   form.addEventListener('change', function (ev) { var t = ev.target; if (t.dataset && t.dataset.lv != null) chosenSkills[+t.dataset.lv].lv = +t.value; });
   $('#add-skill').addEventListener('click', function () {
@@ -276,6 +317,13 @@
   });
   $('#add-fixed').addEventListener('click', function () { var id = idFromLabel($('#fixed-input').value); if (id != null && I.armorById[id]) { fixedArmor[I.armorById[id].part] = id; $('#fixed-input').value = ''; renderChips(); } });
   $('#add-ex').addEventListener('click', function () { var id = idFromLabel($('#ex-input').value); if (id != null && I.armorById[id] && excludeArmor.indexOf(id) < 0) { excludeArmor.push(id); $('#ex-input').value = ''; renderChips(); } });
+  $('#add-ao').addEventListener('click', function () {
+    var id = idFromLabel($('#ao-input').value); if (id == null || !I.armorById[id]) return;
+    var o = { slots: [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; }) };
+    var sk = findSkillByName($('#ao-skill').value);
+    if (sk) o.addSkills = [[sk.id, +$('#ao-lv').value]];
+    armorOverrides[id] = o; $('#ao-input').value = ''; $('#ao-skill').value = ''; renderChips();
+  });
   $('#add-exd').addEventListener('click', function () { var id = idFromLabel($('#exd-input').value); if (id != null && I.decoById[id] && excludeDecos.indexOf(id) < 0) { excludeDecos.push(id); $('#exd-input').value = ''; renderChips(); } });
 
   function currentQuery() {
@@ -288,8 +336,22 @@
       minDefense: +$('#min-def').value || 0, minRes: minRes,
       maxRarity: +$('#max-rarity').value, decoMaxRarity: +$('#deco-rarity').value,
       uptimeScale: +$('#uptime').value, timeLimitMs: +$('#time-limit').value * 1000,
-      untilDone: $('#time-limit').value === '0', minRarity: +$('#min-rarity').value
+      untilDone: $('#time-limit').value === '0', minRarity: +$('#min-rarity').value,
+      elemWeight: +$('#elem-weight').value,
+      parts: { art: (+$('#part-art').value || 0) / 100, special: (+$('#part-special').value || 0) / 100, jump: (+$('#part-jump').value || 0) / 100 },
+      weaponOverride: weaponOverride(), armorAugMax: $('#armor-augmax').checked,
+      armorOverrides: Object.keys(armorOverrides).length ? JSON.parse(JSON.stringify(armorOverrides)) : null
     };
+  }
+  function weaponOverride() {
+    if (!wSel.value) return null;
+    var o = {};
+    if ($('#wo-attack').value !== '') o.attack = +$('#wo-attack').value;
+    if ($('#wo-aff').value !== '') o.affinity = +$('#wo-aff').value;
+    if ($('#wo-etype').value && $('#wo-eval').value !== '') o.element = [$('#wo-etype').value, +$('#wo-eval').value];
+    if ($('#wo-s1').value !== '') o.slots = [+$('#wo-s1').value, +$('#wo-s2').value, +$('#wo-s3').value].filter(function (x) { return x > 0; });
+    if ($('#wo-def').value !== '') o.defense = +$('#wo-def').value;
+    return Object.keys(o).length ? o : null;
   }
 
   var resultsEl = $('#results'), statusEl = $('#status');
@@ -366,8 +428,8 @@
     $('#shared-out').innerHTML = buildCard(shared.b, { id: 'shared', title: '共有された案', query: shared.q });
   }
 
-  fillWeapons(); renderChips();
-  $('#weapon-type').value = 'long-sword'; fillWeapons();
+  fillWeapons(); renderChips(); resetParts();
+  $('#weapon-type').value = 'long-sword'; fillWeapons(); resetParts();
 
   /* ---------- 言葉で頼む（Claude の sample。使える場所だけ出す） ---------- */
   var nlSec = $('#nl'), nlOut = $('#nl-out'), nlStatus = $('#nl-status');

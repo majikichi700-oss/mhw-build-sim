@@ -144,6 +144,32 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>防御力 <input type="number" id="min-def" min="0" step="10" placeholder="なし"></label><br>
 <label>火 <input type="number" class="minres" placeholder="なし"></label><label>水 <input type="number" class="minres" placeholder="なし"></label><label>雷 <input type="number" class="minres" placeholder="なし"></label><label>氷 <input type="number" class="minres" placeholder="なし"></label><label>龍 <input type="number" class="minres" placeholder="なし"></label>
 </fieldset>
+<fieldset><legend>属性と、武器の種類ごとの計算</legend>
+<label>属性の重み <select id="elem-weight"><option value="0.5">0.5 倍</option><option value="1" selected>1 倍（はじめ）</option><option value="1.5">1.5 倍</option><option value="2">2 倍</option><option value="3">3 倍</option></select></label>
+<p class="muted">属性ダメージを物理ダメージと比べてどれだけ重く見るかです。手数（攻撃の回数）が多い武器や、属性がよく効くモンスターでは大きくしてください。会心撃【属性】・真・会心撃【属性】（調べた倍率）、属性解放と属性加速による隠し属性は、いつも計算に入ります。</p>
+<div class="row">
+<label>爆発を伴う攻撃の割合（砲術が効く） <input type="number" id="part-art" min="0" max="90" step="5">%</label>
+<label>特殊弾・竜の一矢・竜の千々矢の割合（特殊射撃強化が効く） <input type="number" id="part-special" min="0" max="90" step="5">%</label>
+<label>ジャンプ攻撃の割合（飛燕が効く） <input type="number" id="part-jump" min="0" max="100" step="5">%</label>
+</div>
+<p class="muted">武器の種類を変えると、作者が決めた初めの値に戻ります（ガンランスは爆発 30%、チャージアックスは爆発 20%、ボウガンは爆発 5%・特殊弾 10%、弓は竜の一矢など 10%、操虫棍はジャンプ 50%）。この割合はゲームのデータではなく、計算のための見込みです。</p>
+</fieldset>
+<fieldset><legend>カスタム強化（ゲームの画面で見た数値を入れる）</legend>
+<p class="muted">カスタム強化の決まり（強化できる回数・上がる量）は調べきれなかったため、強化や覚醒のあとにゲームの画面に出る数値を、そのまま入れてください。空のところは、データの数値を使います。</p>
+<div class="row"><span class="muted">選んだ武器：</span>
+<label>表示攻撃力 <input type="number" id="wo-attack" min="0" step="1" placeholder="データのまま"></label>
+<label>会心率 <input type="number" id="wo-aff" min="-100" max="100" step="5" placeholder="データのまま">%</label>
+<label>属性 <select id="wo-etype"><option value="">データのまま</option><option value="fire">火</option><option value="water">水</option><option value="thunder">雷</option><option value="ice">氷</option><option value="dragon">龍</option></select><input type="number" id="wo-eval" min="0" step="10" placeholder="属性値"></label>
+<label>スロット <select id="wo-s1"><option value="">データのまま</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="wo-s2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="wo-s3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+<label>防御ボーナス <input type="number" id="wo-def" min="0" step="5" placeholder="データのまま"></label>
+</div>
+<label><input type="checkbox" id="armor-augmax"> 防具の防御力を、カスタム強化の最大（データの defense_augment_max）で計算する</label>
+<div class="row"><span class="muted">強化した防具：</span><input id="ao-input" list="armor-list" placeholder="防具の名前" aria-label="強化した防具">
+<label>強化のあとのスロット <select id="ao-s1"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+<label>足したスキル <input id="ao-skill" list="skill-list" placeholder="なし" aria-label="足したスキル"></label><label>Lv <select id="ao-lv"><option>1</option><option>2</option><option>3</option></select></label>
+<button type="button" id="add-ao">追加</button></div>
+<div class="chips" id="ao-chips"></div>
+</fieldset>
 <fieldset><legend>入手しやすさと計算</legend>
 <label>防具・護石のレア度の上限 <select id="max-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option></select></label>
 <label>装飾品のレア度の上限 <select id="deco-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option></select></label>
