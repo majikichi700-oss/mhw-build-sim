@@ -1,0 +1,1961 @@
+{
+ "how": "WebSearch（検索の道具）の結果の題名と説明から見つけた日本語名です。2026-11-02 に調べました。ページは開いていません（このセッションのネットワークの決まりで開けないため）。2 回目の別の調べ（確かめ）は、検索の回数の上限に達したため行えていません。",
+ "names": [
+  {
+   "kind": "armor",
+   "name_en": "Artemis Coil α+",
+   "name_ja": "EXアルテミスコイルα",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/363323",
+     "title": "【MHWアイスボーン】EXアルテミス装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    },
+    {
+     "url": "http://mhwg.org/ida/250071.html",
+     "title": "EXアルテミスαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "検索結果の要約で、腰の防具が「EXアルテミスコイルα」となっており、スキルは属性やられ耐性+2・体力回復量UP+2、スロットは3、防御力は140。データ(体力回復量UP2/属性やられ耐性2、スロット[3])と一致する。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Greaves α+",
+   "name_ja": "EXアルテミスグリーヴα",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/363323",
+     "title": "【MHWアイスボーン】EXアルテミス装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    },
+    {
+     "url": "http://mhwg.org/ida/250071.html",
+     "title": "EXアルテミスαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "検索結果の要約で、脚の防具が「EXアルテミスグリーヴα」となっており、スキルは気絶耐性+3・毒耐性+2、スロットはLv4が1個。データ(気絶耐性3/毒耐性2、スロット[4])と一致する。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Guards α+",
+   "name_ja": "EXアルテミスアームα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "gamewith.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/ourworld",
+     "title": "【MHWアイスボーン】Our World私達の世界への報酬と攻略方法【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/241551",
+     "title": "【MHWアイスボーン】EXアルテミスαの性能と必要素材【モンハンワールド】 - ゲームウィズ"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    }
+   ],
+   "evidence": "アルテマとGameWithの検索結果に装備名「EXアルテミスアームα」があり、スキルは体力増強Lv3・耳栓Lv1。データの腕防具(体力増強3/耳栓1)と一致する。英語のGuardsは日本語ではアームになっている。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Head α+",
+   "name_ja": "EXアルテミスヘッドα",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    },
+    {
+     "url": "https://game8.jp/mhw/363323",
+     "title": "【MHWアイスボーン】EXアルテミス装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/241551",
+     "title": "【MHWアイスボーン】EXアルテミスαの性能と必要素材【モンハンワールド】 - ゲームウィズ"
+    }
+   ],
+   "evidence": "Kiranico日本語版のEXアルテミスα(英語版Artemis α+と同じID)の部位一覧に「EXアルテミスヘッドα」がある。game8・GameWithでは頭の部位がフルチャージLv2・耳栓Lv1・スロット2個で、データ(フルチャージ2/耳栓1、スロット[1,1]、防御力140〜184)と一致する。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Mail α+",
+   "name_ja": "EXアルテミスメイルα",
+   "confidence": "high",
+   "domains": [
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    },
+    {
+     "url": "http://mhwg.org/ida/250071.html",
+     "title": "EXアルテミスαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "Kiranico日本語版のシリーズページの表に「EXアルテミスメイルα」の行があり、防御力は140〜184、耐性は火+2・水+2・雷+1・氷+1・龍+2。mhwgの要約では胴が耳栓Lv2・体力回復量UP Lv1で、データと一致する。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Geta α+",
+   "name_ja": "EX蒼世ノ侍【履物】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhw.wiki-db.com"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1697",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍【履物】αのスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://mhw.wiki-db.com/equipments/ex%E8%92%BC%E4%B8%96%E3%83%8E%E4%BE%8D%E5%B1%A5%E7%89%A9%CE%B1",
+     "title": "EX蒼世ノ侍【履物】α (wiki-db)"
+    }
+   ],
+   "evidence": "altema の防具ページ「EX蒼世ノ侍【履物】α」と wiki-db の同名の装備ページでは、スロットが④①-、個別スキルが体術(Lv2)と弱点特効(Lv1)。データの脚防具（スロット[4,1]、体術2・弱点特効1）と同じ。日本語の表記は「α」で、「+」は付かない。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Hair α+",
+   "name_ja": "EX蒼世ノ侍【艶髪】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1693",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍【艶髪】αのスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/353832",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍装備の性能｜ゲームエイト"
+    }
+   ],
+   "evidence": "altema の防具ページ「EX蒼世ノ侍【艶髪】α」では、個別スキルが弱点特効+1 とスリンガー装填数UP+3 で、シリーズスキルは銀火竜の真髄。データの頭防具（スリンガー装填数UP3・弱点特効1）と同じ。日本語では「+」の付かない「α」表記だけが確認でき、「α+」で検索しても見つからなかった。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Haori α+",
+   "name_ja": "EX蒼世ノ侍【羽織】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1694",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍【羽織】αのスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/353832",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍装備の性能｜ゲームエイト"
+    }
+   ],
+   "evidence": "altema の防具ページ「EX蒼世ノ侍【羽織】α」では、スロットが④--、個別スキルが体術(Lv2)と集中(Lv1)、防御力は初期170。データの胴防具（スロット[4]、体術2・集中1、防御170）と同じ。日本語の表記は「α」で、「+」は付かない。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Obi α+",
+   "name_ja": "EX蒼世ノ侍【帯】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhw.wiki-db.com"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1696",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍【帯】αのスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://mhw.wiki-db.com/equipments/ex%E8%92%BC%E4%B8%96%E3%83%8E%E4%BE%8D%E5%B8%AF%CE%B1",
+     "title": "EX蒼世ノ侍【帯】α (wiki-db)"
+    }
+   ],
+   "evidence": "altema の防具ページ「EX蒼世ノ侍【帯】α」と wiki-db の同名の装備ページでは、スロットが④①①、個別スキルがスリンガー装填数UP(Lv2)と水属性攻撃強化(Lv3)で、シリーズスキルは銀火竜の真髄。データの腰防具（スロット[4,1,1]、スリンガー装填数UP2・水属性攻撃強化3）と同じ。日本語の表記は「α」で、「+」は付かない。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Sleeve α+",
+   "name_ja": "EX蒼世ノ侍【袖】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1695",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍【袖】αのスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/353832",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍装備の性能｜ゲームエイト"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/184000",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍αの性能と必要素材 - ゲームウィズ"
+    }
+   ],
+   "evidence": "altema の防具ページ「EX蒼世ノ侍【袖】α」と、Game8 や攻略ブログでは、集中Lv2・弱点特効Lv1、スロット3つ、レア度12、防御力は初期170とされている。データの腕防具（スロット[1,1,1]、弱点特効1・集中2、レア度12、防御170）と同じ。日本語の表記は「α」で、「+」は付かない。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Blackarm α+",
+   "name_ja": "EX魔界ノ主【黒腕】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1705",
+     "title": "altema.jp EX魔界ノ主【黒腕】α"
+    },
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "EX魔界ノ主シリーズの性能 - アルテマ"
+    }
+   ],
+   "evidence": "アルテマの防具ページで「EX魔界ノ主【黒腕】α」は個別スキルが匠+3、スロット④、防御力162、レア11でした。英語データ（腕、匠3、スロット[4]、防御162、rarity 11）と同じです。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Boots α+",
+   "name_ja": "EX魔界ノ主【黒靴】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/193565",
+     "title": "game8.jp MHW 防具一覧（脚）"
+    },
+    {
+     "url": "https://altema.jp/mhw/bogu/1707",
+     "title": "altema.jp EX魔界ノ主【黒靴】α"
+    }
+   ],
+   "evidence": "ゲームエイトの防具一覧で「EX魔界ノ主【黒靴】α」はレア11、スロット④、攻めの守勢Lv3でした。アルテマの防具ページでも、黒靴αの個別スキルは攻めの守勢+3、スロット④、防御力162でした。英語データ（脚、攻めの守勢3、スロット[4]、防御162）と同じです。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Cloak α+",
+   "name_ja": "EX魔界ノ主【外套】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/193562",
+     "title": "game8.jp MHW 防具一覧（胴）"
+    },
+    {
+     "url": "https://game8.jp/mhw/199534",
+     "title": "game8.jp MHW"
+    },
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "EX魔界ノ主シリーズの性能 - アルテマ"
+    }
+   ],
+   "evidence": "ゲームエイトの胴防具一覧で「EX魔界ノ主【外套】α」はレア11、スロット②②、属性やられ耐性Lv3でした。英語データ（胴、rarity 11、slots [2,2]、属性やられ耐性3）と同じです。アルテマのシリーズ表にも、属性やられ耐性+3でスロット②②の部位があります。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Hair α+",
+   "name_ja": "EX魔界ノ主【艶髪】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1703",
+     "title": "altema.jp EX魔界ノ主【艶髪】α"
+    },
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "EX魔界ノ主シリーズの性能 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/355760",
+     "title": "EX魔界ノ主装備の性能｜ゲームエイト"
+    }
+   ],
+   "evidence": "アルテマの防具ページと日本語の検索結果で、頭の防具「EX魔界ノ主【艶髪】α」は防御力162、ガード性能+3、スロット④でした。英語データ（頭、防御162、ガード性能3、スロット[4]）と同じです。日本語の情報源に「+」付きの表記はありませんでした。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Leather Belt α+",
+   "name_ja": "EX魔界ノ主【革帯】α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1706",
+     "title": "altema.jp EX魔界ノ主【革帯】α"
+    },
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "EX魔界ノ主シリーズの性能 - アルテマ"
+    }
+   ],
+   "evidence": "アルテマの防具ページで「EX魔界ノ主【革帯】α」は個別スキルが属性解放/装填拡張+3、スロット①①、防御力162、レア11でした。英語データ（腰、属性解放／装填拡張3、slots [1,1]、防御162、rarity 11）と同じです。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs α+",
+   "name_ja": "EXドラゴンスパインα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1686",
+     "title": "altema EXドラゴンスパインα"
+    }
+   ],
+   "evidence": "altema の個別ページで、スキルは弱点特効+1と見切り+3。データのスキルと一致し、EXドラゴンαシリーズの腰はこの部位にあたる。ただし、スロット④③③は検索結果の中では確かめられなかった。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs β+",
+   "name_ja": "EXドラゴンスパインβ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1691",
+     "title": "altema EXドラゴンスパインβ"
+    },
+    {
+     "url": "https://game8.jp/mhw/288726",
+     "title": "Game8 ミラボレアス装備のビルド例"
+    }
+   ],
+   "evidence": "altemaのEXドラゴンスパインβで、個別スキルが見切り+2(会心率+10%)、シリーズスキルが黒龍の伝説となっており、データの Critical Eye 2 と同じ。Game8のビルド例で、腰にEXドラゴンスパインαが使われていることから腰の防具と判断した。英語名(Barbs)と日本語名(スパイン)は直訳ではないが、スキルが一致し、ほかに見切りを持つβの腰防具が見つからなかった。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws α+",
+   "name_ja": "EXドラゴンクロウα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1685",
+     "title": "altema EXドラゴンクロウα"
+    }
+   ],
+   "evidence": "altema の個別ページで、スキルは弱点特効+1と匠+3、スロットは④①-。データと一致する（βは弱点特効+1のみ）。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws β+",
+   "name_ja": "EXドラゴンクロウβ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1690",
+     "title": "altema EXドラゴンクロウβ"
+    },
+    {
+     "url": "https://game8.jp/mhw/288726",
+     "title": "Game8 ミラボレアス装備のビルド例"
+    }
+   ],
+   "evidence": "altemaのEXドラゴンクロウβで、個別スキルが弱点特効+1、シリーズスキルが黒龍の伝説となっており、データの腕防具(Weakness Exploit 1)と同じ。Game8のミラボレアス防具のビルド例にもEXドラゴンクロウβが載っている。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet α+",
+   "name_ja": "EXドラゴンフットα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/boguseries/323",
+     "title": "altema EXドラゴンα・βシリーズ"
+    },
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema ミラボレアス装備"
+    }
+   ],
+   "evidence": "altema の EXドラゴンαシリーズのスキル・スロット表に、EXドラゴンフットαが回避性能+1と匠+2、スロット④④-で載っている。データと一致する。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet β+",
+   "name_ja": "EXドラゴンフットβ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1692",
+     "title": "altema EXドラゴンフットβ"
+    }
+   ],
+   "evidence": "altemaで、EXドラゴンフットβは脚の防具、個別スキルは回避性能+1、シリーズスキルは黒龍の伝説となっており、データの Evade Window 1 と同じ。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead α+",
+   "name_ja": "EXドラゴンヘッドα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1683",
+     "title": "altema EXドラゴンヘッドα"
+    }
+   ],
+   "evidence": "altema の個別ページで、レア度12、防御力180、スロット③②②、スキルはガード性能+3と気絶耐性+3。データとすべて一致する。「EXドラゴンヘッドα+」で検索しても「+」付きの表記は見つからなかった。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead β+",
+   "name_ja": "EXドラゴンヘッドβ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1688",
+     "title": "altema EXドラゴンヘッドβ"
+    }
+   ],
+   "evidence": "altemaのEXドラゴンヘッドβのページで、個別スキルが気絶耐性+3、シリーズスキルが黒龍の伝説となっており、データの Stun Resistance 3 と同じ。β+ の『+』つき表記は見つからなかった。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide α+",
+   "name_ja": "EXドラゴンハイドα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/boguseries/323",
+     "title": "altema EXドラゴンα・βシリーズ"
+    },
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema ミラボレアス装備"
+    }
+   ],
+   "evidence": "altema で、スキルは弱点特効+1と回避性能+2、スロットは④④③。データと一致する（βは回避性能+1と弱点特効+1なので別物）。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide β+",
+   "name_ja": "EXドラゴンハイドβ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema ミラボレアス装備"
+    },
+    {
+     "url": "https://altema.jp/mhw/bogu/1689",
+     "title": "altema 防具ページ(EXドラゴン系)"
+    }
+   ],
+   "evidence": "altemaのEXドラゴンハイドβで、個別スキルが回避性能+1と弱点特効+1となっており、データの Weakness Exploit 1 / Evade Window 1 と同じ(α版は回避性能+2で別物)。胴の防具として扱われていて、シリーズスキルは黒龍の伝説。"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Arms α+",
+   "name_ja": "EXパッションアームα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1670",
+     "title": "【MHWアイスボーン】EXパッションアームαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "altema の「EXパッションアームα」のページ（題名で確認）で、個別スキルが環境利用の知識+3、スロットが④③。英語データ（腕、スロット[4,3]、環境利用の知識3）と一致する。素材は情熱チケット・剛竜骨・掻鳥の特大飾り羽"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Belt α+",
+   "name_ja": "EXパッションベルトα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1671",
+     "title": "【MHWアイスボーン】EXパッションベルトαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "altema の「EXパッションベルトα」のページ（題名で確認）で、個別スキルが植生学+4、シリーズスキルが情熱の祝福、素材が情熱チケット・剛竜骨。英語データ（腰、植生学4）と一致する"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Body α+",
+   "name_ja": "EXパッションボディα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1669",
+     "title": "【MHWアイスボーン】EXパッションボディαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "altema の「EXパッションボディα」のページで、個別スキルが採集の達人+1・剥ぎ取り鉄人+1、防御力 156、シリーズスキルが情熱の祝福。英語データ（胴、採集の達人1／剥ぎ取り鉄人1、防御 156）と一致する"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Headdress α+",
+   "name_ja": "EXパッションヘッドα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1668",
+     "title": "【MHWアイスボーン】EXパッションヘッドαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "altema の「EXパッションヘッドα」のページで、個別スキルがランナー+3、シリーズスキルが情熱の祝福、カスタム強化素材の欄がある（マスターランク）。mhwg・game8 系の表でもスロット③のみ・ランナーLv3。英語データ（頭、スロット[3]、ランナー3）と一致する。「+」は付かない"
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Leggings α+",
+   "name_ja": "EXパッションフットα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1672",
+     "title": "【MHWアイスボーン】EXパッションフットαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "altema の「EXパッションフットα」のページ（題名で確認）で、個別スキルが地質学+3。英語データ（脚、地質学3）と一致する。素材は情熱チケット・剛竜骨"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Artemis α+",
+   "name_ja": "EXアルテミスα",
+   "confidence": "high",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+     "title": "EXアルテミスα - MH:World - Kiranico"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/en/armorseries/5bZq5/artemis-a",
+     "title": "Artemis α+ - MH:World - Kiranico"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/241551",
+     "title": "【MHWアイスボーン】EXアルテミスαの性能と必要素材【モンハンワールド】 - ゲームウィズ"
+    },
+    {
+     "url": "http://mhwg.org/ida/250071.html",
+     "title": "EXアルテミスαシリーズのスキルと素材"
+    }
+   ],
+   "evidence": "Kiranicoでは英語版のシリーズページ「Artemis α+」(/en/armorseries/5bZq5/artemis-a)と日本語版のページ「EXアルテミスα」(/ja/armorseries/5bZq5/ex-arutemisu-alpha)のIDが同じ5bZq5。日本語ページはRARE11・5部位・防御力140〜184で、データと一致する。GameWith・mhwg・game8の題名もすべて「EXアルテミスα」で、「+」は付いていない。"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Azure Age α+",
+   "name_ja": "EX蒼世ノ侍α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com",
+    "monsterhunterworld.wiki.fextralife.com",
+    "www.gamespark.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/armorseries/5v6R5/ex-ao-yo-no-samurai-alpha",
+     "title": "EX蒼世ノ侍α - MH:World - Kiranico"
+    },
+    {
+     "url": "https://altema.jp/mhw/boguseries/325",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍装備のシリーズスキルとキー素材 - アルテマ"
+    },
+    {
+     "url": "https://altema.jp/mhw/seriesskill/52",
+     "title": "altema 銀火竜の真髄"
+    },
+    {
+     "url": "https://www.gamespark.jp/article/2020/01/20/96122.html",
+     "title": "PS4『モンハンワールド:アイスボーン』に3月20日よりUSJコラボ装備「EX蒼世ノ侍α」シリーズが登場 | Game*Spark"
+    },
+    {
+     "url": "https://monsterhunterworld.wiki.fextralife.com/Azure+Age+Alpha+++Set",
+     "title": "Azure Age Alpha + Set (Fextralife)"
+    },
+    {
+     "url": "https://game8.jp/mhw/353832",
+     "title": "【MHWアイスボーン】EX蒼世ノ侍装備の性能｜ゲームエイト"
+    }
+   ],
+   "evidence": "Kiranico日本語版の防具シリーズページの題名が「EX蒼世ノ侍α」で、URLのスラッグは ex-ao-yo-no-samurai-alpha。Game*Spark や altema などの日本語サイトでもアイスボーンの USJ コラボの MR 防具「EX蒼世ノ侍α」シリーズとされている。altema のシリーズスキルページ（銀火竜の真髄）では、発動防具に EX蒼世ノ侍α が入っている。英語の Fextralife では Azure Age α+ の素材が USJ イベントクエスト（USJ: Ballet of Frost）から出るとあり、日本語のイベントクエスト「USJ・氷刃を薙ぎ、舞え!」と同じものに当たる。日本語ではどのサイトでも「α」で、「+」が付いた表記は見つからなかった（「α+」で検索しても出てこなかった）。"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Demonlord α+",
+   "name_ja": "EX魔界ノ主α",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "http://mhwg.org/ida/249923.html",
+     "title": "EX魔界ノ主αシリーズのスキルと素材"
+    },
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "【MHWアイスボーン】EX魔界ノ主シリーズの性能｜ホラーナイト装備【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/355760",
+     "title": "【MHWアイスボーン】EX魔界ノ主装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://game8.jp/mhw/355775",
+     "title": "【MHWアイスボーン】ホラーナイトの祝福の発動条件とスキル効果【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/227955",
+     "title": "【MHWアイスボーン】EX魔界の主αの性能と必要素材【モンハンワールド】 - ゲームウィズ"
+    }
+   ],
+   "evidence": "日本語の攻略サイト（アルテマ、ゲームエイト、ゲームウィズ）とデータベース（mhwg.org）の題名はどれも「EX魔界ノ主αシリーズ」でした。セリエナ祭【ホラーナイト】の限定装備で、シリーズスキルは「ホラーナイトの祝福」（3部位で贈り物、5部位で恵み）です。英語のセットボーナス Fun Fright Blessing と合います。5部位の個別スキル（ガード性能3／属性やられ耐性3／匠3／属性解放・装填拡張3／攻めの守勢3）もデータと合います。どの日本語の情報源にも「α+」の表記は見つからず、すべて「α」でした。"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon α+",
+   "name_ja": "EXドラゴンα",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/boguseries/323",
+     "title": "altema EXドラゴンα・βシリーズ"
+    },
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema ミラボレアス装備"
+    }
+   ],
+   "evidence": "altema のシリーズページ（ミラボレアス装備）に「EXドラゴンα・βシリーズ」とあり、シリーズスキルは黒龍の伝説（2部位で継承、4部位で超越）。各部位（ヘッド・ハイド・クロウ・スパイン・フットα）のスキルとスロットがデータと一致する。日本語版の表記は「EX〜α」で、「+」は付かない（「EXドラゴンヘッドα+」で検索しても見つからなかった）。"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon β+",
+   "name_ja": "EXドラゴンβ",
+   "confidence": "medium",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema ミラボレアス装備"
+    },
+    {
+     "url": "https://altema.jp/mhw/boguseries/323",
+     "title": "altema 防具シリーズ(EXドラゴン)"
+    }
+   ],
+   "evidence": "altemaのミラボレアス装備ページに、ミラボレアス装備は『EXドラゴンα・βシリーズ防具』とあり、シリーズスキルは『黒龍の伝説』(Fatalis Legend にあたる。2部位で継承、4部位で超越)と出ている。β+ の『+』つきの表記は検索結果のどこにも見つからず、β版は『EXドラゴン◯◯β』(+なし)の表記だった。シリーズ名『EXドラゴンβ』は、この『EXドラゴンα・βシリーズ』という書き方からの読み取りで、シリーズ名だけを書いたページは確かめられていない。"
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Passionate α+",
+   "name_ja": "EXパッションα",
+   "confidence": "high",
+   "domains": [
+    "ascii.jp",
+    "game8.jp",
+    "gamewith.jp",
+    "gamy.jp",
+    "mhw.poedb.tw",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/343644",
+     "title": "【MHWアイスボーン】EXパッションα装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "http://mhwg.org/ida/249537.html",
+     "title": "EXパッションαシリーズのスキルと素材"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/213660",
+     "title": "【MHWアイスボーン】EXパッションαの性能と必要素材【モンハンワールド】 - ゲームウィズ"
+    },
+    {
+     "url": "https://gamy.jp/mh-w/mhw-armor0382",
+     "title": "【MHWアイスボーン】EXパッションαシリーズの性能と作成方法【モンハンワールド】｜GAMY"
+    },
+    {
+     "url": "https://mhw.poedb.tw/jpn/armorset/Passion%20%CE%B1+",
+     "title": "Monster Hunter World Chronicles"
+    },
+    {
+     "url": "https://ascii.jp/elem/000/004/018/4018842/",
+     "title": "ascii.jp（セリエナ祭 情熱の宴 記事）"
+    }
+   ],
+   "evidence": "セリエナ祭【情熱の宴】の限定防具として、game8・gamewith・mhwg.org・GAMY の題名が揃って「EXパッションα」シリーズと書いている。素材（情熱チケット・剛竜骨・掻鳥の特大飾り羽）、カスタム強化があること、部位ごとのスキル（ランナー3／採集の達人1・剥ぎ取り鉄人1／環境利用の知識3／植生学4／地質学3）、防御力の合計 780→940 が英語データと一致する。日本語版の表記には「+」が付かない（どの日本語サイトの題名も「EXパッションα」）。poedb の日本語ページの URL は英語の set 名 'Passion α+' を使っている"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Shaver Charm",
+   "name_ja": "削撃の護石",
+   "confidence": "high",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    {
+     "url": "http://mhwg.org/ida/249772.html",
+     "title": "削撃の護石"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/231000",
+     "title": "【MHWアイスボーン】クラッチ攻撃強化の発動防具・装飾品とおすすめ武器【モンハンワールド】 - ゲームウィズ"
+    },
+    {
+     "url": "https://twitter.com/MH_official_JP/status/1310157415145287681",
+     "title": "モンスターハンターワールド：アイスボーン公式 on X"
+    }
+   ],
+   "evidence": "検索結果で、削撃の護石はクラッチ攻撃強化+1とクライマー+1（Cliffhangerの日本語スキル名）が付き、mhwgではレア9と出ている。公式XのVer.15.01告知にも追加護石として削撃の護石がある。英語データ（rarity 9, Clutch Claw Boost 1 / Cliffhanger 1）とすべて合う"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm I",
+   "name_ja": "環境の護石Ⅰ",
+   "confidence": "medium",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/stone/244",
+     "title": "【MHWアイスボーン】環境の護石(1～3)の必要素材とスキル【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/185081",
+     "title": "【MHWアイスボーン】護石一覧｜入手方法【モンハンワールド】｜ゲームエイト"
+    }
+   ],
+   "evidence": "環境利用の知識の検索結果で、発動する護石として「環境の護石Ⅰ：環境利用の知識Lv1」と出ている（アルテマには「環境の護石(1～3)」のページがある）。スキルとレベルが英語データと合う。レア度3と、ローマ数字が全角記号か半角英字かは確かめられなかった"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm II",
+   "name_ja": "環境の護石Ⅱ",
+   "confidence": "medium",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/stone/244",
+     "title": "【MHWアイスボーン】環境の護石(1～3)の必要素材とスキル【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/185081",
+     "title": "【MHWアイスボーン】護石一覧｜入手方法【モンハンワールド】｜ゲームエイト"
+    }
+   ],
+   "evidence": "同じ検索結果で「環境の護石Ⅱ：環境利用の知識Lv2」と出ている。スキルとレベルが英語データと合う。レア度とローマ数字の書き方は確かめられなかった"
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm III",
+   "name_ja": "環境の護石Ⅲ",
+   "confidence": "medium",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/stone/244",
+     "title": "【MHWアイスボーン】環境の護石(1～3)の必要素材とスキル【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/185081",
+     "title": "【MHWアイスボーン】護石一覧｜入手方法【モンハンワールド】｜ゲームエイト"
+    }
+   ],
+   "evidence": "同じ検索結果で「環境の護石Ⅲ：環境利用の知識Lv3」と出ている。スキルとレベルが英語データと合う。レア度とローマ数字の書き方は確かめられなかった"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Acrobat Jewel 3",
+   "name_ja": "受身珠【3】",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "www.mhw-blog.com"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/352329",
+     "title": "【MHWアイスボーン】受身珠【3】の入手方法｜モンハンワールド｜ゲームエイト"
+    },
+    {
+     "url": "http://mhwg.org/ida/249780.html",
+     "title": "受身珠【3】"
+    },
+    {
+     "url": "https://www.mhw-blog.com/iceborne-5th-update/clutchkougekikyouka-skill-sakuge-yousou-ukemi-skill-kouka",
+     "title": "【MHWI】削撃珠や削撃の護石で「クラッチ攻撃強化」のスキルを付与!? 陽動珠/受身珠など3種装飾品の追加のあるアップデートVer.15.01概要"
+    }
+   ],
+   "evidence": "公式XのVer.15.01告知で、追加された装飾品として受身珠【３】が挙がっている。game8・mhwgの検索結果では、発動スキルは受け身術（大きく吹き飛ばされたときに素早く起き上がる、Safe Landingに当たる）・レア度11と出ている。英語データ（size 3, rarity 11）と合う"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Cooling Jewel 2",
+   "name_ja": "耐暑珠【2】",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/295179",
+     "title": "【MHWアイスボーン】耐暑珠【2】の入手方法｜モンハンワールド｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/skill/279",
+     "title": "【MHWアイスボーン】熱ダメージ無効のスキル効果と所持防具・装飾品【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/239169.html",
+     "title": "耐暑珠【2】"
+    }
+   ],
+   "evidence": "熱ダメージ無効のスキルページと耐暑珠【2】の個別ページ（game8・アルテマ・mhwg）の検索結果で、耐暑珠【2】は熱ダメージ無効+1・スロット2・レア度9と出ている。英語データ（Heat Guard, size 2, rarity 9）と合う"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Diversion Jewel 3",
+   "name_ja": "陽動珠【3】",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/352325",
+     "title": "【MHWアイスボーン】陽動珠【3】の入手方法｜モンハンワールド｜ゲームエイト"
+    },
+    {
+     "url": "http://mhwg.org/ida/249782.html",
+     "title": "陽動珠【3】"
+    },
+    {
+     "url": "https://twitter.com/MH_official_JP/status/1310157415145287681",
+     "title": "モンスターハンターワールド：アイスボーン公式 on X"
+    }
+   ],
+   "evidence": "公式Xのアップデート告知（Ver.15.01）で、追加された装飾品として陽動珠【３】が挙がっている。game8・mhwgの検索結果では、発動スキルは陽動攻撃（Provokerの日本語スキル名）・レア度11と出ている。英語データ（size 3, rarity 11, Provoker 1）と合う。表記は攻略サイトの半角【3】にした（公式Xは全角の【３】）"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Guardian Jewel 2",
+   "name_ja": "守勢珠【2】",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/295235",
+     "title": "【MHWアイスボーン】守勢珠【2】の入手方法｜モンハンワールド｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/soushokuhin/182",
+     "title": "【MHWアイスボーン】守勢珠【2】の基本情報とスキル【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/173098",
+     "title": "【MHWアイスボーン】守勢珠の入手方法と発動スキル【モンハンワールド】 - ゲームウィズ"
+    }
+   ],
+   "evidence": "game8の「守勢珠【2】の入手方法」ページの検索結果で、レア度10・スロット2・スキル攻めの守勢と出ている。英語データ（size 2, rarity 10, 攻めの守勢1）とすべて合う"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Shaver Jewel 3",
+   "name_ja": "削撃珠【3】",
+   "confidence": "high",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    {
+     "url": "https://gamewith.jp/mhw/231000",
+     "title": "【MHWアイスボーン】クラッチ攻撃強化の発動防具・装飾品とおすすめ武器【モンハンワールド】 - ゲームウィズ"
+    },
+    {
+     "url": "http://mhwg.org/ida/249778.html",
+     "title": "クラッチ攻撃強化のスキル効果"
+    },
+    {
+     "url": "https://twitter.com/MH_official_JP/status/1310157415145287681",
+     "title": "モンスターハンターワールド：アイスボーン公式 on X"
+    }
+   ],
+   "evidence": "検索結果で、削撃珠【3】の発動スキルはクラッチ攻撃強化+1（Clutch Claw Boostの日本語スキル名）と出ている。公式XのVer.15.01告知にも追加装飾品として削撃珠【３】がある。英語データ（size 3, Clutch Claw Boost 1）と合う（レア度11は削撃珠そのものについては確かめられなかった）"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Survival Jewel 1",
+   "name_ja": "環境珠【1】",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/275169",
+     "title": "【MHWアイスボーン】環境利用の知識の効果と発動装備【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/skill/344",
+     "title": "【MHWアイスボーン】環境利用の知識のスキル効果と所持防具・装飾品【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "http://mhwg.org/ida/1317.html",
+     "title": "環境利用の知識のスキル効果"
+    }
+   ],
+   "evidence": "環境利用の知識のスキルページ（game8・アルテマ・mhwg）の検索結果で、発動装飾品として「環境珠【1】：環境利用の知識+1」と出ている。同じ系統の上位版は環境珠Ⅱ【4】(+2)と環境珠Ⅲ【4】(+3)。スロット1でスキル+1なので英語データと合う（レア度9は検索結果では確かめられなかった）"
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Warming Jewel 2",
+   "name_ja": "耐寒珠【2】",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/295181",
+     "title": "【MHWアイスボーン】耐寒珠【2】の入手方法｜モンハンワールド｜ゲームエイト"
+    },
+    {
+     "url": "https://game8.jp/mhw/200212",
+     "title": "【MHWアイスボーン】寒さ耐性の効果と発動装備【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "http://mhwg.org/ida/239167.html",
+     "title": "耐寒珠【2】"
+    }
+   ],
+   "evidence": "耐寒珠【2】の個別ページ（game8・アルテマ・mhwg）の検索結果で、スキルは寒さ耐性+1（Coldproofの日本語スキル名は「寒さ耐性」）・スロット2・レア度9と出ている。英語データ（size 2, rarity 9, Coldproof 1）と合う"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fatalis Legend",
+   "name_ja": "黒龍の伝説",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/seriesskill/68",
+     "title": "altema.jp（黒龍の伝説）"
+    },
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema.jp（ミラボレアス装備）"
+    },
+    {
+     "url": "https://game8.jp/mhw/327610",
+     "title": "game8.jp"
+    }
+   ],
+   "evidence": "アルテマのシリーズスキル『黒龍の伝説』は EXドラゴンα・β（ミラボレアス装備）のスキルで、2部位で「継承」（極意の上限を外す）、4部位で「超越」（真・業物／弾丸節約、体力・スタミナ+100）。英語の Inheritance／Transcendance の説明と同じ。"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fun Fright Blessing",
+   "name_ja": "ホラーナイトの祝福",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "altema.jp（EX魔界ノ主）"
+    },
+    {
+     "url": "https://monsterhunterwiki.org/wiki/Fun_Fright_Blessing_(MHWI)",
+     "title": "Fun Fright Blessing (MHWI)"
+    },
+    {
+     "url": "https://monsterhunterwiki.org/wiki/Demonlord_%CE%B1%2B_Set_(MHWI)",
+     "title": "Demonlord α+ Set (MHWI)"
+    }
+   ],
+   "evidence": "アルテマの EX魔界ノ主α のページで、シリーズスキルが『ホラーナイトの祝福』。3部位で「ホラーナイトの贈り物」、5部位で「ホラーナイトの恵み」。英語の Demonlord α+ のシリーズスキル（3部位／5部位で Fun Fright の特別報酬が出やすくなる）と同じ。Demonlord α+ は Fun Fright Ticket で作るので、ホラーナイト（Fun Fright）のイベント装備ということも合う。"
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Sizzling Blessing",
+   "name_ja": "情熱の祝福",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/bogu/1668",
+     "title": "【MHWアイスボーン】EXパッションヘッドαのスキルとキー素材【モンハンワールド】 - アルテマ"
+    },
+    {
+     "url": "https://monsterhunterwiki.org/wiki/Sizzling_Blessing_(MHWI)",
+     "title": "Sizzling Blessing (MHWI)"
+    },
+    {
+     "url": "https://game8.jp/mhw/343644",
+     "title": "【MHWアイスボーン】EXパッションα装備の性能【モンハンワールド】｜ゲームエイト"
+    }
+   ],
+   "evidence": "altema の EXパッション各部位のページで、シリーズスキルが「情熱の祝福」と書かれ、3部位で「情熱の贈り物!」、5部位で「情熱の恵み!」が発動する。英語の Sizzling Blessing も 3部位・5部位の2段階で、Sizzling Spice の特別報酬が出やすくなるという内容が一致する"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Clutch Claw Boost",
+   "name_ja": "クラッチ攻撃強化",
+   "confidence": "medium",
+   "domains": [
+    "monsterhunter.fandom.com",
+    "www.famitsu.com"
+   ],
+   "sources": [
+    {
+     "url": "https://monsterhunter.fandom.com/wiki/MHWI:_Skill_List",
+     "title": "MHWI: Skill List"
+    },
+    {
+     "url": "https://www.famitsu.com/news/201909/06182544.html",
+     "title": "www.famitsu.com"
+    }
+   ],
+   "evidence": "「クラッチ攻撃強化」で検索すると、MHWI のスキル一覧（英語）が出て、その中の Clutch Claw Boost の説明（クラッチクローの武器攻撃で傷をつけやすく、スリンガー弾を落としやすい、Lv1 のみ）が入力データと同じだった。ただ、日本語の攻略サイトのページそのものでは確かめられていない。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gift",
+   "name_ja": "ホラーナイトの贈り物",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "altema.jp（EX魔界ノ主）"
+    },
+    {
+     "url": "https://altema.jp/mhw/boguseries/327",
+     "title": "altema.jp（防具シリーズ）"
+    }
+   ],
+   "evidence": "アルテマの EX魔界ノ主α（セリエナ祭【ホラーナイト】の装備）のページで、シリーズスキル『ホラーナイトの祝福』の 3部位の効果が「ホラーナイトの贈り物」。効果は特別報酬が出やすくなる（クエストの途中から入ると効かない）で、英語の説明と同じ。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gratitude",
+   "name_ja": "ホラーナイトの恵み",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/exmakainonushi",
+     "title": "altema.jp（EX魔界ノ主）"
+    }
+   ],
+   "evidence": "同じ『ホラーナイトの祝福』で、5部位の効果が「ホラーナイトの恵み」。効果は特別報酬がとても出やすくなる（クエストの途中から入ると効かない）で、英語の説明と同じ。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Inheritance",
+   "name_ja": "継承",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/seriesskill/68",
+     "title": "altema.jp（黒龍の伝説）"
+    },
+    {
+     "url": "https://altema.jp/mhw/miraboreasusoubi",
+     "title": "altema.jp（ミラボレアス装備）"
+    }
+   ],
+   "evidence": "アルテマのシリーズスキル『黒龍の伝説』（EXドラゴンα・β＝ミラボレアス装備）で、2部位の効果が「継承」。効果は「極意で上限が決まっているスキルのレベル上限をすべて外す」で、英語の説明と同じ。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gift",
+   "name_ja": "情熱の贈り物",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/343644",
+     "title": "【MHWアイスボーン】EXパッションα装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/seriesskill/66",
+     "title": "【MHWアイスボーン】情熱の祝福のスキル効果と発動条件【モンハンワールド】 - アルテマ"
+    }
+   ],
+   "evidence": "EXパッションα（セリエナ祭【情熱の宴】の装備）のシリーズスキル『情熱の祝福』で、3部位の効果が「情熱の贈り物」。効果は【情熱の宴】の特別報酬が出やすくなる（クエストの途中からは効かない）で、英語の説明と同じ。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gratitude",
+   "name_ja": "情熱の恵み",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/343644",
+     "title": "【MHWアイスボーン】EXパッションα装備の性能【モンハンワールド】｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/seriesskill/66",
+     "title": "【MHWアイスボーン】情熱の祝福のスキル効果と発動条件【モンハンワールド】 - アルテマ"
+    }
+   ],
+   "evidence": "同じ『情熱の祝福』で、5部位の効果が「情熱の恵み」。効果は【情熱の宴】の特別報酬がとても出やすくなる（クエストの途中からは効かない）で、英語の説明と同じ。"
+  },
+  {
+   "kind": "skill",
+   "name_en": "Transcendance",
+   "name_ja": "超越",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/seriesskill/68",
+     "title": "altema.jp（黒龍の伝説）"
+    }
+   ],
+   "evidence": "同じ『黒龍の伝説』で、4部位の効果が「超越」。中身は真・業物／弾丸節約に加えて、クエスト開始時や力尽きた後に体力・スタミナ+100（他の効果と重ならない）で、英語の説明と同じ。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Black Fatalis Blade",
+   "name_ja": "ブラックミラブレイド",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/taikensaikyo",
+     "title": "アルテマ 大剣最強武器"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    }
+   ],
+   "evidence": "アルテマに「ブラックミラブレイド 攻撃力1632 会心率-30% 龍180 龍封力【大】 スロット④④-」とあり、ミラボレアス素材の最強大剣と書かれている。データ（1632・-30・龍180・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Rack & Ruin",
+   "name_ja": "殲滅と破壊の剛弓",
+   "confidence": "high",
+   "domains": [
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/200099",
+     "title": "Game8 弓派生一覧"
+    },
+    {
+     "url": "https://game8.jp/mhw/353132",
+     "title": "【MHWアイスボーン】ミラボレアスの武器性能一覧｜ゲームエイト"
+    }
+   ],
+   "evidence": "Game8 の弓派生一覧で「殲滅と破壊の剛弓」が攻撃408・龍120とされ、その上位派生が断滅と崩壊の剛烈弓になっている。ミラボレアス武器の弓 2 種の一つとしても紹介されている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Vice & Violence",
+   "name_ja": "断滅と崩壊の剛烈弓",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "www.mhw-blog.com"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/290413",
+     "title": "Game8 弓装備"
+    },
+    {
+     "url": "https://game8.jp/mhw/200099",
+     "title": "Game8 弓派生一覧"
+    },
+    {
+     "url": "https://www.mhw-blog.com/miraboreasu-weapon14-skill-seinou/",
+     "title": "【MHWI】ミラボレスRARE12武器全14種性能と素材"
+    }
+   ],
+   "evidence": "Game8 で「断滅と崩壊の剛烈弓」がレア12・攻撃444・会心率-30%・龍120とされ、殲滅と破壊の剛弓の上位派生になっている（別のページでは会心率0%となっていて、数値が合わない所が一つある）。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw",
+   "name_ja": "漆黒の爪",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/arubatorionbuki",
+     "title": "アルテマ アルバトリオン武器一覧"
+    },
+    {
+     "url": "https://monsterhunterwiki.org/wiki/Dark_Claw_(MHWI)",
+     "title": "Dark Claw (MHWI)"
+    }
+   ],
+   "evidence": "英語版wikiでDark Claw（MHWI）はアルバトリオン系の太刀でレア11。アルテマのアルバトリオン武器一覧に太刀「漆黒の爪」攻撃力825・龍510・スロット②--（生産品）とあり、データ（825・龍510・スロット2）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw \"Demise\"",
+   "name_ja": "漆黒爪【終焉】",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "wikiwiki.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/arubatorionbuki",
+     "title": "アルテマ アルバトリオン武器一覧"
+    },
+    {
+     "url": "https://wikiwiki.jp/nenaiko/%E6%AD%A6%E5%99%A8/%E6%BC%86%E9%BB%92%E7%88%AA%E3%80%90%E7%B5%82%E7%84%89%E3%80%91",
+     "title": "武器/漆黒爪【終焉】 - モンスターハンター大辞典 Wiki*"
+    }
+   ],
+   "evidence": "アルテマのアルバトリオン武器一覧に、漆黒の爪の強化先の「漆黒爪【終焉】」が攻撃力924・龍660・スロット②②-とあり、データ（924・龍660・スロット2,2）と一致。大辞典wikiにも、この名前の太刀が「漆黒の爪」の強化形として載っている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Blade",
+   "name_ja": "ミラブレイド",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/taikensaikyo",
+     "title": "アルテマ 大剣最強武器"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/jqHy9fvw/mirabureido",
+     "title": "ミラブレイド - MH:World - Kiranico"
+    }
+   ],
+   "evidence": "アルテマのミラボレアス大剣の記述に「ミラブレイド 攻撃力1488 会心率-40%」、龍120、スロット④④-とある。データ（攻撃力1488・会心-40・龍120・スロット4,4）と一致。KiranicoにもミラブレイドがMHWIの武器として出ている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Buster",
+   "name_ja": "ミラバスター",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/VRCp8fqR/mirabasutaa",
+     "title": "ミラバスター - MH:World - Kiranico"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/353132",
+     "title": "【MHWアイスボーン】ミラボレアスの武器性能一覧│黒龍武器 - ゲームエイト"
+    }
+   ],
+   "evidence": "Kiranico日本語版とアルテマで、ハンマー「ミラバスター」はRARE11・攻撃力1612・会心率-40%・龍90・龍封力【大】・スロット④④-。強化先はミラデモリッシャーとされている。データ（レア11・1612・-40・龍90・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Charger",
+   "name_ja": "黒龍盾斧",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhw.poedb.tw",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhw.poedb.tw/jpn/weapon/Fatalis%20Charger",
+     "title": "黒龍盾斧 (poedb)"
+    },
+    {
+     "url": "https://altema.jp/mhw/weapon/3980",
+     "title": "【MHWアイスボーン】黒龍盾斧の生産・強化素材と派生方法 - アルテマ"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/gBTqlfMJ/kokuryuu-tate-ono",
+     "title": "黒龍盾斧 - MH:World - Kiranico"
+    }
+   ],
+   "evidence": "poedb の日本語ページ（URL は英語名 Fatalis Charger）の題名が「黒龍盾斧」。アルテマとゲームエイトで攻撃力1116・会心率-40%・龍90・榴弾ビン・スロット2つとされている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Demolisher",
+   "name_ja": "ミラデモリッシャー",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/hammersaikyo",
+     "title": "アルテマ ハンマー最強武器"
+    },
+    {
+     "url": "https://game8.jp/mhw/196055",
+     "title": "game8 属性別ハンマー最強武器"
+    }
+   ],
+   "evidence": "アルテマとgame8で「ミラデモリッシャー」はレア12・攻撃力1820・龍150。ミラバスターの強化先で、ミラボレアス素材の最強ハンマーとされている。攻撃力・属性・レア度はデータと一致する。ただし両サイトとも会心率は-20%で、データの-30とは違う。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Depths",
+   "name_ja": "真・黒龍翼弩",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://gamewith.jp/mhw/231132",
+     "title": "【MHWアイスボーン】ミラボレアスライトの性能と必要素材"
+    },
+    {
+     "url": "https://game8.jp/mhw/354036",
+     "title": "【MHWアイスボーン】黒龍翼弩の派生と強化素材｜ゲームエイト"
+    }
+   ],
+   "evidence": "GameWith で、黒龍翼弩の強化先「真・黒龍翼弩」が攻撃371・会心率-30%・レア12とされている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Blades",
+   "name_ja": "黒龍双刃",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    }
+   ],
+   "evidence": "アルテマのミラボレアス武器一覧に「黒龍双刃 攻撃力476 会心率-40% 龍60 龍封力【大】 スロット④④-」とあり、ミラボレアス素材の生産双剣と書かれている。データ（476・-40・龍60・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Skies",
+   "name_ja": "黒龍双刃【二天】",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/288726",
+     "title": "game8 ミラボレアス武具の装備例"
+    }
+   ],
+   "evidence": "アルテマとgame8で「黒龍双刃【二天】」が攻撃力518・龍120、黒龍双刃の上位版として載っている。データ（518・龍120）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis End",
+   "name_ja": "黒龍剣斧",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhw.poedb.tw",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhw.poedb.tw/jpn/weapon/Fatalis%20End",
+     "title": "黒龍剣斧 (poedb)"
+    },
+    {
+     "url": "https://altema.jp/mhw/weapon/3979",
+     "title": "【MHWアイスボーン】黒龍剣斧の生産・強化素材と派生方法 - アルテマ"
+    },
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/b9U6vcog/kokuryuu-tsurugi-ono",
+     "title": "黒龍剣斧 - MH:World - Kiranico"
+    }
+   ],
+   "evidence": "poedb の日本語ページ（URL は英語名 Fatalis End）の題名が「黒龍剣斧」。アルテマでも攻撃力1085・会心率-40%・龍90・強撃ビンとされている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Glaive",
+   "name_ja": "黒龍棍",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/200092",
+     "title": "Game8 操虫棍派生一覧"
+    },
+    {
+     "url": "https://altema.jp/mhw/weapon/3981",
+     "title": "【MHWアイスボーン】黒龍棍の生産・強化素材と派生方法 - アルテマ"
+    }
+   ],
+   "evidence": "Game8 の操虫棍派生一覧で「黒龍棍」が攻撃961・龍60とされ、その強化先が真・黒龍棍になっている。アルテマにも黒龍棍のページがある。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Gunlance",
+   "name_ja": "黒龍銃槍",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/5aSvbfPM/kokuryuu-juu-yari",
+     "title": "黒龍銃槍 - MH:World - Kiranico"
+    },
+    {
+     "url": "https://game8.jp/mhw/201563",
+     "title": "Game8 ガンランス派生一覧"
+    }
+   ],
+   "evidence": "Game8 のガンランス派生一覧で「黒龍銃槍」が攻撃力782・龍90とされ、その強化先が真・黒龍銃槍になっている。Kiranico 日本語版にもページがある。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Lance",
+   "name_ja": "黒龍槍",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    {
+     "url": "https://mhworld.kiranico.com/ja/weapons/y2cWoi5M/kokuryuu-yari",
+     "title": "黒龍槍 - MH:World - Kiranico"
+    },
+    {
+     "url": "https://altema.jp/mhw/weapon/3977",
+     "title": "【MHWアイスボーン】黒龍槍の生産・強化素材と派生方法 - アルテマ"
+    },
+    {
+     "url": "https://game8.jp/mhw/354030",
+     "title": "【MHWアイスボーン】黒龍槍の派生と強化素材｜ゲームエイト"
+    }
+   ],
+   "evidence": "検索結果で、アイスボーンの「黒龍槍」が攻撃力782・会心率-40%・龍属性60・レア11と確認できた。強化先は真・黒龍槍。Kiranico 日本語版にも「黒龍槍」のページがある。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace",
+   "name_ja": "ミラメノス",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/200094",
+     "title": "game8 狩猟笛派生表"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    }
+   ],
+   "evidence": "game8の狩猟笛派生表に「★ミラメノス(1302/龍90) ┗ミラメノスアギカ(1470/龍150)」とある。データ（1302・龍90）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace Wailer",
+   "name_ja": "ミラメノスアギカ",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/fuesaikyo",
+     "title": "アルテマ 狩猟笛最強武器"
+    },
+    {
+     "url": "https://game8.jp/mhw/200094",
+     "title": "game8 狩猟笛派生表"
+    }
+   ],
+   "evidence": "アルテマとgame8に「ミラメノスアギカ 攻撃力1470 会心率-20% 龍150 龍封力【大】 スロット④④-」、レア12とある。ミラメノスからの派生。データ（レア12・1470・-20・龍150・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Pit",
+   "name_ja": "黒龍翼弩",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/354036",
+     "title": "【MHWアイスボーン】黒龍翼弩の派生と強化素材｜ゲームエイト"
+    },
+    {
+     "url": "https://gamewith.jp/mhw/231132",
+     "title": "【MHWアイスボーン】ミラボレアスライトの性能と必要素材"
+    }
+   ],
+   "evidence": "Game8 と GameWith で「黒龍翼弩」が攻撃351・会心率-40%・レア11・スロット④④とされ、黒龍素材で作るミラボレアスのライトボウガンになっている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sickle",
+   "name_ja": "ミラドレパノン",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/200089",
+     "title": "game8 太刀派生一覧"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    }
+   ],
+   "evidence": "game8の太刀派生一覧で、ミラザーゲスパノンの前の段階が「ミラドレパノン」（攻撃力1023・龍90）となっている。アルテマのミラボレアス武器一覧にも太刀の攻撃力1023・会心-40%・龍90の記載がある。データ（1023・-40・龍90）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sword",
+   "name_ja": "黒龍剣",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/katatekensaikyo",
+     "title": "アルテマ 片手剣最強武器"
+    },
+    {
+     "url": "https://altema.jp/mhw/monsterbuki/99",
+     "title": "【MHWアイスボーン】ミラボレアス武器一覧 - アルテマ"
+    }
+   ],
+   "evidence": "アルテマとgame8に、真・黒龍剣の強化前の生産武器が「黒龍剣」（攻撃力434・龍60）と書かれている。データ（434・龍60）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Zaggespanon",
+   "name_ja": "ミラザーゲスパノン",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/tachisaikyo",
+     "title": "アルテマ 太刀最強武器"
+    },
+    {
+     "url": "https://game8.jp/mhw/200089",
+     "title": "game8 太刀派生一覧"
+    },
+    {
+     "url": "https://game8.jp/mhw/290401",
+     "title": "game8 太刀おすすめ装備"
+    }
+   ],
+   "evidence": "アルテマとgame8に、太刀「ミラザーゲスパノン」攻撃力1155・会心率-30%・龍150・スロット4-4-なしとあり、ミラドレパノンの強化先とされている。データ（1155・-30・龍150・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Charger",
+   "name_ja": "真・黒龍盾斧",
+   "confidence": "high",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/weapon/3994",
+     "title": "【MHWアイスボーン】真・黒龍盾斧の生産・強化素材と派生方法 - アルテマ"
+    },
+    {
+     "url": "https://altema.jp/mhw/chargeaxsaikyo",
+     "title": "アルテマ チャージアックス最強武器"
+    }
+   ],
+   "evidence": "アルテマで「真・黒龍盾斧」が攻撃力1224・会心率-20%・龍150とされ、黒龍盾斧の強化先になっている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Dyaus",
+   "name_ja": "真・黒龍棍",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/souchukonsaikyo",
+     "title": "アルテマ 操虫棍最強武器"
+    },
+    {
+     "url": "https://game8.jp/mhw/200092",
+     "title": "Game8 操虫棍派生一覧"
+    }
+   ],
+   "evidence": "アルテマで「真・黒龍棍」が攻撃力1101・会心率-30%・龍120・スロット④④とされ、黒龍棍の強化先になっている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis End",
+   "name_ja": "真・黒龍剣斧",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/354033",
+     "title": "【MHWアイスボーン】黒龍剣斧の派生と強化素材｜ゲームエイト"
+    },
+    {
+     "url": "https://altema.jp/mhw/weapon/3993",
+     "title": "【MHWアイスボーン】真・黒龍剣斧の生産・強化素材と派生方法 - アルテマ"
+    }
+   ],
+   "evidence": "Game8 で「真・黒龍剣斧」が攻撃力1225・会心率-30%・龍150・スロット④④・強撃ビンとされ、黒龍剣斧の強化先になっている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Gunlance",
+   "name_ja": "真・黒龍銃槍",
+   "confidence": "high",
+   "domains": [
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/196054",
+     "title": "Game8 ガンランス装備"
+    },
+    {
+     "url": "https://game8.jp/mhw/201563",
+     "title": "Game8 ガンランス派生一覧"
+    }
+   ],
+   "evidence": "Game8 で「真・黒龍銃槍」が攻撃力897・龍150とされ、黒龍銃槍の強化先になっている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Lance",
+   "name_ja": "真・黒龍槍",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/lancesaikyo",
+     "title": "アルテマ ランス最強武器"
+    },
+    {
+     "url": "http://mhwg.org/ida/249847.html",
+     "title": "真・黒龍槍の性能"
+    }
+   ],
+   "evidence": "アルテマのランス最強武器ページで「真・黒龍槍」が攻撃力851・会心率-20%・龍120・スロット④④とされ、ミラボレアスから作れると書かれている。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Sword",
+   "name_ja": "真・黒龍剣",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/katatekensaikyo",
+     "title": "アルテマ 片手剣最強武器"
+    },
+    {
+     "url": "https://game8.jp/mhw/200090",
+     "title": "game8 片手剣"
+    }
+   ],
+   "evidence": "アルテマとgame8に「真・黒龍剣 攻撃力490 会心率-30% 龍120 龍封力【大】 スロット④④-」とあり、黒龍剣の強化先と書かれている。データ（490・-30・龍120・4,4）と一致。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Buster",
+   "name_ja": "ヴォルバスター",
+   "confidence": "high",
+   "domains": [
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    {
+     "url": "https://game8.jp/mhw/354037",
+     "title": "【MHWアイスボーン】ヴォルバスターの派生と強化素材｜ゲームエイト"
+    },
+    {
+     "url": "https://game8.jp/mhw/290757",
+     "title": "Game8 ヘビィボウガン装備"
+    },
+    {
+     "url": "http://mhwg.org/ida/249861.html",
+     "title": "ヴォルバスターの性能"
+    }
+   ],
+   "evidence": "Game8 で「ヴォルバスター」が攻撃力510・会心率-20%とされ、ミラボレアスのヘビィボウガンとして紹介されている。ヴォルキャノンの強化先。"
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Cannon",
+   "name_ja": "ヴォルキャノン",
+   "confidence": "high",
+   "domains": [
+    "altema.jp",
+    "monsterhunter.fandom.com"
+   ],
+   "sources": [
+    {
+     "url": "https://altema.jp/mhw/weapon/3984",
+     "title": "【MHWアイスボーン】ヴォルキャノンの生産・強化素材と派生方法 - アルテマ"
+    },
+    {
+     "url": "https://monsterhunter.fandom.com/wiki/Vor_Cannon_(MHWI)",
+     "title": "Vor Cannon (MHWI)"
+    }
+   ],
+   "evidence": "アルテマの「ヴォルキャノン」ページ（アイスボーン）で攻撃力435・会心率-40%・特殊弾は竜撃弾、黒龍素材で作りヴォルバスターに強化するとされている。英語 Fandom の Vor Cannon (MHWI) にも日本語名ヴォルキャノンがある。"
+  }
+ ]
+}

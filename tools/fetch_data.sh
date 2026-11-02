@@ -14,6 +14,7 @@ FILES=(
   charms/charm_base.csv charms/charm_base_translations.csv
   skills/skill_base.csv skills/skill_base_translations.csv skills/skill_levels.csv
   weapons/weapon_base.csv weapons/weapon_base_translations.csv
+  weapons/weapon_bow_ext.csv weapons/weapon_ammo.csv
 )
 cd "$WORK"
 [ -d .git ] || git init -q

@@ -57,6 +57,8 @@
         if (e.def || e.defMul || e.res || e.resAll || e.health || e.dmgCut || e.resMul) I.defSkill[s.id] = 1;
       });
     });
+    // データの英語の説明で「極意の上限をなくす」とされているスキル（Fatalis Legend の 2 部位で付く）
+    I.inheritId = I.skillByEn['Inheritance'] ? I.skillByEn['Inheritance'].id : null;
     g._idx = I;
     return I;
   }
@@ -206,12 +208,14 @@
     var wi = weaponInfo(g, q);
     var req = {}; // skillId -> 必要レベル
     q.skills.forEach(function (x) { req[x.id] = Math.max(req[x.id] || 0, x.lv); });
-    // 上限を超えるレベルは極意スキルが要る
+    // 上限を超えるレベルは、極意スキルか「Inheritance」（データの英語の説明：極意の上限をなくす）が要ります。
+    // どちらでもよいので、条件にはせず、最後に確かめます（needUnlock）。
+    var needUnlock = [];
     Object.keys(req).forEach(function (k) {
       var s = I.skillById[k];
       if (req[k] > s.max) {
         if (s.unlockedBy == null || req[k] > s.maxAll) throw new Error('「' + s.ja + '」は Lv' + Math.max(s.max, s.maxAll) + ' までです');
-        req[s.unlockedBy] = Math.max(req[s.unlockedBy] || 0, 1);
+        needUnlock.push(+k);
       }
     });
     // シリーズスキルで付くスキル -> そのシリーズスキルと必要部位数
@@ -236,8 +240,10 @@
     g.skills.forEach(function (s) {
       if ((ow[0] && fireRel(s)) || (ow[1] && (I.defSkill[s.id] || I.survival[s.id])) || (ow[2] && I.comfort[s.id])) rel[s.id] = 1;
     });
-    // 極意スキル：解放先が点数に関わるなら関わる
-    g.skills.forEach(function (s) { if (s.unlocks != null && rel[s.unlocks]) rel[s.id] = 1; });
+    // 極意スキル：解放先が点数に関わるなら関わる。Inheritance も同じ
+    var anySecret = false;
+    g.skills.forEach(function (s) { if (s.unlocks != null && rel[s.unlocks]) { rel[s.id] = 1; anySecret = true; } });
+    if (anySecret && I.inheritId != null) rel[I.inheritId] = 1;
     var relBonus = {};
     g.bonuses.forEach(function (b) { b.skills.forEach(function (x) { if (rel[x[0]]) relBonus[b.id] = 1; }); });
     var relList = Object.keys(rel).map(Number).sort(function (a, b) { return a - b; });
@@ -325,7 +331,7 @@
         for (var s = d.size; s <= 4; s++) arr[s] = Math.max(arr[s], x[1]);
       });
     });
-    var P = { g: g, I: I, q: q, wi: wi, req: req, rel: rel, relList: relList, relPos: relPos, relBonus: relBonus, bonusGrants: bonusGrants,
+    var P = { g: g, I: I, q: q, wi: wi, req: req, needUnlock: needUnlock, rel: rel, relList: relList, relPos: relPos, relBonus: relBonus, bonusGrants: bonusGrants,
       pools: pools, poolSizes: poolSizes, decos: decos, bestPts: bestPts, useDef: useDef };
     // 装飾品で置きかえられる防具も外す：B のスロットに装飾品を差して A のスキルを作っても、
     // A のスロット以上が残るなら、A を使う案は B を使う案より良くならない
@@ -446,6 +452,8 @@
     var R = P.relList.length, q = P.q, wi = P.wi, I = P.I;
     var sk = P.relList.map(function (id) { return I.skillById[id]; });
     var unlockIdx = sk.map(function (s) { return s.unlockedBy != null && P.relPos[s.unlockedBy] != null ? P.relPos[s.unlockedBy] : -1; });
+    var hasSecret = sk.map(function (s) { return s.unlockedBy != null; });
+    var inheritIdx = I.inheritId != null && P.relPos[I.inheritId] != null ? P.relPos[I.inheritId] : -1;
     var nE = wi.elems.length;
     // T[i][lv] = その段階で足す量
     var T = sk.map(function (s) {
@@ -489,7 +497,7 @@
     function levels(pts) {
       for (var i = 0; i < R; i++) {
         var s = sk[i], p = pts[i];
-        var cap = (unlockIdx[i] >= 0 && pts[unlockIdx[i]] > 0) ? s.maxAll : s.max;
+        var cap = ((unlockIdx[i] >= 0 && pts[unlockIdx[i]] > 0) || (hasSecret[i] && inheritIdx >= 0 && pts[inheritIdx] > 0)) ? s.maxAll : s.max;
         lvBuf[i] = p < cap ? p : cap;
       }
       return lvBuf;
@@ -580,7 +588,7 @@
     var lv = {};
     for (var s in total) {
       var sk = P.I.skillById[s];
-      var unlocked = sk.unlockedBy != null && (total[sk.unlockedBy] || 0) > 0;
+      var unlocked = sk.unlockedBy != null && ((total[sk.unlockedBy] || 0) > 0 || (P.I.inheritId != null && (total[P.I.inheritId] || 0) > 0));
       lv[s] = Math.min(total[s], skillCap(sk, unlocked));
     }
     return { total: total, lv: lv };
@@ -603,7 +611,7 @@
     // 極意が要るのに無いなら不可
     for (var k2 in P.req) {
       var s2 = P.I.skillById[k2];
-      if (P.req[k2] > s2.max && !(base.total[s2.unlockedBy] > 0)) return null;
+      if (P.req[k2] > s2.max && !(base.total[s2.unlockedBy] > 0) && !(P.I.inheritId != null && base.total[P.I.inheritId] > 0)) return null;
     }
     if (P.q.minDefense || P.q.minRes.some(function (x) { return x != null && x !== ''; })) {
       // 下限は装飾品を入れる前の数で大まかに確かめ、最後にもう一度確かめます

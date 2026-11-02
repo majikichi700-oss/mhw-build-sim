@@ -42,7 +42,7 @@ section('決まり（上限・極意・シリーズ・スロット）');
   const q = { weaponType: 'long-sword', weaponSlots: [], objective: 'fire', skills: [{ id: sk('Agitator'), lv: 7 }], timeLimitMs: 15000 };
   const r = E.search(game, q);
   ok(r.builds.length > 0, '挑戦者 Lv7 の案がある');
-  for (const b of r.builds) ok((b.levels[sk('Agitator Secret')] || 0) >= 1, '挑戦者 Lv7 の案に挑戦者・極意がある');
+  for (const b of r.builds) ok((b.levels[sk('Agitator Secret')] || 0) >= 1 || (b.levels[sk('Inheritance')] || 0) >= 1, '挑戦者 Lv7 の案に挑戦者・極意か Inheritance がある');
   checkResult(r, q, '挑戦者7');
   // 上限を超えると止める
   let threw = false; try { E.search(game, { skills: [{ id: sk('Critical Eye'), lv: 8 }] }); } catch (e) { threw = true; }

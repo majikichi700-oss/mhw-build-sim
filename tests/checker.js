@@ -11,6 +11,8 @@ function makeChecker(game) {
   const set = new Map(game.sets.map(s => [s.id, s]));
   const bonus = new Map(game.bonuses.map(b => [b.id, b]));
   const PARTS = ['head', 'chest', 'arms', 'waist', 'legs'];
+  const inh = game.skills.find(s => s.en === 'Inheritance');
+  const inheritId = inh ? inh.id : null;
 
   // build: {armor:[5 ids], charm, weapon, weaponSlots, decos:[{slot, deco}]}
   function recompute(build) {
@@ -71,7 +73,8 @@ function makeChecker(game) {
     const levels = {};
     for (const id in points) {
       const s = skill.get(+id);
-      const unlocked = s.unlockedBy != null && (points[s.unlockedBy] || 0) > 0;
+      // 極意スキル、または Inheritance（skill_levels の英語の説明: Removes the skill level cap for the skill secrets.）で上限が上がる
+      const unlocked = s.unlockedBy != null && ((points[s.unlockedBy] || 0) > 0 || (inheritId != null && (points[inheritId] || 0) > 0));
       const cap = unlocked ? s.levels.length : s.levels.length - s.secret;
       levels[id] = Math.min(points[id], cap);
     }

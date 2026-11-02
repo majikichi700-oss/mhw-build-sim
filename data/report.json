@@ -16,38 +16,12 @@
   "charms/charm_base_translations.csv": 303,
   "charms/charm_base.csv": 317,
   "weapons/weapon_base_translations.csv": 3514,
-  "weapons/weapon_base.csv": 3544
+  "weapons/weapon_base.csv": 3544,
+  "weapons/weapon_bow_ext.csv": 238,
+  "weapons/weapon_ammo.csv": 190
  },
  "missing_ref": [],
  "missing_ja": [
-  {
-   "kind": "skill",
-   "name_en": "Clutch Claw Boost"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Inheritance"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Transcendance"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Fun Fright's Gift"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Fun Fright's Gratitude"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Sizzling Gift"
-  },
-  {
-   "kind": "skill",
-   "name_en": "Sizzling Gratitude"
-  },
   {
    "kind": "skill",
    "name_en": "Coldproof"
@@ -63,326 +37,6 @@
   {
    "kind": "set_bonus",
    "name_en": "New World"
-  },
-  {
-   "kind": "set_bonus",
-   "name_en": "Fatalis Legend"
-  },
-  {
-   "kind": "set_bonus",
-   "name_en": "Fun Fright Blessing"
-  },
-  {
-   "kind": "set_bonus",
-   "name_en": "Sizzling Blessing"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Passionate α+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Demonlord α+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Dragon α+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Dragon β+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Azure Age α+"
-  },
-  {
-   "kind": "armor_set",
-   "name_en": "Artemis α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Passionate Headdress α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Passionate Body α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Passionate Arms α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Passionate Belt α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Passionate Leggings α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Demonlord Hair α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Demonlord Cloak α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Demonlord Blackarm α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Demonlord Leather Belt α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Demonlord Boots α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonhead α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonhide α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonclaws α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonbarbs α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonfeet α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonhead β+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonhide β+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonclaws β+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonbarbs β+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Dragonfeet β+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Azure Age Hair α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Azure Age Haori α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Azure Age Sleeve α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Azure Age Obi α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Azure Age Geta α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Artemis Head α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Artemis Mail α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Artemis Guards α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Artemis Coil α+"
-  },
-  {
-   "kind": "armor",
-   "name_en": "Artemis Greaves α+"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Survival Jewel 1"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Guardian Jewel 2"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Cooling Jewel 2"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Warming Jewel 2"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Diversion Jewel 3"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Acrobat Jewel 3"
-  },
-  {
-   "kind": "decoration",
-   "name_en": "Shaver Jewel 3"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Survival Charm I"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Survival Charm II"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Survival Charm III"
-  },
-  {
-   "kind": "charm",
-   "name_en": "Shaver Charm"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Blade"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Black Fatalis Blade"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Dark Claw"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Dark Claw \"Demise\""
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Sickle"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Zaggespanon"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Sword"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis Sword"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Dual Blades"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Dual Skies"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Buster"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Demolisher"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Menace"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Menace Wailer"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Lance"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis Lance"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Gunlance"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis Gunlance"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis End"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis End"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Charger"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis Charger"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Glaive"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "True Fatalis Dyaus"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Pit"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Fatalis Depths"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Vor Cannon"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Vor Buster"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Bow of Rack & Ruin"
-  },
-  {
-   "kind": "weapon",
-   "name_en": "Bow of Vice & Violence"
   }
  ],
  "derived_ja": [
@@ -519,6 +173,1175 @@
    "from": "Critical Charm II（超心の護石Ⅱ）"
   }
  ],
+ "searched_ja": [
+  {
+   "kind": "skill",
+   "name_en": "Clutch Claw Boost",
+   "name_ja": "クラッチ攻撃強化",
+   "domains": [
+    "monsterhunter.fandom.com",
+    "www.famitsu.com"
+   ],
+   "sources": [
+    "https://monsterhunter.fandom.com/wiki/MHWI:_Skill_List",
+    "https://www.famitsu.com/news/201909/06182544.html"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Inheritance",
+   "name_ja": "継承",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/seriesskill/68",
+    "https://altema.jp/mhw/miraboreasusoubi"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Transcendance",
+   "name_ja": "超越",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/seriesskill/68"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gift",
+   "name_ja": "ホラーナイトの贈り物",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/exmakainonushi",
+    "https://altema.jp/mhw/boguseries/327"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Fun Fright's Gratitude",
+   "name_ja": "ホラーナイトの恵み",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/exmakainonushi"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gift",
+   "name_ja": "情熱の贈り物",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/343644",
+    "https://altema.jp/mhw/seriesskill/66"
+   ]
+  },
+  {
+   "kind": "skill",
+   "name_en": "Sizzling Gratitude",
+   "name_ja": "情熱の恵み",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/343644",
+    "https://altema.jp/mhw/seriesskill/66"
+   ]
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fatalis Legend",
+   "name_ja": "黒龍の伝説",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/seriesskill/68",
+    "https://altema.jp/mhw/miraboreasusoubi",
+    "https://game8.jp/mhw/327610"
+   ]
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Fun Fright Blessing",
+   "name_ja": "ホラーナイトの祝福",
+   "domains": [
+    "altema.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/exmakainonushi",
+    "https://monsterhunterwiki.org/wiki/Fun_Fright_Blessing_(MHWI)",
+    "https://monsterhunterwiki.org/wiki/Demonlord_%CE%B1%2B_Set_(MHWI)"
+   ]
+  },
+  {
+   "kind": "set_bonus",
+   "name_en": "Sizzling Blessing",
+   "name_ja": "情熱の祝福",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1668",
+    "https://monsterhunterwiki.org/wiki/Sizzling_Blessing_(MHWI)",
+    "https://game8.jp/mhw/343644"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Passionate α+",
+   "name_ja": "EXパッションα",
+   "domains": [
+    "ascii.jp",
+    "game8.jp",
+    "gamewith.jp",
+    "gamy.jp",
+    "mhw.poedb.tw",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/343644",
+    "http://mhwg.org/ida/249537.html",
+    "https://gamewith.jp/mhw/213660",
+    "https://gamy.jp/mh-w/mhw-armor0382",
+    "https://mhw.poedb.tw/jpn/armorset/Passion%20%CE%B1+",
+    "https://ascii.jp/elem/000/004/018/4018842/"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Demonlord α+",
+   "name_ja": "EX魔界ノ主α",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "http://mhwg.org/ida/249923.html",
+    "https://altema.jp/mhw/exmakainonushi",
+    "https://game8.jp/mhw/355760",
+    "https://game8.jp/mhw/355775",
+    "https://gamewith.jp/mhw/227955"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon α+",
+   "name_ja": "EXドラゴンα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/boguseries/323",
+    "https://altema.jp/mhw/miraboreasusoubi"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Dragon β+",
+   "name_ja": "EXドラゴンβ",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/miraboreasusoubi",
+    "https://altema.jp/mhw/boguseries/323"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Azure Age α+",
+   "name_ja": "EX蒼世ノ侍α",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com",
+    "monsterhunterworld.wiki.fextralife.com",
+    "www.gamespark.jp"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/armorseries/5v6R5/ex-ao-yo-no-samurai-alpha",
+    "https://altema.jp/mhw/boguseries/325",
+    "https://altema.jp/mhw/seriesskill/52",
+    "https://www.gamespark.jp/article/2020/01/20/96122.html",
+    "https://monsterhunterworld.wiki.fextralife.com/Azure+Age+Alpha+++Set",
+    "https://game8.jp/mhw/353832"
+   ]
+  },
+  {
+   "kind": "armor_set",
+   "name_en": "Artemis α+",
+   "name_ja": "EXアルテミスα",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+    "https://mhworld.kiranico.com/en/armorseries/5bZq5/artemis-a",
+    "https://gamewith.jp/mhw/241551",
+    "http://mhwg.org/ida/250071.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Headdress α+",
+   "name_ja": "EXパッションヘッドα",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1668",
+    "http://mhwg.org/ida/249537.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Body α+",
+   "name_ja": "EXパッションボディα",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1669",
+    "http://mhwg.org/ida/249537.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Arms α+",
+   "name_ja": "EXパッションアームα",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1670",
+    "http://mhwg.org/ida/249537.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Belt α+",
+   "name_ja": "EXパッションベルトα",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1671",
+    "http://mhwg.org/ida/249537.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Passionate Leggings α+",
+   "name_ja": "EXパッションフットα",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1672",
+    "http://mhwg.org/ida/249537.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Hair α+",
+   "name_ja": "EX魔界ノ主【艶髪】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1703",
+    "https://altema.jp/mhw/exmakainonushi",
+    "https://game8.jp/mhw/355760"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Cloak α+",
+   "name_ja": "EX魔界ノ主【外套】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/193562",
+    "https://game8.jp/mhw/199534",
+    "https://altema.jp/mhw/exmakainonushi"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Blackarm α+",
+   "name_ja": "EX魔界ノ主【黒腕】α",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1705",
+    "https://altema.jp/mhw/exmakainonushi"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Leather Belt α+",
+   "name_ja": "EX魔界ノ主【革帯】α",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1706",
+    "https://altema.jp/mhw/exmakainonushi"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Demonlord Boots α+",
+   "name_ja": "EX魔界ノ主【黒靴】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/193565",
+    "https://altema.jp/mhw/bogu/1707"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead α+",
+   "name_ja": "EXドラゴンヘッドα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1683"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide α+",
+   "name_ja": "EXドラゴンハイドα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/boguseries/323",
+    "https://altema.jp/mhw/miraboreasusoubi"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws α+",
+   "name_ja": "EXドラゴンクロウα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1685"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs α+",
+   "name_ja": "EXドラゴンスパインα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1686"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet α+",
+   "name_ja": "EXドラゴンフットα",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/boguseries/323",
+    "https://altema.jp/mhw/miraboreasusoubi"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhead β+",
+   "name_ja": "EXドラゴンヘッドβ",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1688"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonhide β+",
+   "name_ja": "EXドラゴンハイドβ",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/miraboreasusoubi",
+    "https://altema.jp/mhw/bogu/1689"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonclaws β+",
+   "name_ja": "EXドラゴンクロウβ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1690",
+    "https://game8.jp/mhw/288726"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonbarbs β+",
+   "name_ja": "EXドラゴンスパインβ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1691",
+    "https://game8.jp/mhw/288726"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Dragonfeet β+",
+   "name_ja": "EXドラゴンフットβ",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1692"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Hair α+",
+   "name_ja": "EX蒼世ノ侍【艶髪】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1693",
+    "https://game8.jp/mhw/353832"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Haori α+",
+   "name_ja": "EX蒼世ノ侍【羽織】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1694",
+    "https://game8.jp/mhw/353832"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Sleeve α+",
+   "name_ja": "EX蒼世ノ侍【袖】α",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1695",
+    "https://game8.jp/mhw/353832",
+    "https://gamewith.jp/mhw/184000"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Obi α+",
+   "name_ja": "EX蒼世ノ侍【帯】α",
+   "domains": [
+    "altema.jp",
+    "mhw.wiki-db.com"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1696",
+    "https://mhw.wiki-db.com/equipments/ex%E8%92%BC%E4%B8%96%E3%83%8E%E4%BE%8D%E5%B8%AF%CE%B1"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Azure Age Geta α+",
+   "name_ja": "EX蒼世ノ侍【履物】α",
+   "domains": [
+    "altema.jp",
+    "mhw.wiki-db.com"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/bogu/1697",
+    "https://mhw.wiki-db.com/equipments/ex%E8%92%BC%E4%B8%96%E3%83%8E%E4%BE%8D%E5%B1%A5%E7%89%A9%CE%B1"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Head α+",
+   "name_ja": "EXアルテミスヘッドα",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+    "https://game8.jp/mhw/363323",
+    "https://gamewith.jp/mhw/241551"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Mail α+",
+   "name_ja": "EXアルテミスメイルα",
+   "domains": [
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+    "http://mhwg.org/ida/250071.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Guards α+",
+   "name_ja": "EXアルテミスアームα",
+   "domains": [
+    "altema.jp",
+    "gamewith.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/ourworld",
+    "https://gamewith.jp/mhw/241551",
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Coil α+",
+   "name_ja": "EXアルテミスコイルα",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/363323",
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+    "http://mhwg.org/ida/250071.html"
+   ]
+  },
+  {
+   "kind": "armor",
+   "name_en": "Artemis Greaves α+",
+   "name_ja": "EXアルテミスグリーヴα",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/363323",
+    "https://mhworld.kiranico.com/ja/armorseries/5bZq5/ex-arutemisu-alpha",
+    "http://mhwg.org/ida/250071.html"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Survival Jewel 1",
+   "name_ja": "環境珠【1】",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/275169",
+    "https://altema.jp/mhw/skill/344",
+    "http://mhwg.org/ida/1317.html"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Guardian Jewel 2",
+   "name_ja": "守勢珠【2】",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/295235",
+    "https://altema.jp/mhw/soushokuhin/182",
+    "https://gamewith.jp/mhw/173098"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Cooling Jewel 2",
+   "name_ja": "耐暑珠【2】",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/295179",
+    "https://altema.jp/mhw/skill/279",
+    "http://mhwg.org/ida/239169.html"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Warming Jewel 2",
+   "name_ja": "耐寒珠【2】",
+   "domains": [
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/295181",
+    "https://game8.jp/mhw/200212",
+    "http://mhwg.org/ida/239167.html"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Diversion Jewel 3",
+   "name_ja": "陽動珠【3】",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/352325",
+    "http://mhwg.org/ida/249782.html",
+    "https://twitter.com/MH_official_JP/status/1310157415145287681"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Acrobat Jewel 3",
+   "name_ja": "受身珠【3】",
+   "domains": [
+    "game8.jp",
+    "mhwg.org",
+    "www.mhw-blog.com"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/352329",
+    "http://mhwg.org/ida/249780.html",
+    "https://www.mhw-blog.com/iceborne-5th-update/clutchkougekikyouka-skill-sakuge-yousou-ukemi-skill-kouka"
+   ]
+  },
+  {
+   "kind": "decoration",
+   "name_en": "Shaver Jewel 3",
+   "name_ja": "削撃珠【3】",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    "https://gamewith.jp/mhw/231000",
+    "http://mhwg.org/ida/249778.html",
+    "https://twitter.com/MH_official_JP/status/1310157415145287681"
+   ]
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm I",
+   "name_ja": "環境の護石Ⅰ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/stone/244",
+    "https://game8.jp/mhw/185081"
+   ]
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm II",
+   "name_ja": "環境の護石Ⅱ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/stone/244",
+    "https://game8.jp/mhw/185081"
+   ]
+  },
+  {
+   "kind": "charm",
+   "name_en": "Survival Charm III",
+   "name_ja": "環境の護石Ⅲ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/stone/244",
+    "https://game8.jp/mhw/185081"
+   ]
+  },
+  {
+   "kind": "charm",
+   "name_en": "Shaver Charm",
+   "name_ja": "削撃の護石",
+   "domains": [
+    "gamewith.jp",
+    "mhwg.org",
+    "twitter.com"
+   ],
+   "sources": [
+    "http://mhwg.org/ida/249772.html",
+    "https://gamewith.jp/mhw/231000",
+    "https://twitter.com/MH_official_JP/status/1310157415145287681"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Blade",
+   "name_ja": "ミラブレイド",
+   "domains": [
+    "altema.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/taikensaikyo",
+    "https://altema.jp/mhw/monsterbuki/99",
+    "https://mhworld.kiranico.com/ja/weapons/jqHy9fvw/mirabureido"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Black Fatalis Blade",
+   "name_ja": "ブラックミラブレイド",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/taikensaikyo",
+    "https://altema.jp/mhw/monsterbuki/99"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw",
+   "name_ja": "漆黒の爪",
+   "domains": [
+    "altema.jp",
+    "monsterhunterwiki.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/arubatorionbuki",
+    "https://monsterhunterwiki.org/wiki/Dark_Claw_(MHWI)"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Dark Claw \"Demise\"",
+   "name_ja": "漆黒爪【終焉】",
+   "domains": [
+    "altema.jp",
+    "wikiwiki.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/arubatorionbuki",
+    "https://wikiwiki.jp/nenaiko/%E6%AD%A6%E5%99%A8/%E6%BC%86%E9%BB%92%E7%88%AA%E3%80%90%E7%B5%82%E7%84%89%E3%80%91"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sickle",
+   "name_ja": "ミラドレパノン",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/200089",
+    "https://altema.jp/mhw/monsterbuki/99"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Zaggespanon",
+   "name_ja": "ミラザーゲスパノン",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/tachisaikyo",
+    "https://game8.jp/mhw/200089",
+    "https://game8.jp/mhw/290401"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Sword",
+   "name_ja": "黒龍剣",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/katatekensaikyo",
+    "https://altema.jp/mhw/monsterbuki/99"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Sword",
+   "name_ja": "真・黒龍剣",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/katatekensaikyo",
+    "https://game8.jp/mhw/200090"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Blades",
+   "name_ja": "黒龍双刃",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/monsterbuki/99"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Dual Skies",
+   "name_ja": "黒龍双刃【二天】",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/monsterbuki/99",
+    "https://game8.jp/mhw/288726"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Buster",
+   "name_ja": "ミラバスター",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/weapons/VRCp8fqR/mirabasutaa",
+    "https://altema.jp/mhw/monsterbuki/99",
+    "https://game8.jp/mhw/353132"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Demolisher",
+   "name_ja": "ミラデモリッシャー",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/hammersaikyo",
+    "https://game8.jp/mhw/196055"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace",
+   "name_ja": "ミラメノス",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/200094",
+    "https://altema.jp/mhw/monsterbuki/99"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Menace Wailer",
+   "name_ja": "ミラメノスアギカ",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/fuesaikyo",
+    "https://game8.jp/mhw/200094"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Lance",
+   "name_ja": "黒龍槍",
+   "domains": [
+    "altema.jp",
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/weapons/y2cWoi5M/kokuryuu-yari",
+    "https://altema.jp/mhw/weapon/3977",
+    "https://game8.jp/mhw/354030"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Lance",
+   "name_ja": "真・黒龍槍",
+   "domains": [
+    "altema.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/lancesaikyo",
+    "http://mhwg.org/ida/249847.html"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Gunlance",
+   "name_ja": "黒龍銃槍",
+   "domains": [
+    "game8.jp",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhworld.kiranico.com/ja/weapons/5aSvbfPM/kokuryuu-juu-yari",
+    "https://game8.jp/mhw/201563"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Gunlance",
+   "name_ja": "真・黒龍銃槍",
+   "domains": [
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/196054",
+    "https://game8.jp/mhw/201563"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis End",
+   "name_ja": "黒龍剣斧",
+   "domains": [
+    "altema.jp",
+    "mhw.poedb.tw",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhw.poedb.tw/jpn/weapon/Fatalis%20End",
+    "https://altema.jp/mhw/weapon/3979",
+    "https://mhworld.kiranico.com/ja/weapons/b9U6vcog/kokuryuu-tsurugi-ono"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis End",
+   "name_ja": "真・黒龍剣斧",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/354033",
+    "https://altema.jp/mhw/weapon/3993"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Charger",
+   "name_ja": "黒龍盾斧",
+   "domains": [
+    "altema.jp",
+    "mhw.poedb.tw",
+    "mhworld.kiranico.com"
+   ],
+   "sources": [
+    "https://mhw.poedb.tw/jpn/weapon/Fatalis%20Charger",
+    "https://altema.jp/mhw/weapon/3980",
+    "https://mhworld.kiranico.com/ja/weapons/gBTqlfMJ/kokuryuu-tate-ono"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Charger",
+   "name_ja": "真・黒龍盾斧",
+   "domains": [
+    "altema.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/weapon/3994",
+    "https://altema.jp/mhw/chargeaxsaikyo"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Glaive",
+   "name_ja": "黒龍棍",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/200092",
+    "https://altema.jp/mhw/weapon/3981"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "True Fatalis Dyaus",
+   "name_ja": "真・黒龍棍",
+   "domains": [
+    "altema.jp",
+    "game8.jp"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/souchukonsaikyo",
+    "https://game8.jp/mhw/200092"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Pit",
+   "name_ja": "黒龍翼弩",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/354036",
+    "https://gamewith.jp/mhw/231132"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Fatalis Depths",
+   "name_ja": "真・黒龍翼弩",
+   "domains": [
+    "game8.jp",
+    "gamewith.jp"
+   ],
+   "sources": [
+    "https://gamewith.jp/mhw/231132",
+    "https://game8.jp/mhw/354036"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Cannon",
+   "name_ja": "ヴォルキャノン",
+   "domains": [
+    "altema.jp",
+    "monsterhunter.fandom.com"
+   ],
+   "sources": [
+    "https://altema.jp/mhw/weapon/3984",
+    "https://monsterhunter.fandom.com/wiki/Vor_Cannon_(MHWI)"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Vor Buster",
+   "name_ja": "ヴォルバスター",
+   "domains": [
+    "game8.jp",
+    "mhwg.org"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/354037",
+    "https://game8.jp/mhw/290757",
+    "http://mhwg.org/ida/249861.html"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Rack & Ruin",
+   "name_ja": "殲滅と破壊の剛弓",
+   "domains": [
+    "game8.jp"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/200099",
+    "https://game8.jp/mhw/353132"
+   ]
+  },
+  {
+   "kind": "weapon",
+   "name_en": "Bow of Vice & Violence",
+   "name_ja": "断滅と崩壊の剛烈弓",
+   "domains": [
+    "game8.jp",
+    "www.mhw-blog.com"
+   ],
+   "sources": [
+    "https://game8.jp/mhw/290413",
+    "https://game8.jp/mhw/200099",
+    "https://www.mhw-blog.com/miraboreasu-weapon14-skill-seinou/"
+   ]
+  }
+ ],
  "notes": [],
  "counts": {
   "armors": 1595,
@@ -533,7 +1356,9 @@
  },
  "parsed_skills": [
   "Agitator",
+  "Airborne",
   "All Elemental Resistance",
+  "Artillery",
   "Attack Boost",
   "Coalescence",
   "Critical Boost",
@@ -546,6 +1371,7 @@
   "Fire Attack",
   "Fire Resistance",
   "Fortify",
+  "Free Elem/Ammo Up",
   "Health Boost",
   "Heroics",
   "Ice Attack",
@@ -555,6 +1381,7 @@
   "Offensive Guard",
   "Peak Performance",
   "Resentment",
+  "Special Ammo Boost",
   "Thunder Attack",
   "Thunder Resistance",
   "Water Attack",

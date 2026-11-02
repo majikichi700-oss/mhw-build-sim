@@ -24,7 +24,7 @@ MELEE = {'great-sword', 'long-sword', 'sword-and-shield', 'dual-blades', 'hammer
          'lance', 'gunlance', 'switch-axe', 'charge-blade', 'insect-glaive'}
 
 report = {'commit': open(os.path.join(SRC, 'COMMIT')).read().strip(), 'rows': {}, 'missing_ref': [],
-          'missing_ja': [], 'derived_ja': [], 'notes': []}
+          'missing_ja': [], 'derived_ja': [], 'searched_ja': [], 'notes': []}
 
 
 def read(rel):
@@ -90,6 +90,25 @@ def derive_charm(m, rows):
             report['derived_ja'].append({'kind': 'charm', 'name_en': en, 'name_ja': m[en], 'from': r['previous_en'] + '（' + pj + '）'})
 
 
+# ---- データにも兄弟の名前にもない日本語名：検索で見つけた名前（data/ja_names_extra.json、出典つき）
+EXTRA = {}
+_extra_path = os.path.join(OUT, 'ja_names_extra.json')
+if os.path.exists(_extra_path):
+    for x in json.load(open(_extra_path, encoding='utf-8'))['names']:
+        EXTRA[(x['kind'], re.sub(r'\s+', ' ', x['name_en']).strip())] = x
+
+
+def apply_extra(m, kind, names, key_of=lambda n: n):
+    for en in names:
+        k = key_of(en)
+        if m.get(k):
+            continue
+        x = EXTRA.get((kind, re.sub(r'\s+', ' ', en).strip()))
+        if x:
+            m[k] = x['name_ja']
+            report['searched_ja'].append({'kind': kind, 'name_en': en, 'name_ja': x['name_ja'], 'domains': x['domains'], 'sources': [s['url'] for s in x['sources']]})
+
+
 def norm(s):
     s = unicodedata.normalize('NFKC', s or '')
     return re.sub(r'\s+', '', s)
@@ -142,6 +161,21 @@ def parse_effect(desc_ja):
     m = re.search(r'ダメージを(\d+)%軽減', d)
     if m:
         e['dmgCut'] = int(m.group(1))
+    # 武器の種類ごとの数値（v1.1）
+    m = re.search(r'対象の攻撃威力(\d+(?:\.\d+)?)倍', d)
+    if m:
+        e['artMul'] = float(m.group(1))          # 砲術：砲撃・ビン爆発など「対象の攻撃」
+    m = re.search(r'特殊弾.*?威力が(\d+(?:\.\d+)?)倍', d)
+    if m:
+        e['specialMul'] = float(m.group(1))      # 特殊射撃強化：ボウガンの特殊弾、弓の竜の一矢・千々矢
+    m = re.search(r'隠された属性の(\d)/(\d)を引き出す', d)
+    if m:
+        e['hiddenFrac'] = int(m.group(1)) / int(m.group(2))
+    elif re.search(r'隠された属性を100%引き出す', d):
+        e['hiddenFrac'] = 1.0
+    m = re.search(r'ジャンプ攻撃の威力を(\d+(?:\.\d+)?)倍', d)
+    if m:
+        e['jumpMul'] = float(m.group(1))         # 飛燕
     if not e:
         return None
     if '回毎' in d:
@@ -171,6 +205,9 @@ def main():
         en = r['name_en']
         tr = sk_tr.get(en)
         ja = tr['name_ja'] if tr and tr.get('name_ja') else None
+        if not ja and ('skill', en) in EXTRA:
+            ja = EXTRA[('skill', en)]['name_ja']
+            report['searched_ja'].append({'kind': 'skill', 'name_en': en, 'name_ja': ja, 'domains': EXTRA[('skill', en)]['domains'], 'sources': [x['url'] for x in EXTRA[('skill', en)]['sources']]})
         if not ja:
             report['missing_ja'].append({'kind': 'skill', 'name_en': en})
         lv = sorted(levels.get(en, []), key=lambda x: int(x['level']))
@@ -204,6 +241,7 @@ def main():
 
     # ---- set bonuses
     bon_ja = ja_map('armors/armorset_bonus_base_translations.csv', 'bonus')
+    apply_extra(bon_ja, 'set_bonus', [r['name_en'] for r in read('armors/armorset_bonus_base.csv')])
     bonuses = []
     bid = {}
     for r in read('armors/armorset_bonus_base.csv'):
@@ -220,6 +258,7 @@ def main():
     set_ja = ja_map('armors/armorset_base_translations.csv', 'set')
     set_rows = read('armors/armorset_base.csv')
     derive_gamma(set_ja, 'armor_set', [r['name_en'] for r in set_rows])
+    apply_extra(set_ja, 'armor_set', [r['name_en'] for r in set_rows])
     sets = []
     piece_set = {}
     for r in set_rows:
@@ -250,6 +289,7 @@ def main():
     armors = []
     armor_rows = read('armors/armor_base.csv')
     derive_gamma(ar_ja, 'armor', [r['name_en'] for r in armor_rows])
+    apply_extra(ar_ja, 'armor', [r['name_en'] for r in armor_rows])
     for r in armor_rows:
         en = r['name_en']
         st = piece_set.get(en)
@@ -271,6 +311,7 @@ def main():
 
     # ---- decorations
     de_ja = ja_map('decorations/decoration_base_translations.csv', 'decoration')
+    apply_extra(de_ja, 'decoration', [r['name_en'] for r in read('decorations/decoration_base.csv')])
     decos = []
     for r in read('decorations/decoration_base.csv'):
         lst = []
@@ -286,6 +327,7 @@ def main():
     ch_ja = ja_map('charms/charm_base_translations.csv', 'charm')
     rows = read('charms/charm_base.csv')
     derive_charm(ch_ja, rows)
+    apply_extra(ch_ja, 'charm', [r['name_en'] for r in rows])
     names = {r['name_en'] for r in rows}
     has_next = {r['previous_en'] for r in rows if r['previous_en']}
     charms = []
@@ -309,6 +351,29 @@ def main():
 
     # ---- weapons
     we_ja = ja_map('weapons/weapon_base_translations.csv', 'weapon')
+    _wrows = read('weapons/weapon_base.csv')
+    for r in _wrows:
+        k = (r['name_en'], r['weapon_type'])
+        x = EXTRA.get(('weapon', re.sub(r'\s+', ' ', r['name_en']).strip()))
+        if not we_ja.get(k) and x:
+            we_ja[k] = x['name_ja']
+            report['searched_ja'].append({'kind': 'weapon', 'name_en': r['name_en'], 'name_ja': x['name_ja'], 'domains': x['domains'], 'sources': [u['url'] for u in x['sources']]})
+    # 弓のビン（使えるビンの一覧）
+    bow_ext = {}
+    for r in read('weapons/weapon_bow_ext.csv'):
+        bow_ext[r['base_name_en']] = [k for k in ('close', 'power', 'paralysis', 'poison', 'sleep', 'blast') if r[k] == 'TRUE']
+    # ボウガンの弾の設定（弾の種類ごとの装填数・速射）
+    ammo = {}
+    for r in read('weapons/weapon_ammo.csv'):
+        a = {'deviation': r['deviation'], 'special': r['special'], 'types': {}}
+        for k, v in r.items():
+            m = re.match(r'^(.*?)(\d?)_(clip|rapid)$', k)
+            if not m or not v or v == '0':
+                continue
+            name = m.group(1) + m.group(2)
+            a['types'].setdefault(name, {})[m.group(3)] = (v == 'TRUE') if m.group(3) == 'rapid' else int(v)
+        a['types'] = {k: v for k, v in a['types'].items() if v.get('clip', 0) > 0}
+        ammo[r['key']] = a
     weapons = []
     for r in read('weapons/weapon_base.csv'):
         key = (r['name_en'], r['weapon_type'])
@@ -334,12 +399,17 @@ def main():
             'elemHidden': r['element_hidden'] == 'TRUE', 'elements': el,
             'slots': sorted([int(r['slot_%d' % k]) for k in (1, 2, 3) if int(r['slot_%d' % k] or 0) > 0], reverse=True),
             'skills': wsk, 'bonus': wbonus, 'final': True,
+            # 武器の種類ごとの情報（ビン・砲撃タイプ・弾の設定など）
+            'phial': r['phial'] or None, 'phialPower': int(r['phial_power']) if r['phial_power'] else None,
+            'shelling': r['shelling'] or None, 'shellingLevel': int(r['shelling_level']) if r['shelling_level'] else None,
+            'kinsect': r['kinsect_bonus'] or None, 'ammo': r['ammo_config'] or None,
+            'coatings': bow_ext.get(r['name_en']),
         })
     prev = {r['previous_en'] for r in read('weapons/weapon_base.csv') if r['previous_en']}
     for w in weapons:
         w['final'] = w['en'] not in prev
 
-    game = {'commit': report['commit'], 'skills': skills, 'bonuses': bonuses, 'sets': sets, 'armors': armors,
+    game = {'commit': report['commit'], 'ammo': ammo, 'skills': skills, 'bonuses': bonuses, 'sets': sets, 'armors': armors,
             'decos': decos, 'charms': charms, 'weapons': weapons}
     with open(os.path.join(OUT, 'game.json'), 'w', encoding='utf-8') as f:
         json.dump(game, f, ensure_ascii=False, separators=(',', ':'))
