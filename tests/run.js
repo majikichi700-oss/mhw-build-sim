@@ -72,6 +72,56 @@ for (const q of queries) {
   console.log('  ' + q.objective + ': ' + r.builds.length + ' 案、' + r.stats.leaves + ' 通りを調べた、打ち切り=' + r.stats.truncated + '、' + r.stats.timeMs + 'ms');
 }
 
+// ---- 3b. v1.1 で足した計算
+section('v1.1 の計算（属性・武器の種類ごとの数値・カスタム強化）');
+{
+  const wpick = (type, f) => game.weapons.filter(w => w.type === type && w.rarity >= 11 && f(w)).sort((a, b) => b.attack - a.attack)[0];
+  // 会心撃【属性】：属性のある武器なら属性期待値が上がる（調べた倍率）
+  const ce = sk('Critical Element');
+  const ew = wpick('dual-blades', w => !w.elemHidden && w.elements.length && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]));
+  const wi = E.weaponInfo(game, { weaponId: ew.id, objective: 'fire' });
+  const base = E.scoreParts(game, { objective: 'fire' }, wi, { [sk('Critical Eye')]: 7 }, [], 0, [0, 0, 0, 0, 0]);
+  const withCE = E.scoreParts(game, { objective: 'fire' }, wi, { [sk('Critical Eye')]: 7, [ce]: 1 }, [], 0, [0, 0, 0, 0, 0]);
+  ok(withCE.detail.elem > base.detail.elem && Math.abs(withCE.detail.critElem - 1.35) < 1e-9, '双剣の会心撃【属性】は 1.35 倍として属性期待値が上がる');
+  ok(base.notCounted.indexOf(ce) < 0 && withCE.notCounted.indexOf(ce) < 0, '属性のある武器では会心撃【属性】を「数値に入れていないスキル」にしない');
+  // 隠し属性：属性解放なしでは 0、Lv3 で全部
+  const hw = wpick('great-sword', w => w.elemHidden && w.elements.length && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]));
+  if (hw) {
+    const hwi = E.weaponInfo(game, { weaponId: hw.id });
+    const h0 = E.scoreParts(game, { objective: 'fire' }, hwi, {}, [], 0, [0, 0, 0, 0, 0]);
+    const h3 = E.scoreParts(game, { objective: 'fire' }, hwi, { [sk('Free Elem/Ammo Up')]: 3 }, [], 0, [0, 0, 0, 0, 0]);
+    ok(h0.detail.elem === 0 && Math.abs(h3.detail.elemShown[0][1] - hw.elements[0][1]) < 1e-9, '隠し属性は属性解放 Lv3 で全部出る（' + hw.ja + '）');
+  } else ok(false, '隠し属性の大剣が見つからない');
+  // 砲術：ガンランスだけ点数が上がる
+  const gl = wpick('gunlance', () => true), ls = wpick('long-sword', () => true);
+  const art = sk('Artillery');
+  const g1 = E.scoreParts(game, { objective: 'fire' }, E.weaponInfo(game, { weaponId: gl.id }), { [art]: 3 }, [], 0, [0, 0, 0, 0, 0]);
+  const l1 = E.scoreParts(game, { objective: 'fire' }, E.weaponInfo(game, { weaponId: ls.id }), { [art]: 3 }, [], 0, [0, 0, 0, 0, 0]);
+  ok(Math.abs(g1.fire - (100 * (0.7 + 0.3 * 1.3))) < 1e-6, 'ガンランスの砲術 Lv3：爆発の割合 30% に 1.3 倍がかかる（' + g1.fire.toFixed(2) + '）');
+  ok(Math.abs(l1.fire - 100) < 1e-9 && l1.notCounted.indexOf(art) >= 0, '太刀では砲術は点数に入らず、「数値に入れていないスキル」になる');
+  // 武器の数値を自分で入れる（カスタム強化）
+  const qo = { weaponId: ls.id, objective: 'fire', weaponOverride: { attack: ls.attack + 33, affinity: 30, slots: [4, 4, 1] }, skills: [{ id: sk('Critical Eye'), lv: 4 }], timeLimitMs: 4000, minRarity: 10 };
+  const ro = E.search(game, qo);
+  ok(ro.builds.length && ro.builds[0].weaponSlots.join() === '4,4,1', '入れた武器のスロットで探す');
+  checkResult(ro, qo, '武器の強化');
+  ok(ro.builds.every(b => C.check(b, qo.skills).ok), '武器の強化を入れた案も検算が合う');
+  // 防具の強化を自分で入れる・防御力をカスタム強化の最大で計算する
+  const someHead = game.armors.find(a => a.part === 'head' && a.rarity === 12);
+  const qa = { weaponType: 'hammer', weaponSlots: [2], objective: 'defense', armorAugMax: true, fixedArmor: { head: someHead.id }, armorOverrides: { [someHead.id]: { slots: [4, 4, 4], addSkills: [[sk('Health Boost'), 1]] } }, skills: [{ id: sk('Health Boost'), lv: 3 }], timeLimitMs: 4000 };
+  const ra = E.search(game, qa);
+  ok(ra.builds.length && ra.builds[0].mods && ra.builds[0].mods.armorOverrides && ra.builds[0].mods.armorAugMax, '防具の強化の入力が案に付く');
+  checkResult(ra, qa, '防具の強化');
+  // Inheritance（データの英語の説明：極意の上限をなくす）
+  const qi = { weaponType: 'long-sword', weaponSlots: [2, 2], objective: 'fire', skills: [{ id: sk('Agitator'), lv: 7 }], timeLimitMs: 8000, minRarity: 10 };
+  const ri = E.search(game, qi);
+  ok(ri.builds.length > 0 && ri.builds.every(b => (b.levels[sk('Agitator Secret')] || 0) > 0 || (b.levels[sk('Inheritance')] || 0) > 0), '挑戦者 Lv7 は極意か Inheritance で上限が上がる');
+  checkResult(ri, qi, 'Inheritance');
+  // 防具のレア度の下限
+  const qm = { weaponType: 'bow', weaponSlots: [1], objective: 'comfort', minRarity: 11, skills: [], timeLimitMs: 3000 };
+  const rm = E.search(game, qm);
+  ok(rm.builds.length && rm.builds.every(b => b.armor.every(id => I.armorById[id].rarity >= 11)), '防具のレア度の下限を守る');
+}
+
 // ---- 4. 小さな例で総当たりと比べる
 section('小さな例で総当たりと比べる');
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
@@ -97,7 +147,10 @@ for (let t = 0; t < 24; t++) {
   const nsk = 1 + Math.floor(R() * 2);
   const skills = [];
   for (let i = 0; i < nsk; i++) { const n = skillPool[Math.floor(R() * skillPool.length)]; if (!skills.some(s => s.id === sk(n))) skills.push({ id: sk(n), lv: 1 + Math.floor(R() * 2) }); }
-  const q = { weaponType: 'great-sword', weaponSlots: [[3], [2, 1], [], [4, 1]][t % 4], ranks: [rank], objective: objectives[t % 4], skills, excludeArmor, excludeCharms, timeLimitMs: 60000, topK: 30 };
+  // 武器も変えて、属性・砲術・飛燕の計算も総当たりと比べます
+  const wlist = game.weapons.filter(w => w.rarity >= 11 && ['gunlance', 'dual-blades', 'insect-glaive', 'bow', 'great-sword', 'light-bowgun'].includes(w.type));
+  const wpk = t % 3 === 2 ? null : wlist[Math.floor(R() * wlist.length)];
+  const q = { weaponType: wpk ? wpk.type : 'great-sword', weaponId: wpk ? wpk.id : null, weaponSlots: [[3], [2, 1], [], [4, 1]][t % 4], ranks: [rank], objective: objectives[t % 4], skills, excludeArmor, excludeCharms, timeLimitMs: 60000, topK: 30 };
   const r = E.search(game, q);
   // 総当たり
   const P = E.prepare(game, q);

@@ -24,13 +24,21 @@ function makeChecker(game) {
     const res = [0, 0, 0, 0, 0];
     const bonusCount = {};
     if (!Array.isArray(build.armor) || build.armor.length !== 5) errors.push('防具が 5 部位ありません');
+    const mods = build.mods || {};
     build.armor.forEach((id, i) => {
-      const a = armor.get(id);
+      let a = armor.get(id);
+      // 自分で入れた防具の強化（スロット・足したスキル）は、入れた値をそのまま使います
+      const ov = mods.armorOverrides && mods.armorOverrides[id];
+      if (a && ov) {
+        const sk = {}; a.skills.forEach(([k, n]) => { sk[k] = (sk[k] || 0) + n; });
+        (ov.addSkills || []).forEach(([k, n]) => { if (n > 0) sk[k] = (sk[k] || 0) + n; });
+        a = Object.assign({}, a, { slots: ov.slots ? ov.slots.filter(x => x > 0).sort((x, y) => y - x) : a.slots, skills: Object.entries(sk).map(([k, n]) => [+k, n]) });
+      }
       if (!a) { errors.push('防具 ' + id + ' がデータにありません'); return; }
       if (a.part !== PARTS[i]) errors.push(a.ja + ' は ' + PARTS[i] + ' の防具ではありません');
       for (const [s, n] of a.skills) addPts(s, n);
       a.slots.forEach((sz, j) => { slots[a.part + '#' + j] = sz; });
-      defense += a.def[1];
+      defense += a.def[mods.armorAugMax ? 2 : 1];
       a.res.forEach((r, j) => { res[j] += r; });
       if (a.set != null) {
         const st = set.get(a.set);
@@ -47,10 +55,11 @@ function makeChecker(game) {
       const w = weapon.get(build.weapon);
       if (!w) errors.push('武器 ' + build.weapon + ' がデータにありません');
       else {
-        wslots = w.slots;
+        const wo = mods.weaponOverride || {};
+        wslots = wo.slots ? wo.slots.filter(x => x > 0).sort((x, y) => y - x) : w.slots;
         for (const [s, n] of w.skills) addPts(s, n);
         if (w.bonus != null) bonusCount[w.bonus] = (bonusCount[w.bonus] || 0) + 1;
-        defense += w.defense;
+        defense += (wo.defense != null && wo.defense !== '') ? +wo.defense : w.defense;
       }
     }
     wslots.forEach((sz, j) => { slots['weapon#' + j] = sz; });

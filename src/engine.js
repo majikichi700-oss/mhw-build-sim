@@ -63,6 +63,26 @@
     return I;
   }
 
+  /* 防具のカスタム強化：自分で入れた「強化のあとのスロット・足したスキル」を反映した防具を返します。
+   * データにない強化なので、値は入力のまま使います。防御力は armorAugMax のとき defense_augment_max（データ）を使います。 */
+  function armorOf(g, q, id) {
+    var I = indexGame(g);
+    var a = I.armorById[id];
+    if (!a) return null;
+    var ov = q && q.armorOverrides && q.armorOverrides[id];
+    if (!ov) return a;
+    var c = Object.assign({}, a);
+    if (ov.slots) c.slots = ov.slots.filter(function (x) { return x > 0; }).map(Number).sort(function (x, y) { return y - x; });
+    if (ov.addSkills && ov.addSkills.length) {
+      var m = {}; a.skills.forEach(function (x) { m[x[0]] = (m[x[0]] || 0) + x[1]; });
+      ov.addSkills.forEach(function (x) { if (x && x[1] > 0) m[x[0]] = (m[x[0]] || 0) + +x[1]; });
+      c.skills = Object.keys(m).map(function (k) { return [+k, m[k]]; });
+    }
+    c.augmented = true;
+    return c;
+  }
+  function defOf(q, a) { return a.def[q && q.armorAugMax ? 2 : 1]; }
+
   function rankOfRarity(r) { return r <= 4 ? 'LR' : (r <= 8 ? 'HR' : 'MR'); }
 
   /* スキルの上限（極意で上がる分を含む） */
@@ -80,7 +100,9 @@
     'Heroics': 0,              // 体力が 35% 以下のとき（狙わない前提で数えない）
     'Offensive Guard': 0.3,    // ガードを決めたあと一定時間（ガードできる武器だけ）
     'Coalescence': 0.2,        // 状態異常などを解除したあと一定時間
-    'Divine Blessing': 0.3     // 一定の確率
+    'Divine Blessing': 0.3,    // 一定の確率
+    'Element Acceleration': 0.6,      // 続けて攻撃を当てたあと一定時間（v1.1）
+    'True Element Acceleration': 0.6  // 同じ
   };
   var GUARD_WEAPONS = { lance: 1, gunlance: 1, 'charge-blade': 1, 'sword-and-shield': 1, 'great-sword': 1 };
   function condWeight(cond, s, q, wi) {
@@ -91,79 +113,207 @@
     return Math.min(1, u * (q.uptimeScale == null ? 1 : q.uptimeScale));
   }
 
+  /* ---- 調べて分かった数（出典は README と画面の「点数の付け方」にあります。2026-11-02 に検索で調べました） ---- */
+  // 会心撃【属性】・真・会心撃【属性】：会心が出たときの属性ダメージの倍率（武器の種類ごと）
+  var CRIT_ELEM = { 'great-sword': 1.5, hammer: 1.5, 'hunting-horn': 1.5, 'heavy-bowgun': 1.5, 'light-bowgun': 1.25, other: 1.35 };
+  var TRUE_CRIT_ELEM = { 'great-sword': 1.7, hammer: 1.7, 'hunting-horn': 1.7, 'heavy-bowgun': 1.7, 'light-bowgun': 1.4, other: 1.55 };
+  function critElemMul(type, level) {
+    var t = level === 2 ? TRUE_CRIT_ELEM : CRIT_ELEM;
+    return t[type] != null ? t[type] : t.other;
+  }
+
+  /* ---- 武器の種類ごとの「攻撃の内わけ」（判断。画面で変えられます） ----
+   * art：爆発を伴う攻撃（砲撃・竜撃砲・盾斧のビン攻撃・徹甲榴弾など。データの「砲術」の説明より）の割合。砲術だけが効くとして計算します。
+   * special：ボウガンの特殊弾、弓の竜の一矢・千々矢（データの「特殊射撃強化」の説明より）の割合。
+   * jump：ジャンプ攻撃（飛燕が効く）の割合。 */
+  var PARTS_DEFAULT = {
+    gunlance: { art: 0.3, special: 0, jump: 0 },
+    'charge-blade': { art: 0.2, special: 0, jump: 0 },
+    'light-bowgun': { art: 0.05, special: 0.1, jump: 0 },
+    'heavy-bowgun': { art: 0.05, special: 0.1, jump: 0 },
+    bow: { art: 0, special: 0.1, jump: 0 },
+    'insect-glaive': { art: 0, special: 0, jump: 0.5 }
+  };
+  function weaponParts(q, type) {
+    var d = PARTS_DEFAULT[type] || { art: 0, special: 0, jump: 0 };
+    var o = q.parts || {};
+    return { art: o.art != null ? +o.art : d.art, special: o.special != null ? +o.special : d.special, jump: o.jump != null ? +o.jump : d.jump };
+  }
+
   function weaponInfo(g, q) {
     var I = indexGame(g);
     var w = q.weaponId != null ? I.weaponById[q.weaponId] : null;
+    var info;
     if (w) {
-      var el = (!w.elemHidden) ? w.elements.filter(function (e) { return ELEMS.indexOf(e[0]) >= 0; }) : [];
-      return { w: w, raw: w.attack / WEAPON_BLOAT[w.type], aff: w.affinity, elems: el, defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
+      var el = w.elements.filter(function (e) { return ELEMS.indexOf(e[0]) >= 0; });
+      info = { w: w, raw: w.attack / WEAPON_BLOAT[w.type], aff: w.affinity, elems: w.elemHidden ? [] : el, hidden: w.elemHidden ? el : [],
+        defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
+    } else {
+      // 武器を選ばないときの「基準の武器」（判断）：基礎攻撃力 200、会心率 0%、属性なし
+      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
     }
-    // 武器を選ばないときの「基準の武器」（判断）：基礎攻撃力 200、会心率 0%、属性なし
-    return { w: null, raw: 200, aff: 0, elems: [], defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
+    // カスタム強化・覚醒のあとの数値を自分で入れたとき（データにない強化なので、入れた値をそのまま使います）
+    var ov = q.weaponOverride;
+    if (ov && info.type) {
+      if (ov.attack) info.raw = +ov.attack / WEAPON_BLOAT[info.type];
+      if (ov.affinity != null && ov.affinity !== '') info.aff = +ov.affinity;
+      if (ov.element && ov.element[0] && ov.element[1] > 0) { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+      if (ov.slots) info.slots = ov.slots.filter(function (x) { return x > 0; }).map(Number).sort(function (a, b) { return b - a; });
+      if (ov.defense != null && ov.defense !== '') info.defense = +ov.defense;
+      info.overridden = true;
+    }
+    info.parts = weaponParts(q, info.type);
+    return info;
+  }
+
+  /* ---- 点数の計算（速い計算と通常の計算で同じ式を使います） ----
+   * effContrib：スキル 1 つ・レベル 1 つの効果を、足し合わせやすい形にします。 */
+  var FREE_FRAC = null;
+  function freeFrac(g, lv) {
+    if (!FREE_FRAC) {
+      var I = indexGame(g), s = I.skillByEn['Free Elem/Ammo Up'];
+      FREE_FRAC = [0].concat(s.levels.map(function (l) { return (l.eff && l.eff.hiddenFrac) || 0; }));
+    }
+    return FREE_FRAC[Math.min(lv, FREE_FRAC.length - 1)] || 0;
+  }
+  function effContrib(g, s, lv, q, wi) {
+    var I = indexGame(g);
+    var L = s.levels[Math.min(lv, s.levels.length) - 1], e = L && L.eff;
+    var nE = wi.elems.length, nH = wi.hidden.length;
+    var o = { atk: 0, atkMul: 1, aff: 0, crit: 0, critElem: 0, eAdd: [0, 0], eMul: [1, 1], hAdd: [0, 0], hMul: [1, 1], hidden: 0, accelFrac: 0, accelW: 0,
+      art: 1, special: 1, jump: 1, def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0,
+      surv: I.survival[s.id] ? lv : 0, comf: I.comfort[s.id] ? lv : 0, fireCounted: false };
+    if (s.en === 'Critical Element') o.critElem = 1;
+    if (s.en === 'True Critical Element') o.critElem = 2;
+    if (o.critElem && (nE || nH)) o.fireCounted = true;
+    if (!e) return o;
+    var cw = condWeight(e.cond, s, q, wi);
+    if (cw > 0) {
+      if (e.atk) o.atk = cw * e.atk;
+      if (e.atkMul) o.atkMul = 1 + cw * (e.atkMul - 1);
+      if (e.aff) o.aff = cw * e.aff;
+      for (var j = 0; j < 2; j++) {
+        var t = j < nE ? wi.elems[j][0] : null, th = j < nH ? wi.hidden[j][0] : null;
+        if (t) {
+          if (e.elemAdd && e.elemAdd[t]) o.eAdd[j] += cw * e.elemAdd[t];
+          if (e.elemAddAll) o.eAdd[j] += cw * e.elemAddAll;
+          if (e.elemMul && e.elemMul[t]) o.eMul[j] = 1 + cw * (e.elemMul[t] - 1);
+        }
+        if (th) {
+          if (e.elemAdd && e.elemAdd[th]) o.hAdd[j] += cw * e.elemAdd[th];
+          if (e.elemAddAll) o.hAdd[j] += cw * e.elemAddAll;
+          if (e.elemMul && e.elemMul[th]) o.hMul[j] = 1 + cw * (e.elemMul[th] - 1);
+        }
+      }
+      if (e.accelFreeLv) { o.accelFrac = freeFrac(g, e.accelFreeLv); o.accelW = cw; }
+      if (e.def) o.def = cw * e.def;
+      if (e.defMul) o.defMul = 1 + cw * (e.defMul - 1);
+      if (e.resAll) o.resAll = cw * e.resAll;
+      if (e.res) for (var t3 in e.res) o.res[ELEMS.indexOf(t3)] = cw * e.res[t3];
+      if (e.health) o.health = cw * e.health;
+      if (e.dmgCut) o.cut = cw * e.dmgCut;
+    }
+    if (e.critMul) o.crit = e.critMul;
+    if (e.hiddenFrac) o.hidden = e.hiddenFrac;
+    if (e.resMul) o.resMul = e.resMul;
+    if (e.artMul) o.art = e.artMul;
+    if (e.specialMul) o.special = e.specialMul;
+    if (e.jumpMul) o.jump = e.jumpMul;
+    var P = wi.parts;
+    o.fireCounted = o.fireCounted || !!(o.atk || o.atkMul !== 1 || o.aff || o.crit ||
+      (nE && (o.eAdd[0] || o.eAdd[1] || o.eMul[0] !== 1 || o.eMul[1] !== 1)) ||
+      (nH && (o.hidden || o.accelFrac || o.hAdd[0] || o.hAdd[1] || o.hMul[0] !== 1 || o.hMul[1] !== 1)) ||
+      (o.art !== 1 && P.art > 0) || (o.special !== 1 && P.special > 0) || (o.jump !== 1 && P.jump > 0));
+    return o;
+  }
+  function newAgg(wi) {
+    return { atk: 0, atkMul: 1, aff: wi.aff, crit: 0, critElem: 0, eAdd: [0, 0], eMul: [1, 1], hAdd: [0, 0], hMul: [1, 1], hidden: 0, accelFrac: 0, accelW: 0,
+      art: 1, special: 1, jump: 1, def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0, surv: 0, comf: 0 };
+  }
+  function resetAgg(a, wi) {
+    a.atk = 0; a.atkMul = 1; a.aff = wi.aff; a.crit = 0; a.critElem = 0;
+    a.eAdd[0] = 0; a.eAdd[1] = 0; a.eMul[0] = 1; a.eMul[1] = 1; a.hAdd[0] = 0; a.hAdd[1] = 0; a.hMul[0] = 1; a.hMul[1] = 1;
+    a.hidden = 0; a.accelFrac = 0; a.accelW = 0; a.art = 1; a.special = 1; a.jump = 1;
+    a.def = 0; a.defMul = 1; a.resAll = 0; a.res[0] = 0; a.res[1] = 0; a.res[2] = 0; a.res[3] = 0; a.res[4] = 0;
+    a.resMul = 1; a.health = 0; a.cut = 0; a.surv = 0; a.comf = 0;
+  }
+  function addContrib(a, o) {
+    a.atk += o.atk; a.atkMul *= o.atkMul; a.aff += o.aff; if (o.crit > a.crit) a.crit = o.crit; if (o.critElem > a.critElem) a.critElem = o.critElem;
+    a.eAdd[0] += o.eAdd[0]; a.eAdd[1] += o.eAdd[1]; a.eMul[0] *= o.eMul[0]; a.eMul[1] *= o.eMul[1];
+    a.hAdd[0] += o.hAdd[0]; a.hAdd[1] += o.hAdd[1]; a.hMul[0] *= o.hMul[0]; a.hMul[1] *= o.hMul[1];
+    if (o.hidden > a.hidden) a.hidden = o.hidden;
+    if (o.accelFrac > a.accelFrac) { a.accelFrac = o.accelFrac; a.accelW = o.accelW; }
+    if (o.art > a.art) a.art = o.art; if (o.special > a.special) a.special = o.special; if (o.jump > a.jump) a.jump = o.jump;
+    a.def += o.def; a.defMul *= o.defMul; a.resAll += o.resAll;
+    for (var i = 0; i < 5; i++) a.res[i] += o.res[i];
+    a.resMul *= o.resMul; a.health += o.health; if (o.cut > a.cut) a.cut = o.cut; a.surv += o.surv; a.comf += o.comf;
+  }
+  // 足し合わせた効果から、火力点・守り点・快適点を出します
+  function evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, wantDetail) {
+    var critBase = g._critBase || 1.25;
+    var critMul = a.crit || critBase;
+    var affC = a.aff > 100 ? 100 : (a.aff < -100 ? -100 : a.aff);
+    var critF = affC >= 0 ? 1 + affC / 100 * (critMul - 1) : 1 + affC / 100 * NEG_CRIT;
+    var phys = (wi.raw + a.atk) * a.atkMul * critF;
+    var aff0 = wi.aff > 100 ? 100 : (wi.aff < -100 ? -100 : wi.aff);
+    var phys0 = wi.raw * (aff0 >= 0 ? 1 + aff0 / 100 * (critBase - 1) : 1 + aff0 / 100 * NEG_CRIT);
+    // 属性：会心撃【属性】があれば、会心が出たときに武器の種類ごとの倍率がかかります（マイナス会心では属性は変わらないとして計算）
+    var ceF = (a.critElem && affC > 0) ? 1 + affC / 100 * (critElemMul(wi.type, a.critElem) - 1) : 1;
+    var ew = q.elemWeight == null ? 1 : +q.elemWeight;
+    var elem = 0, elem0 = 0, elemShown = [];
+    var nE = wi.elems.length, nH = wi.hidden.length;
+    for (var j = 0; j < nE; j++) {
+      var v = wi.elems[j][1] * a.eMul[j] + a.eAdd[j];
+      elemShown.push([wi.elems[j][0], v]);
+      elem += v / ELEM_DIV / nE * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / nE * ew;
+    }
+    // 隠し属性：属性解放（データ：Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部）と属性加速（データ：属性解放 Lv2・Lv3 として働く）
+    var hf = a.hidden;
+    if (a.accelFrac > hf) hf = hf + a.accelW * (a.accelFrac - hf);
+    for (var k = 0; k < nH; k++) {
+      if (hf <= 0) { elemShown.push([wi.hidden[k][0], 0]); continue; }
+      var hv = wi.hidden[k][1] * hf * a.hMul[k] + a.hAdd[k];
+      elemShown.push([wi.hidden[k][0], hv]);
+      elem += hv / ELEM_DIV / nH * ceF * ew;
+    }
+    var hit = phys + elem, hit0 = phys0 + elem0;
+    var P = wi.parts;
+    var normal = 1 - P.art - P.special;
+    var ratio = hit / hit0;
+    var fire = 100 * (normal * ratio * (1 + P.jump * (a.jump - 1)) + P.art * a.art + P.special * a.special * ratio);
+    var defense = (baseDef + wi.defense) * a.defMul + a.def;
+    var r0 = (baseRes[0] + a.resAll + a.res[0]) * a.resMul, r1 = (baseRes[1] + a.resAll + a.res[1]) * a.resMul, r2 = (baseRes[2] + a.resAll + a.res[2]) * a.resMul,
+      r3 = (baseRes[3] + a.resAll + a.res[3]) * a.resMul, r4 = (baseRes[4] + a.resAll + a.res[4]) * a.resMul;
+    var def = (defense + W.resPt * (r0 + r1 + r2 + r3 + r4) + W.healthPt * a.health + W.surv * a.surv + W.cutPt * a.cut) / W.defDiv;
+    var spareP = 0;
+    for (var i = 0; i < nSpare; i++) spareP += W.spare[spare[i]];
+    var comfort = spareP + W.comfortLv * a.comf;
+    var ow = OBJECTIVES[q.objective || 'fire'].w;
+    var total = ow[0] * fire + ow[1] * def + ow[2] * comfort;
+    if (!wantDetail) return total;
+    return {
+      total: total, fire: fire, def: def, comfort: comfort,
+      detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, elemShown: elemShown, critElem: a.critElem ? critElemMul(wi.type, a.critElem) : 0, hiddenFrac: hf,
+        raw: wi.raw + a.atk, atkMul: a.atkMul, affinity: a.aff, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
+        defense: defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
+    };
   }
 
   /* levels: {skillId: level}（上限で切った後）, spare: 余りスロットの大きさの配列 */
   function scoreParts(g, q, wi, levels, spare, baseDef, baseRes) {
     var I = indexGame(g);
-    var atk = 0, atkMul = 1, aff = wi.aff, crit = 0, elemAdd = {}, elemMul = {}, elemAll = 0;
-    var defAdd = 0, defMul = 1, resAll = 0, res = [0, 0, 0, 0, 0], resMul = 1, health = 0, cut = 0, survLv = 0, comfortLv = 0;
-    var notCounted = [];
+    var a = newAgg(wi), notCounted = [];
     for (var k in levels) {
       var lv = levels[k]; if (!lv) continue;
       var s = I.skillById[k];
-      var L = s.levels[Math.min(lv, s.levels.length) - 1];
-      var e = L && L.eff;
-      if (I.survival[k]) survLv += lv;
-      if (I.comfort[k]) comfortLv += lv;
-      if (!e) { if (!I.survival[k] && !I.comfort[k]) notCounted.push(+k); continue; }
-      var cw = condWeight(e.cond, s, q, wi);
-      if (cw === 0) { notCounted.push(+k); continue; }
-      if (e.atk) atk += cw * e.atk;
-      if (e.atkMul) atkMul *= 1 + cw * (e.atkMul - 1);
-      if (e.aff) aff += cw * e.aff;
-      if (e.critMul) crit = Math.max(crit, e.critMul);
-      if (e.elemAdd) for (var t in e.elemAdd) elemAdd[t] = (elemAdd[t] || 0) + cw * e.elemAdd[t];
-      if (e.elemMul) for (var t2 in e.elemMul) elemMul[t2] = (elemMul[t2] || 1) * (1 + cw * (e.elemMul[t2] - 1));
-      if (e.elemAddAll) elemAll += cw * e.elemAddAll;
-      if (e.def) defAdd += cw * e.def;
-      if (e.defMul) defMul *= 1 + cw * (e.defMul - 1);
-      if (e.resAll) resAll += cw * e.resAll;
-      if (e.res) for (var t3 in e.res) res[ELEMS.indexOf(t3)] += cw * e.res[t3];
-      if (e.resMul) resMul *= e.resMul;
-      if (e.health) health += cw * e.health;
-      if (e.dmgCut) cut = Math.max(cut, cw * e.dmgCut);
+      var o = effContrib(g, s, lv, q, wi);
+      addContrib(a, o);
+      var defCounted = o.def || o.defMul !== 1 || o.resAll || o.res.some(function (x) { return x; }) || o.resMul !== 1 || o.health || o.cut || o.surv || o.comf;
+      if (!o.fireCounted && !defCounted) notCounted.push(+k);
     }
-    // 会心の倍率：超会心 Lv1〜2 の差を Lv1 から引いた値を「超会心なし」とします（データからの推定）
-    var critBase = g._critBase || 1.25;
-    var critMul = crit || critBase;
-    var affC = Math.max(-100, Math.min(100, aff));
-    var critF = affC >= 0 ? 1 + affC / 100 * (critMul - 1) : 1 + affC / 100 * NEG_CRIT;
-    var phys = (wi.raw + atk) * atkMul * critF;
-    var phys0 = wi.raw * (wi.aff >= 0 ? 1 + Math.min(100, wi.aff) / 100 * (critBase - 1) : 1 + Math.max(-100, wi.aff) / 100 * NEG_CRIT);
-    var elem = 0, elem0 = 0;
-    if (wi.elems.length) {
-      wi.elems.forEach(function (x) {
-        var v = x[1] * (elemMul[x[0]] || 1) + (elemAdd[x[0]] || 0) + elemAll;
-        elem += v / ELEM_DIV / wi.elems.length; elem0 += x[1] / ELEM_DIV / wi.elems.length;
-      });
-    }
-    var fire = 100 * (phys + elem) / (phys0 + elem0);
-    var defense = (baseDef + wi.defense) * defMul + defAdd;
-    var rs = [];
-    for (var i = 0; i < 5; i++) rs.push((baseRes[i] + resAll + res[i]) * resMul);
-    var resSum = rs.reduce(function (a, b) { return a + b; }, 0);
-    var def = (defense + W.resPt * resSum + W.healthPt * health + W.surv * survLv + W.cutPt * cut) / W.defDiv;
-    var spareP = 0;
-    for (var j = 0; j < spare.length; j++) spareP += W.spare[spare[j]];
-    var comfort = spareP + W.comfortLv * comfortLv;
-    var ow = OBJECTIVES[q.objective || 'fire'].w;
-    return {
-      total: ow[0] * fire + ow[1] * def + ow[2] * comfort,
-      fire: fire, def: def, comfort: comfort,
-      detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, raw: wi.raw + atk, atkMul: atkMul, affinity: aff, critMul: critMul,
-        defense: defense, res: rs, health: health, cut: cut, survLv: survLv, comfortLv: comfortLv, spareP: spareP },
-      notCounted: notCounted
-    };
+    var r = evalAgg(g, q, wi, a, spare, spare.length, baseDef, baseRes, true);
+    r.notCounted = notCounted;
+    return r;
   }
 
   /* ---------- 検索の準備 ---------- */
@@ -225,17 +375,9 @@
     // 点数に関わるスキル
     var rel = {};
     Object.keys(req).forEach(function (k) { rel[k] = 1; });
-    var welems = {}; wi.elems.forEach(function (x) { welems[x[0]] = 1; });
     function fireRel(s) {
-      return s.levels.some(function (l) {
-        var e = l.eff; if (!e || condWeight(e.cond, s, q, wi) === 0) return false;
-        if (e.atk || e.atkMul || e.aff || e.critMul) return true;
-        if (e.elemAddAll && wi.elems.length) return true;
-        var k;
-        for (k in (e.elemAdd || {})) if (welems[k]) return true;
-        for (k in (e.elemMul || {})) if (welems[k]) return true;
-        return false;
-      });
+      for (var lv = 1; lv <= s.maxAll; lv++) if (effContrib(g, s, lv, q, wi).fireCounted) return true;
+      return false;
     }
     g.skills.forEach(function (s) {
       if ((ow[0] && fireRel(s)) || (ow[1] && (I.defSkill[s.id] || I.survival[s.id])) || (ow[2] && I.comfort[s.id])) rel[s.id] = 1;
@@ -260,7 +402,7 @@
       var st = a.set != null ? I.setById[a.set] : null;
       var b = st ? st.bonus : null;
       return { a: a, id: a.id, v: vecOf(a.skills), slots: a.slots, bonus: b != null && relBonus[b] ? b : null, rawBonus: b,
-        def: a.def[1], res: a.res, rarity: a.rarity };
+        def: defOf(q, a), res: a.res, rarity: a.rarity };
     }
     function dominates(x, y) {
       if (x.bonus !== y.bonus) return false;
@@ -297,10 +439,10 @@
     var poolSizes = {};
     PARTS.forEach(function (p) {
       var list;
-      if (q.fixedArmor[p] != null) list = [mkCand(I.armorById[q.fixedArmor[p]])];
+      if (q.fixedArmor[p] != null) list = [mkCand(armorOf(g, q, q.fixedArmor[p]))];
       else list = g.armors.filter(function (a) {
         return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && a.rarity >= q.minRarity;
-      }).map(mkCand);
+      }).map(function (a) { return mkCand(armorOf(g, q, a.id)); });
       poolSizes[p] = list.length;
       pools[p] = q.fixedArmor[p] != null ? list : prune(list);
     });
@@ -446,53 +588,20 @@
     return best;
   }
 
-  /* 速い点数計算：点数に関わるスキルだけを配列で持ち、scoreParts と同じ式で計算します（試験で一致を確かめます） */
+  /* 速い点数計算：点数に関わるスキルだけを配列で持ち、scoreParts と同じ式（evalAgg）で計算します（試験で一致を確かめます） */
   function compileScorer(P) {
     if (P._fast) return P._fast;
-    var R = P.relList.length, q = P.q, wi = P.wi, I = P.I;
+    var R = P.relList.length, q = P.q, wi = P.wi, I = P.I, g = P.g;
     var sk = P.relList.map(function (id) { return I.skillById[id]; });
     var unlockIdx = sk.map(function (s) { return s.unlockedBy != null && P.relPos[s.unlockedBy] != null ? P.relPos[s.unlockedBy] : -1; });
     var hasSecret = sk.map(function (s) { return s.unlockedBy != null; });
     var inheritIdx = I.inheritId != null && P.relPos[I.inheritId] != null ? P.relPos[I.inheritId] : -1;
-    var nE = wi.elems.length;
-    // T[i][lv] = その段階で足す量
+    // T[i][lv] = その段階の効果
     var T = sk.map(function (s) {
       var arr = [null];
-      for (var lv = 1; lv <= s.maxAll; lv++) {
-        var L = s.levels[lv - 1], e = L && L.eff, o = { atk: 0, atkMul: 1, aff: 0, crit: 0, eAdd: [], eMul: [], def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0 };
-        for (var j = 0; j < nE; j++) { o.eAdd.push(0); o.eMul.push(1); }
-        if (e) {
-          var cw = condWeight(e.cond, s, q, wi);
-          if (cw > 0) {
-            if (e.atk) o.atk = cw * e.atk;
-            if (e.atkMul) o.atkMul = 1 + cw * (e.atkMul - 1);
-            if (e.aff) o.aff = cw * e.aff;
-            if (e.critMul) o.crit = e.critMul;
-            for (var j2 = 0; j2 < nE; j2++) {
-              var t = wi.elems[j2][0];
-              if (e.elemAdd && e.elemAdd[t]) o.eAdd[j2] += cw * e.elemAdd[t];
-              if (e.elemAddAll) o.eAdd[j2] += cw * e.elemAddAll;
-              if (e.elemMul && e.elemMul[t]) o.eMul[j2] = 1 + cw * (e.elemMul[t] - 1);
-            }
-            if (e.def) o.def = cw * e.def;
-            if (e.defMul) o.defMul = 1 + cw * (e.defMul - 1);
-            if (e.resAll) o.resAll = cw * e.resAll;
-            if (e.res) for (var t3 in e.res) o.res[ELEMS.indexOf(t3)] = cw * e.res[t3];
-            if (e.resMul) o.resMul = e.resMul;
-            if (e.health) o.health = cw * e.health;
-            if (e.dmgCut) o.cut = cw * e.dmgCut;
-          }
-        }
-        o.surv = I.survival[s.id] ? lv : 0;
-        o.comf = I.comfort[s.id] ? lv : 0;
-        arr.push(o);
-      }
+      for (var lv = 1; lv <= s.maxAll; lv++) arr.push(effContrib(g, s, lv, q, wi));
       return arr;
     });
-    var ow = OBJECTIVES[q.objective].w;
-    var critBase = P.g._critBase;
-    var phys0 = wi.raw * (wi.aff >= 0 ? 1 + Math.min(100, wi.aff) / 100 * (critBase - 1) : 1 + Math.max(-100, wi.aff) / 100 * NEG_CRIT);
-    var elem0 = 0; wi.elems.forEach(function (x) { elem0 += x[1] / ELEM_DIV / nE; });
     var lvBuf = new Int16Array(R);
     function levels(pts) {
       for (var i = 0; i < R; i++) {
@@ -502,36 +611,55 @@
       }
       return lvBuf;
     }
+    // 速くするため、効果を「欄の番号・値・足し方」の短い一覧にして、数の配列に足し込みます（足し方は addContrib と同じ）
+    var F = ['atk', 'atkMul', 'aff', 'crit', 'critElem', 'eAdd0', 'eAdd1', 'eMul0', 'eMul1', 'hAdd0', 'hAdd1', 'hMul0', 'hMul1', 'hidden', 'accelFrac', 'accelW',
+      'art', 'special', 'jump', 'def', 'defMul', 'resAll', 'r0', 'r1', 'r2', 'r3', 'r4', 'resMul', 'health', 'cut', 'surv', 'comf'];
+    var OP = { atkMul: 'mul', eMul0: 'mul', eMul1: 'mul', hMul0: 'mul', hMul1: 'mul', defMul: 'mul', resMul: 'mul', crit: 'max', critElem: 'max', hidden: 'max', art: 'max', special: 'max', jump: 'max', cut: 'max', accelFrac: 'acc', accelW: 'skip' };
+    var NEUTRAL = new Float64Array(F.length);
+    F.forEach(function (f, i) { NEUTRAL[i] = OP[f] === 'mul' || f === 'art' || f === 'special' || f === 'jump' ? 1 : 0; });
+    function flat(o) {
+      return { atk: o.atk, atkMul: o.atkMul, aff: o.aff, crit: o.crit, critElem: o.critElem, eAdd0: o.eAdd[0], eAdd1: o.eAdd[1], eMul0: o.eMul[0], eMul1: o.eMul[1],
+        hAdd0: o.hAdd[0], hAdd1: o.hAdd[1], hMul0: o.hMul[0], hMul1: o.hMul[1], hidden: o.hidden, accelFrac: o.accelFrac, accelW: o.accelW, art: o.art, special: o.special, jump: o.jump,
+        def: o.def, defMul: o.defMul, resAll: o.resAll, r0: o.res[0], r1: o.res[1], r2: o.res[2], r3: o.res[3], r4: o.res[4], resMul: o.resMul, health: o.health, cut: o.cut, surv: o.surv, comf: o.comf };
+    }
+    // S[i][lv] = [欄の番号, 値, 種類(0 足す・1 かける・2 大きい方・3 属性加速), ...]
+    var S = T.map(function (arr) {
+      return arr.map(function (o) {
+        if (!o) return null;
+        var fo = flat(o), out = [];
+        F.forEach(function (f, k) {
+          var op = OP[f] || 'add', v = fo[f];
+          if (op === 'skip') return;
+          if (v === NEUTRAL[k]) return;
+          out.push(k, v, op === 'add' ? 0 : op === 'mul' ? 1 : op === 'max' ? 2 : 3);
+          if (op === 'acc') out.push(fo.accelW);
+        });
+        return out;
+      });
+    });
+    var ACC = new Float64Array(F.length), iAW = F.indexOf('accelW');
+    var A = newAgg(wi);
     function total(lv, spare, nSpare, baseDef, baseRes) {
-      var atk = 0, atkMul = 1, aff = wi.aff, crit = 0, defAdd = 0, defMul = 1, resAll = 0, r0 = 0, r1 = 0, r2 = 0, r3 = 0, r4 = 0, resMul = 1, health = 0, cut = 0, surv = 0, comf = 0;
-      var e0a = 0, e0m = 1, e1a = 0, e1m = 1;
+      ACC.set(NEUTRAL);
+      ACC[2] = wi.aff;
       for (var i = 0; i < R; i++) {
         var l = lv[i]; if (l <= 0) continue;
-        var o = T[i][l];
-        atk += o.atk; atkMul *= o.atkMul; aff += o.aff; if (o.crit > crit) crit = o.crit;
-        if (nE > 0) { e0a += o.eAdd[0]; e0m *= o.eMul[0]; if (nE > 1) { e1a += o.eAdd[1]; e1m *= o.eMul[1]; } }
-        defAdd += o.def; defMul *= o.defMul; resAll += o.resAll; r0 += o.res[0]; r1 += o.res[1]; r2 += o.res[2]; r3 += o.res[3]; r4 += o.res[4];
-        resMul *= o.resMul; health += o.health; if (o.cut > cut) cut = o.cut; surv += o.surv; comf += o.comf;
+        var e = S[i][l];
+        for (var j = 0; j < e.length; j += 3) {
+          var k = e[j], v = e[j + 1], op = e[j + 2];
+          if (op === 0) ACC[k] += v;
+          else if (op === 1) ACC[k] *= v;
+          else if (op === 2) { if (v > ACC[k]) ACC[k] = v; }
+          else { if (v > ACC[k]) { ACC[k] = v; ACC[iAW] = e[j + 3]; } j++; }
+        }
       }
-      var fire = 0, def = 0, comfort = 0;
-      if (ow[0]) {
-        var cm = crit || critBase;
-        var a = aff > 100 ? 100 : (aff < -100 ? -100 : aff);
-        var cf = a >= 0 ? 1 + a / 100 * (cm - 1) : 1 + a / 100 * NEG_CRIT;
-        var phys = (wi.raw + atk) * atkMul * cf, elem = 0;
-        if (nE > 0) { elem += (wi.elems[0][1] * e0m + e0a) / ELEM_DIV / nE; if (nE > 1) elem += (wi.elems[1][1] * e1m + e1a) / ELEM_DIV / nE; }
-        fire = 100 * (phys + elem) / (phys0 + elem0);
-      }
-      if (ow[1]) {
-        var defense = (baseDef + wi.defense) * defMul + defAdd;
-        var rs = ((baseRes[0] + resAll + r0) + (baseRes[1] + resAll + r1) + (baseRes[2] + resAll + r2) + (baseRes[3] + resAll + r3) + (baseRes[4] + resAll + r4)) * resMul;
-        def = (defense + W.resPt * rs + W.healthPt * health + W.surv * surv + W.cutPt * cut) / W.defDiv;
-      }
-      if (ow[2]) {
-        var sp = 0; for (var j = 0; j < nSpare; j++) sp += W.spare[spare[j]];
-        comfort = sp + W.comfortLv * comf;
-      }
-      return ow[0] * fire + ow[1] * def + ow[2] * comfort;
+      var a = A;
+      a.atk = ACC[0]; a.atkMul = ACC[1]; a.aff = ACC[2]; a.crit = ACC[3]; a.critElem = ACC[4];
+      a.eAdd[0] = ACC[5]; a.eAdd[1] = ACC[6]; a.eMul[0] = ACC[7]; a.eMul[1] = ACC[8]; a.hAdd[0] = ACC[9]; a.hAdd[1] = ACC[10]; a.hMul[0] = ACC[11]; a.hMul[1] = ACC[12];
+      a.hidden = ACC[13]; a.accelFrac = ACC[14]; a.accelW = ACC[15]; a.art = ACC[16]; a.special = ACC[17]; a.jump = ACC[18];
+      a.def = ACC[19]; a.defMul = ACC[20]; a.resAll = ACC[21]; a.res[0] = ACC[22]; a.res[1] = ACC[23]; a.res[2] = ACC[24]; a.res[3] = ACC[25]; a.res[4] = ACC[26];
+      a.resMul = ACC[27]; a.health = ACC[28]; a.cut = ACC[29]; a.surv = ACC[30]; a.comf = ACC[31];
+      return evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, false);
     }
     P._fast = { levels: levels, total: total, R: R };
     return P._fast;
@@ -561,7 +689,7 @@
     var pts = {}, bcount = {}, def = 0, res = [0, 0, 0, 0, 0], slots = [];
     var add = function (lst) { lst.forEach(function (x) { pts[x[0]] = (pts[x[0]] || 0) + x[1]; }); };
     armorCands.forEach(function (c) {
-      var a = c.a; add(a.skills); def += a.def[1]; for (var i = 0; i < 5; i++) res[i] += a.res[i];
+      var a = c.a; add(a.skills); def += defOf(P.q, a); for (var i = 0; i < 5; i++) res[i] += a.res[i];
       a.slots.forEach(function (s, j) { slots.push({ ref: a.part + '#' + j, size: s }); });
       var st = a.set != null ? P.I.setById[a.set] : null;
       if (st && st.bonus != null) bcount[st.bonus] = (bcount[st.bonus] || 0) + 1;
@@ -686,6 +814,7 @@
       spare: freeSlots.map(function (s) { return { slot: s.ref, size: s.size }; }),
       levels: cur.L.lv, points: cur.L.total,
       bonuses: Object.keys(G.bcount).map(function (b) { return { id: +b, count: G.bcount[b], active: P.I.bonusById[b].skills.filter(function (x) { return G.bcount[b] >= x[1]; }).map(function (x) { return x[0]; }) }; }),
+      mods: modsOf(P.q, armorCands.map(function (c) { return c.a.id; })),
       score: cur.sc, fastTotal: curTotal,
       objective: P.q.objective
     };
@@ -894,11 +1023,24 @@
   }
 
   /* 決まった案（URL や あらかじめ作った案）を、ページのデータで計算し直します */
+  // 案に付ける「強化の入力」（URL や検算でも同じ数値を使えるように、案と一緒に持ち歩きます）
+  function modsOf(q, armorIds) {
+    var m = {};
+    if (q.weaponOverride) m.weaponOverride = q.weaponOverride;
+    if (q.armorAugMax) m.armorAugMax = true;
+    if (q.armorOverrides) {
+      var ao = {}; armorIds.forEach(function (id) { if (q.armorOverrides[id]) ao[id] = q.armorOverrides[id]; });
+      if (Object.keys(ao).length) m.armorOverrides = ao;
+    }
+    if (q.parts) m.parts = q.parts;
+    if (q.elemWeight != null && +q.elemWeight !== 1) m.elemWeight = +q.elemWeight;
+    return Object.keys(m).length ? m : null;
+  }
   function evaluateBuild(g, spec, q0) {
-    var q = normalizeQuery(g, q0 || {});
-    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots }));
+    var q = normalizeQuery(g, Object.assign({}, q0 || {}, spec.mods || {}));
+    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, fixedArmor: {}, minRarity: 1 }));
     var I = P.I;
-    var armorC = spec.armor.map(function (id) { return { a: I.armorById[id] }; });
+    var armorC = spec.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
     if (armorC.some(function (c) { return !c.a; })) return null;
     var charm = spec.charm != null ? { a: I.charmById[spec.charm] } : null;
     var G = gearPoints(P, armorC, charm);
@@ -921,14 +1063,15 @@
       spare: spare.map(function (s) { return { slot: s.ref, size: s.size }; }),
       levels: L.lv, points: L.total,
       bonuses: Object.keys(G.bcount).map(function (b) { return { id: +b, count: G.bcount[b], active: I.bonusById[b].skills.filter(function (y) { return G.bcount[b] >= y[1]; }).map(function (y) { return y[0]; }) }; }),
+      mods: spec.mods || null,
       score: sc, objective: q.objective
     };
   }
 
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
-    WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
-    indexGame: indexGame, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
+    WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
+    indexGame: indexGame, armorOf: armorOf, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;

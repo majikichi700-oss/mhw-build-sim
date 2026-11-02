@@ -173,6 +173,9 @@ def parse_effect(desc_ja):
         e['hiddenFrac'] = int(m.group(1)) / int(m.group(2))
     elif re.search(r'隠された属性を100%引き出す', d):
         e['hiddenFrac'] = 1.0
+    m = re.search(r'属性解放/装填拡張Lv(\d)が発動', d)
+    if m:
+        e['accelFreeLv'] = int(m.group(1))      # 属性加速：属性解放/装填拡張 Lv が働く
     m = re.search(r'ジャンプ攻撃の威力を(\d+(?:\.\d+)?)倍', d)
     if m:
         e['jumpMul'] = float(m.group(1))         # 飛燕
@@ -184,7 +187,7 @@ def parse_effect(desc_ja):
         e['cond'] = 'draw'
     elif '有効部位' in d:
         e['cond'] = 'weak'
-    elif '発動中' in d or '発動時' in d or '維持している間' in d:
+    elif '発動中' in d or '発動時' in d or '維持している間' in d or '継続して' in d:
         e['cond'] = 'active'
     return e
 
