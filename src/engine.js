@@ -137,7 +137,12 @@
   function weaponParts(q, type) {
     var d = PARTS_DEFAULT[type] || { art: 0, special: 0, jump: 0 };
     var o = q.parts || {};
-    return { art: o.art != null ? +o.art : d.art, special: o.special != null ? +o.special : d.special, jump: o.jump != null ? +o.jump : d.jump };
+    var cl = function (x) { x = +x; return isFinite(x) ? Math.max(0, Math.min(1, x)) : 0; };
+    var r = { art: cl(o.art != null ? o.art : d.art), special: cl(o.special != null ? o.special : d.special), jump: cl(o.jump != null ? o.jump : d.jump) };
+    // 爆発と特殊弾の合計が 100% を超えるときは、合計が 100% になるように縮めます（ふつうの攻撃の割合が負にならないように）
+    var sum = r.art + r.special;
+    if (sum > 1) { r.art /= sum; r.special /= sum; }
+    return r;
   }
 
   function weaponInfo(g, q) {
@@ -146,18 +151,24 @@
     var info;
     if (w) {
       var el = w.elements.filter(function (e) { return ELEMS.indexOf(e[0]) >= 0; });
+      // 属性と状態異常を 1 つずつ持つ武器（例：氷と爆破）は、属性が攻撃の半分に乗るとして、属性の数（状態異常も含む）で割ります
       info = { w: w, raw: w.attack / WEAPON_BLOAT[w.type], aff: w.affinity, elems: w.elemHidden ? [] : el, hidden: w.elemHidden ? el : [],
-        defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
+        elemDiv: Math.max(1, w.elements.length), defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
     } else {
       // 武器を選ばないときの「基準の武器」（判断）：基礎攻撃力 200、会心率 0%、属性なし
-      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
+      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], elemDiv: 1, defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
     }
     // カスタム強化・覚醒のあとの数値を自分で入れたとき（データにない強化なので、入れた値をそのまま使います）
     var ov = q.weaponOverride;
     if (ov && info.type) {
       if (ov.attack) info.raw = +ov.attack / WEAPON_BLOAT[info.type];
       if (ov.affinity != null && ov.affinity !== '') info.aff = +ov.affinity;
-      if (ov.element && ov.element[0] && ov.element[1] > 0) { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+      // 入れた属性：もとが隠し属性の武器なら、隠し属性として扱います（属性解放が要るのは変わらないため）
+      if (ov.element && ov.element[0] && ov.element[1] > 0) {
+        if (w && w.elemHidden) { info.hidden = [[ov.element[0], +ov.element[1]]]; info.elems = []; }
+        else { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+        info.elemDiv = 1;
+      }
       if (ov.slots) info.slots = ov.slots.filter(function (x) { return x > 0; }).map(Number).sort(function (a, b) { return b - a; });
       if (ov.defense != null && ov.defense !== '') info.defense = +ov.defense;
       info.overridden = true;
@@ -265,7 +276,7 @@
     for (var j = 0; j < nE; j++) {
       var v = wi.elems[j][1] * a.eMul[j] + a.eAdd[j];
       elemShown.push([wi.elems[j][0], v]);
-      elem += v / ELEM_DIV / nE * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / nE * ew;
+      elem += v / ELEM_DIV / wi.elemDiv * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / wi.elemDiv * ew;
     }
     // 隠し属性：属性解放（データ：Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部）と属性加速（データ：属性解放 Lv2・Lv3 として働く）
     var hf = a.hidden;
@@ -274,7 +285,7 @@
       if (hf <= 0) { elemShown.push([wi.hidden[k][0], 0]); continue; }
       var hv = wi.hidden[k][1] * hf * a.hMul[k] + a.hAdd[k];
       elemShown.push([wi.hidden[k][0], hv]);
-      elem += hv / ELEM_DIV / nH * ceF * ew;
+      elem += hv / ELEM_DIV / wi.elemDiv * ceF * ew;
     }
     var hit = phys + elem, hit0 = phys0 + elem0;
     var P = wi.parts;
@@ -333,7 +344,7 @@
     q.weakUptime = q.weakUptime == null ? 1 : q.weakUptime;
     q.maxRarity = q.maxRarity || 12;        // 防具・護石の上限レア度
     q.decoMaxRarity = q.decoMaxRarity || 12; // 装飾品の上限レア度
-    q.minRarity = q.minRarity || 1;         // 防具の下限レア度（マスターランク序盤の防具を外すときに使う）
+    q.minRarity = q.minRarity || 1;         // マスターランクの防具の下限レア度（序盤の防具を外すときに使う。上位・下位の防具には使わない）
     // untilDone のときは時間で止めず、最後まで探します（止めるのは画面の「止める」だけ）
     q.timeLimitMs = q.untilDone ? Infinity : (q.timeLimitMs || 60000);
     q.topK = q.topK || 120;
@@ -379,7 +390,10 @@
       for (var lv = 1; lv <= s.maxAll; lv++) if (effContrib(g, s, lv, q, wi).fireCounted) return true;
       return false;
     }
+    // 防御・耐性の下限があるときは、防御・耐性のスキルも関わるものとします（それを持つ防具を外さないため）
+    var hasMin = q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
     g.skills.forEach(function (s) {
+      if (hasMin && I.defSkill[s.id]) rel[s.id] = 1;
       if ((ow[0] && fireRel(s)) || (ow[1] && (I.defSkill[s.id] || I.survival[s.id])) || (ow[2] && I.comfort[s.id])) rel[s.id] = 1;
     });
     // 極意スキル：解放先が点数に関わるなら関わる。Inheritance も同じ
@@ -441,7 +455,7 @@
       var list;
       if (q.fixedArmor[p] != null) list = [mkCand(armorOf(g, q, q.fixedArmor[p]))];
       else list = g.armors.filter(function (a) {
-        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && a.rarity >= q.minRarity;
+        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && (a.rank !== 'MR' || a.rarity >= q.minRarity);
       }).map(function (a) { return mkCand(armorOf(g, q, a.id)); });
       poolSizes[p] = list.length;
       pools[p] = q.fixedArmor[p] != null ? list : prune(list);
@@ -661,7 +675,10 @@
       a.resMul = ACC[27]; a.health = ACC[28]; a.cut = ACC[29]; a.surv = ACC[30]; a.comf = ACC[31];
       return evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, false);
     }
-    P._fast = { levels: levels, total: total, R: R };
+    // 点数を下げることがあるスキル（全属性耐性強化：耐性がマイナスだと、もっとマイナスになる）の位置
+    var downIdx = [];
+    T.forEach(function (arr, i) { if (arr.some(function (o) { return o && o.resMul !== 1; })) downIdx.push(i); });
+    P._fast = { levels: levels, total: total, R: R, downIdx: downIdx };
     return P._fast;
   }
 
@@ -809,6 +826,7 @@
       armor: armorCands.map(function (c) { return c.a.id; }),
       charm: charmCand && charmCand.a ? charmCand.a.id : null,
       weapon: P.q.weaponId != null ? P.q.weaponId : null,
+      weaponType: P.wi.type,
       weaponSlots: P.wi.slots,
       decos: placed,
       spare: freeSlots.map(function (s) { return { slot: s.ref, size: s.size }; }),
@@ -930,7 +948,15 @@
       var n = 0;
       for (var t3 = 4; t3 >= 1; t3--) for (var k = 0; k < ge[t3] - (ge[t3 + 1] || 0); k++) spB[n++] = t3;
       for (var e = 0; e < 5; e++) resB[e] = curRes[e] + sufRes[d][e];
-      return FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      var ub = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      if (FS.downIdx.length) {
+        // そのスキルがない場合も計算し、大きいほうを上限にします
+        var keep = FS.downIdx.map(function (i) { var v = lvB[i]; lvB[i] = 0; return v; });
+        var ub2 = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+        FS.downIdx.forEach(function (i, k) { lvB[i] = keep[k]; });
+        if (ub2 > ub) ub = ub2;
+      }
+      return ub;
     }
     var lastYield = Date.now();
     function apply(c, sign) {
@@ -1038,7 +1064,7 @@
   }
   function evaluateBuild(g, spec, q0) {
     var q = normalizeQuery(g, Object.assign({}, q0 || {}, spec.mods || {}));
-    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, fixedArmor: {}, minRarity: 1 }));
+    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, weaponType: spec.weaponType || q.weaponType, fixedArmor: {}, minRarity: 1 }));
     var I = P.I;
     var armorC = spec.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
     if (armorC.some(function (c) { return !c.a; })) return null;
@@ -1058,7 +1084,7 @@
     var spare = G.slots.filter(function (s) { return !used[s.ref]; });
     var sc = scoreParts(g, q, P.wi, L.lv, spare.map(function (s) { return s.size; }), G.def, G.res);
     return {
-      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponSlots: P.wi.slots,
+      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponType: P.wi.type, weaponSlots: P.wi.slots,
       decos: spec.decos.map(function (x) { return { slot: x.slot, slotSize: slotSize[x.slot], deco: x.deco }; }),
       spare: spare.map(function (s) { return { slot: s.ref, size: s.size }; }),
       levels: L.lv, points: L.total,

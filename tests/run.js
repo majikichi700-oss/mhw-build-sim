@@ -20,6 +20,9 @@ function checkResult(r, q, label) {
     ok(Math.abs(b.fastTotal - b.score.total) < 1e-6, label + ' 速い計算と通常の計算の点数が違います ' + b.fastTotal + ' ' + b.score.total);
     const ev = E.evaluateBuild(game, b, q);
     ok(ev && Math.abs(ev.score.total - b.score.total) < 1e-6, label + ' 案を計算し直すと点数が違います');
+    // 共有 URL と同じく、案に付いている情報（武器の種類・強化の入力）と目的・見込みだけで計算し直しても同じになるか
+    const ev2 = E.evaluateBuild(game, { armor: b.armor, charm: b.charm, weapon: b.weapon, weaponType: b.weaponType, weaponSlots: b.weaponSlots, decos: b.decos.map(d => ({ slot: d.slot, deco: d.deco })), mods: b.mods }, { objective: q.objective, uptimeScale: q.uptimeScale });
+    ok(ev2 && Math.abs(ev2.score.total - b.score.total) < 1e-6, label + ' URL と同じ情報だけで計算し直すと点数が違います（' + (ev2 && ev2.score.total) + ' と ' + b.score.total + '）');
     // 防御力の下限
     if (q.minDefense) ok(b.score.detail.defense >= q.minDefense, label + ' 防御力の下限');
   }
@@ -120,6 +123,55 @@ section('v1.1 の計算（属性・武器の種類ごとの数値・カスタム
   const qm = { weaponType: 'bow', weaponSlots: [1], objective: 'comfort', minRarity: 11, skills: [], timeLimitMs: 3000 };
   const rm = E.search(game, qm);
   ok(rm.builds.length && rm.builds.every(b => b.armor.every(id => I.armorById[id].rarity >= 11)), '防具のレア度の下限を守る');
+}
+
+// ---- 3c. 見直しで見つかった問題の試験
+section('見直しで見つかった問題が直っていること');
+{
+  // 防具のレア度の下限は、マスターランクの防具だけにかける
+  const rh = E.search(game, { weaponType: 'long-sword', weaponSlots: [2], ranks: ['HR'], skills: [{ id: sk('Attack Boost'), lv: 1 }], minRarity: 10, timeLimitMs: 3000 });
+  ok(rh.builds.length > 0, '上位だけで探しても、レア度の下限で案が 0 件にならない');
+  // 攻撃の内わけの合計が 100% を超えても、スキルで点数が下がらない
+  const ig = game.weapons.find(w => w.type === 'insect-glaive' && w.rarity === 12);
+  const wiP = E.weaponInfo(game, { weaponId: ig.id, parts: { art: 0.6, special: 0.5, jump: 0.5 } });
+  const p0 = E.scoreParts(game, { objective: 'fire', parts: { art: 0.6, special: 0.5, jump: 0.5 } }, wiP, {}, [], 0, [0, 0, 0, 0, 0]);
+  const p1 = E.scoreParts(game, { objective: 'fire', parts: { art: 0.6, special: 0.5, jump: 0.5 } }, wiP, { [sk('Airborne')]: 1, [sk('Attack Boost')]: 7 }, [], 0, [0, 0, 0, 0, 0]);
+  ok(p1.fire >= p0.fire, '内わけの合計が 100% を超えても、スキルを足して火力点が下がらない（' + p0.fire.toFixed(2) + ' → ' + p1.fire.toFixed(2) + '）');
+  // 属性と状態異常を持つ武器は、属性を状態異常と半分ずつとして数える
+  const dual = game.weapons.find(w => w.elements.length === 2 && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]) && !['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[1][0]));
+  if (dual) {
+    const d0 = E.scoreParts(game, { objective: 'fire' }, E.weaponInfo(game, { weaponId: dual.id }), {}, [], 0, [0, 0, 0, 0, 0]);
+    ok(Math.abs(d0.detail.elem0 - dual.elements[0][1] / 10 / 2) < 1e-9, '属性と状態異常を持つ武器（' + dual.ja + '）は、属性を半分として数える');
+  }
+  // 隠し属性の武器に属性の強化を入れても、属性解放が要る
+  const hw = game.weapons.find(w => w.elemHidden && w.rarity >= 11 && w.elements.length && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]));
+  if (hw) {
+    const hq = { weaponId: hw.id, weaponOverride: { element: [hw.elements[0][0], hw.elements[0][1] + 30] } };
+    const h0 = E.scoreParts(game, Object.assign({ objective: 'fire' }, hq), E.weaponInfo(game, hq), {}, [], 0, [0, 0, 0, 0, 0]);
+    ok(h0.detail.elem === 0, '隠し属性の武器に属性の強化を入れても、属性解放なしでは属性は出ない');
+  }
+  // 全属性耐性強化があっても、守りの検索で取りこぼさない（小さな例で総当たりと比べる）
+  const alat = game.sets.filter(st => st.bonus != null && game.bonuses[st.bonus].skills.some(x => game.skills[x[0]].en === 'All Elemental Resistance')).map(st => st.id);
+  const keepIds = new Set();
+  const pick = {};
+  for (const p of E.PARTS) {
+    const list = game.armors.filter(a => a.part === p && a.rank === 'MR' && (alat.includes(a.set) || a.res.some(r => r < 0))).slice(0, 4);
+    pick[p] = list; list.forEach(a => keepIds.add(a.id));
+  }
+  const qd = { weaponType: 'hammer', weaponSlots: [1], ranks: ['MR'], objective: 'defense', excludeArmor: game.armors.filter(a => !keepIds.has(a.id)).map(a => a.id), excludeCharms: game.charms.map(c => c.id), timeLimitMs: 60000, topK: 20 };
+  const rd = E.search(game, qd);
+  const Pd = E.prepare(game, qd);
+  let best = -Infinity;
+  for (const h of pick.head) for (const c of pick.chest) for (const a of pick.arms) for (const w of pick.waist) for (const l of pick.legs) {
+    const b = E.finishBuild(Pd, [h, c, a, w, l].map(x => ({ a: x })), null);
+    if (b && !b.below && b.score.total > best) best = b.score.total;
+  }
+  ok(rd.builds.length && Math.abs(rd.builds[0].score.total - best) < 1e-6, '全属性耐性強化と耐性マイナスの防具でも、守りの最良を取りこぼさない（総当たり ' + best.toFixed(3) + '、検索 ' + (rd.builds[0] && rd.builds[0].score.total.toFixed(3)) + '）');
+  // 強化したスロットに差した装飾品の場所が、入れたスロットの中にある
+  const zw = game.weapons.find(w => w.type === 'long-sword' && w.rarity === 12 && w.slots.length === 2);
+  const qz = { weaponId: zw.id, weaponOverride: { slots: [4, 4, 2] }, objective: 'fire', skills: [{ id: sk('Critical Eye'), lv: 4 }], timeLimitMs: 3000, minRarity: 10 };
+  const rz = E.search(game, qz);
+  ok(rz.builds.every(b => b.decos.every(d => d.slot !== 'weapon#2' || d.slotSize === 2)), '強化で足した武器のスロットの大きさで差す');
 }
 
 // ---- 4. 小さな例で総当たりと比べる

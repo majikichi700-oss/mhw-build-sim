@@ -82,6 +82,9 @@ async function conditionSearch(p) {
       const a1 = await p.$eval('#results .card', e => e.querySelector('table.parts').textContent);
       const a2 = await p2.$eval('#shared-out .card', e => e.querySelector('table.parts').textContent);
       ok(a1 === a2, name + ': URL で開いた案が同じ');
+      const s1 = await p.$eval('#results .card', e => e.querySelector('.pts').textContent);
+      const s2 = await p2.$eval('#shared-out .card', e => e.querySelector('.pts').textContent);
+      ok(s1 === s2, name + ': URL で開いた案の点数が同じ（' + s1 + ' / ' + s2 + '）');
       ok(e2.length === 0, name + ': URL のページでエラーがない ' + e2.join(' '));
       await p2.close();
     }

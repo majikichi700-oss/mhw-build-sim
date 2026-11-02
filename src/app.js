@@ -35,48 +35,49 @@
 
   // 検索を始めます。返り値の promise は、最後まで探し終えたときか、「止める」を押したときに、
   // それまでに見つけた案を返します（止めても途中の結果は消えません）。
-  var currentJob = null, stopFlag = false;
-  function runSearch(q, onProgress) {
+  // tag：だれの検索か（'form' は条件検索、'claude' は Claude の道具）。「止める」は tag ごとに止めます。
+  var mainStops = {};
+  function runSearch(q, onProgress, tag) {
+    tag = tag || 'form';
     if (worker && workerOk) {
       return new Promise(function (resolve, reject) {
         var id = ++jobSeq;
-        jobs[id] = { resolve: resolve, reject: reject, onProgress: onProgress };
-        currentJob = id;
+        jobs[id] = { resolve: resolve, reject: reject, onProgress: onProgress, tag: tag };
         worker.postMessage({ type: 'search', job: id, query: q });
       });
     }
     // Web Worker が使えないとき：少しずつ処理して、そのたびに画面へ戻ります
     return new Promise(function (resolve, reject) {
-      var it;
-      stopFlag = false; currentJob = 'main';
-      var q2 = Object.assign({}, q, { stopSignal: function () { return stopFlag; } });
-      try { it = E.searchGen(GAME, q2); } catch (e) { reject(e); return; }
+      var it, key = 'm' + (++jobSeq);
+      mainStops[key] = { tag: tag, stop: false };
+      var q2 = Object.assign({}, q, { stopSignal: function () { return mainStops[key].stop; } });
+      try { it = E.searchGen(GAME, q2); } catch (e) { delete mainStops[key]; reject(e); return; }
       (function step() {
         try {
           var t = Date.now(), r;
           while (true) {
             r = it.next();
-            if (r.done) { resolve(stripResult(r.value)); return; }
+            if (r.done) { delete mainStops[key]; resolve(stripResult(r.value)); return; }
             onProgress && onProgress(r.value);
             if (Date.now() - t > 40) break;
           }
           setTimeout(step, 0);
-        } catch (e) { reject(e); }
+        } catch (e) { delete mainStops[key]; reject(e); }
       })();
     });
   }
-  // 「止める」：検索プログラムに止まるよう知らせ、それまでの結果を受け取ります。
-  // 3 秒たっても返事がないときだけ、Web Worker ごと止めます。
-  function stopWorker() {
-    stopFlag = true;
-    if (currentJob === 'main' || currentJob == null) return;
-    var id = currentJob;
-    if (worker) worker.postMessage({ type: 'stop', job: id });
+  // 「止める」：その tag の検索に止まるよう知らせ、それまでの結果を受け取ります。
+  // 3 秒たっても返事がないときだけ、Web Worker ごと止めます（そのときは、動いていた検索を全部「止めました」で終えます）。
+  function stopWorker(tag) {
+    tag = tag || 'form';
+    for (var k in mainStops) if (mainStops[k].tag === tag) mainStops[k].stop = true;
+    var ids = Object.keys(jobs).filter(function (id) { return jobs[id].tag === tag; });
+    if (!ids.length) return;
+    ids.forEach(function (id) { if (worker) worker.postMessage({ type: 'stop', job: +id }); });
     setTimeout(function () {
-      if (!jobs[id]) return;
+      if (!ids.some(function (id) { return jobs[id]; })) return;
       if (worker) worker.terminate();
-      jobs[id].reject(new Error('止めました'));
-      delete jobs[id];
+      Object.keys(jobs).forEach(function (id) { jobs[id].reject(new Error('止めました')); delete jobs[id]; });
       makeWorker();
     }, 3000);
   }
@@ -106,10 +107,10 @@
         return '<span class="slot">' + NUM[sz] + ' ' + (d ? esc(decoName(d.deco)) + noJa(I.decoById[d.deco]) : '<span class="muted">空き</span>') + '</span>';
       }).join('');
     }
-    var wsl = b.weapon != null ? I.weaponById[b.weapon].slots : (b.weaponSlots || []);
+    var wsl = b.weaponSlots || (b.weapon != null ? I.weaponById[b.weapon].slots : []);
     rows.push('<tr><th>武器</th><td>' + esc(weaponLabel(b)) + '<div class="slots">' + slotCells('weapon', wsl) + '</div></td></tr>');
     E.PARTS.forEach(function (p, i) {
-      var a = I.armorById[b.armor[i]];
+      var a = E.armorOf(GAME, b.mods || {}, b.armor[i]); // カスタム強化を入れた防具は、入れたスロットで表示します
       rows.push('<tr><th>' + E.PART_JA[p] + '</th><td>' + esc(a.ja) + noJa(a) + ' <span class="muted">レア' + a.rarity + '</span><div class="slots">' + slotCells(p, a.slots) + '</div></td></tr>');
     });
     rows.push('<tr><th>護石</th><td>' + esc(charmName(b.charm)) + noJa(b.charm != null && I.charmById[b.charm]) + (b.charm != null ? ' <span class="muted">' + I.charmById[b.charm].skills.map(function (x) { return esc(skillName(x[0])) + x[1]; }).join('・') + '</span>' : '') + '</td></tr>');
@@ -123,7 +124,7 @@
     ks.sort(function (x, y) { return (reqSet[y] || 0) - (reqSet[x] || 0) || b.levels[y] - b.levels[x] || x - y; });
     return ks.map(function (k) {
       var s = I.skillById[k];
-      var unlocked = s.unlockedBy != null && (b.levels[s.unlockedBy] || 0) > 0;
+      var unlocked = s.unlockedBy != null && ((b.levels[s.unlockedBy] || 0) > 0 || (I.inheritId != null && (b.levels[I.inheritId] || 0) > 0));
       var cap = unlocked ? s.maxAll : s.max;
       var over = b.points && b.points[k] > b.levels[k] ? '<span class="muted">（' + b.points[k] + 'pt、上限で切り）</span>' : '';
       return '<li class="' + (reqSet[k] ? 'req' : '') + '">' + esc(s.ja) + ' <b>Lv' + b.levels[k] + '</b><span class="muted">/' + cap + '</span>' + (bs[k] ? ' <span class="tag">シリーズ</span>' : '') + over + '</li>';
@@ -163,7 +164,7 @@
       t.push('武器（入力した値）：' + x.join('、'));
     }
     if (m.armorAugMax) t.push('防具の防御力はカスタム強化の最大');
-    if (m.armorOverrides) t.push('強化した防具（入力した値）：' + Object.keys(m.armorOverrides).map(function (id) { var o = m.armorOverrides[id]; return armorName(+id) + '［' + slotsLabel(o.slots) + (o.addSkills ? '・' + o.addSkills.map(function (y) { return skillName(y[0]) + '+' + y[1]; }).join('・') : '') + '］'; }).join('、'));
+    if (m.armorOverrides) t.push('強化した防具（入力した値）：' + Object.keys(m.armorOverrides).map(function (id) { var o = m.armorOverrides[id]; return armorName(+id) + '［' + (o.slots ? slotsLabel(o.slots) : 'スロットはデータのまま') + (o.addSkills ? '・' + o.addSkills.map(function (y) { return skillName(y[0]) + '+' + y[1]; }).join('・') : '') + '］'; }).join('、'));
     return t.join('。');
   }
   function scoreBlock(b) {
@@ -207,9 +208,9 @@
     var lines = ['【MHW:IB 装備案】' + (title || '')];
     var byslot = {}; b.decos.forEach(function (d) { byslot[d.slot] = d; });
     function sl(prefix, slots) { return slots.map(function (sz, j) { var d = byslot[prefix + '#' + j]; return NUM[sz] + (d ? decoName(d.deco) : '空き'); }).join(' / '); }
-    var wsl = b.weapon != null ? I.weaponById[b.weapon].slots : (b.weaponSlots || []);
+    var wsl = b.weaponSlots || (b.weapon != null ? I.weaponById[b.weapon].slots : []);
     lines.push('武器: ' + weaponLabel(b) + (wsl.length ? '［' + sl('weapon', wsl) + '］' : ''));
-    E.PARTS.forEach(function (p, i) { var a = I.armorById[b.armor[i]]; lines.push(E.PART_JA[p] + ': ' + a.ja + (a.slots.length ? '［' + sl(p, a.slots) + '］' : '')); });
+    E.PARTS.forEach(function (p, i) { var a = E.armorOf(GAME, b.mods || {}, b.armor[i]); lines.push(E.PART_JA[p] + ': ' + a.ja + (a.slots.length ? '［' + sl(p, a.slots) + '］' : '')); });
     lines.push('護石: ' + charmName(b.charm));
     lines.push('発動スキル: ' + Object.keys(b.levels).filter(function (k) { return b.levels[k] > 0; }).sort(function (x, y) { return b.levels[y] - b.levels[x]; }).map(function (k) { return skillName(k) + ' Lv' + b.levels[k]; }).join('、'));
     var bo = (b.bonuses || []).filter(function (x) { return x.active.length; }).map(function (x) { return I.bonusById[x.id].ja + '（' + x.active.map(skillName).join('・') + '）'; });
@@ -219,7 +220,7 @@
     return lines.join('\n');
   }
   function shareUrl(b, q) {
-    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale, m: b.mods || undefined };
+    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale, m: b.mods || undefined, t: b.weaponType || (q && q.weaponType) || undefined };
     var s = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return location.href.split('#')[0] + '#b=' + s;
   }
@@ -228,8 +229,8 @@
     try {
       var s = m[1].replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
       var o = JSON.parse(decodeURIComponent(escape(atob(s))));
-      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }), mods: o.m || null };
-      var q = { objective: o.o, uptimeScale: o.u, weaponId: spec.weapon, weaponSlots: spec.weaponSlots };
+      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }), mods: o.m || null, weaponType: o.t || null };
+      var q = { objective: o.o, uptimeScale: o.u, weaponId: spec.weapon, weaponSlots: spec.weaponSlots, weaponType: o.t || null };
       var b = E.evaluateBuild(GAME, spec, q);
       return b ? { b: b, q: q } : null;
     } catch (e) { return null; }
@@ -271,8 +272,10 @@
     var d = E.PARTS_DEFAULT[wtSel.value] || { art: 0, special: 0, jump: 0 };
     $('#part-art').value = Math.round(d.art * 100); $('#part-special').value = Math.round(d.special * 100); $('#part-jump').value = Math.round(d.jump * 100);
   }
-  wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); });
-  wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; });
+  wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); clearWeaponOverride(); });
+  // 武器を変えたら、前の武器のために入れたカスタム強化の数値を消します
+  function clearWeaponOverride() { ['#wo-attack', '#wo-aff', '#wo-eval', '#wo-def'].forEach(function (k) { $(k).value = ''; }); $('#wo-etype').value = ''; $('#wo-s1').value = ''; $('#wo-s2').value = '0'; $('#wo-s3').value = '0'; }
+  wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; clearWeaponOverride(); });
   form.querySelectorAll('input[name=rank]').forEach(function (x) { x.addEventListener('change', fillWeapons); });
 
   // スキルの選択
@@ -295,7 +298,7 @@
     $('#ex-chips').innerHTML = excludeArmor.map(function (id, i) { return '<span class="chip">' + esc(armorName(id)) + '<button type="button" data-rm-ex="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#ao-chips').innerHTML = Object.keys(armorOverrides).map(function (id) {
       var o = armorOverrides[id];
-      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + slotsLabel(o.slots) + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
+      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + (o.slots ? slotsLabel(o.slots) : 'データのまま') + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
     }).join('') || '<span class="muted">なし</span>';
     $('#exd-chips').innerHTML = excludeDecos.map(function (id, i) { return '<span class="chip">' + esc(decoName(id)) + '<button type="button" data-rm-exd="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
   }
@@ -319,9 +322,12 @@
   $('#add-ex').addEventListener('click', function () { var id = idFromLabel($('#ex-input').value); if (id != null && I.armorById[id] && excludeArmor.indexOf(id) < 0) { excludeArmor.push(id); $('#ex-input').value = ''; renderChips(); } });
   $('#add-ao').addEventListener('click', function () {
     var id = idFromLabel($('#ao-input').value); if (id == null || !I.armorById[id]) return;
-    var o = { slots: [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; }) };
+    var o = {};
+    // スロットが「データのまま」なら、スロットは変えません
+    if ($('#ao-s1').value !== '') o.slots = [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; });
     var sk = findSkillByName($('#ao-skill').value);
     if (sk) o.addSkills = [[sk.id, +$('#ao-lv').value]];
+    if (!o.slots && !o.addSkills) return;
     armorOverrides[id] = o; $('#ao-input').value = ''; $('#ao-skill').value = ''; renderChips();
   });
   $('#add-exd').addEventListener('click', function () { var id = idFromLabel($('#exd-input').value); if (id != null && I.decoById[id] && excludeDecos.indexOf(id) < 0) { excludeDecos.push(id); $('#exd-input').value = ''; renderChips(); } });
@@ -398,7 +404,7 @@
         resultsEl.innerHTML = r.builds.map(function (b, i) { return buildCard(b, { id: 'q' + n + '-' + (i + 1), title: (i + 1) + '位', query: q }); }).join('');
       }, function (e) { $('#stop').hidden = true; $('#go').disabled = false; statusEl.textContent = 'うまく探せませんでした：' + e.message; });
   });
-  $('#stop').addEventListener('click', function () { stopWorker(); });
+  $('#stop').addEventListener('click', function () { stopWorker('form'); });
 
   /* ---------- あらかじめ作った案 ---------- */
   var pt = $('#preset-type'), po = $('#preset-obj');
@@ -486,7 +492,12 @@
     };
     var sid = 's' + (++nlSeq);
     nlStatus.textContent = 'ページの中で検索しています（' + sid + '）…';
-    return runSearch(q).then(function (r) {
+    // 画面で入れた計算の設定（条件付きスキルの見込み・属性の重み・攻撃の内わけ・防具の強化）も同じように使います
+    var page = currentQuery();
+    q.uptimeScale = page.uptimeScale; q.elemWeight = page.elemWeight; q.armorAugMax = page.armorAugMax; q.armorOverrides = page.armorOverrides;
+    if (t === wtSel.value) q.parts = page.parts;
+    if (q.weaponId != null && page.weaponId === q.weaponId) q.weaponOverride = page.weaponOverride;
+    return runSearch(q, null, 'claude').then(function (r) {
       var out = r.builds.map(function (b, i) { var id = sid + '-b' + (i + 1); store[id] = { build: b, query: q, title: '' }; return summarize(id, b); });
       return { searchId: sid, truncated: r.stats.truncated, found: r.stats.feasible, builds: out, note: out.length ? '' : '条件を満たす案がありません' };
     });
@@ -570,7 +581,7 @@
       nlStatus.textContent = 'うまくいきませんでした（' + (c || '') + '）：' + (e && e.message || '');
     }).then(function () { nlBusy = false; $('#nl-go').disabled = false; $('#nl-stop').hidden = true; });
   });
-  $('#nl-stop').addEventListener('click', function () { if (nlCtl) nlCtl.abort(); });
+  $('#nl-stop').addEventListener('click', function () { if (nlCtl) nlCtl.abort(); stopWorker('claude'); });
 
   // 試験用に一部を外から見えるようにします
   window.__app = { store: store, TOOLS: TOOLS, runSearch: runSearch, workerOk: function () { return workerOk; }, parseAnswer: parseAnswer };
