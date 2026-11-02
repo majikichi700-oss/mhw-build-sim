@@ -104,7 +104,8 @@ const PART_KEYS = ['head', 'chest', 'arms', 'waist', 'legs'];
 function resolveTemplate(V, idx, t) {
   const { E, game } = V;
   const reasons = [];
-  if (t.requiresAugment) reasons.push('データにない強化（カスタム強化や覚醒）が前提です: ' + t.requiresAugment);
+  // データにない強化が前提でも、強化なしの数値で計算できるとき（装飾品がデータのスロットに入りきるとき）は、
+  // 計画（PLAN.md 4 章）のとおり除かずに「前提の違い」として記録します。入りきらないときは下で除きます。
   const w = lookup(idx, 'weapon', t.weapon, x => x.type === t.weaponType);
   if (w.err) reasons.push('武器: ' + w.err);
   const armor = [];
@@ -133,12 +134,12 @@ function resolveTemplate(V, idx, t) {
   const placed = [];
   for (const d of decos.slice().sort((a, b) => b.size - a.size)) {
     const j = slots.findIndex(s => s.size >= d.size);
-    if (j < 0) return { excluded: true, reasons: ['装飾品がデータの防具・武器のスロットに入りきりません（' + d.ja + '）。データにない強化が前提だと考えて除きます'] };
+    if (j < 0) return { excluded: true, reasons: ['装飾品がデータの防具・武器のスロットに入りきりません（' + d.ja + '）。データにない強化が前提だと考えて除きます' + (t.requiresAugment ? '（サイトの前提：' + t.requiresAugment + '）' : '')] };
     placed.push({ slot: slots[j].ref, deco: d.id });
     slots.splice(j, 1);
   }
   const spec = { weapon: w.ok.id, weaponSlots: w.ok.slots, armor: armor.map(a => a.id), charm: charm ? charm.id : null, decos: placed };
-  return { excluded: false, spec, siteSkills: skills, weapon: w.ok };
+  return { excluded: false, spec, siteSkills: skills, weapon: w.ok, premiseDiff: t.requiresAugment || null };
 }
 
 function objectiveOf(t) { return { '火力': 'fire', '不明': 'fire', '汎用': 'balance', '快適': 'comfort' }[t.purpose] || 'fire'; }
@@ -195,7 +196,12 @@ function compareOne(V, idx, t, secA, secB) {
   const tb = E.evaluateBuild(game, r.spec, tq);
   const req = r.siteSkills.map(s => ({ id: s.id, lv: Math.min(s.lv, tb.levels[s.id] || 0) })).filter(s => s.lv > 0);
   const mism = r.siteSkills.filter(s => (tb.levels[s.id] || 0) !== s.lv).map(s => s.name + '（サイト ' + s.lv + '、計算 ' + (tb.levels[s.id] || 0) + '）');
+  // 逆向き：データで計算すると付くのに、サイトに書かれていないスキル
+  const siteIds = new Set(r.siteSkills.map(s => s.id));
+  const I0 = E.indexGame(game);
+  Object.keys(tb.levels).forEach(k => { if (tb.levels[k] > 0 && !siteIds.has(+k)) mism.push(I0.skillById[k].ja + '（サイトになし、計算 ' + tb.levels[k] + '）'); });
   out.skillMismatch = mism;
+  out.premiseDiff = r.premiseDiff;
   const resB = E.search(game, { weaponId: r.spec.weapon, weaponType: t.weaponType, objective, ranks: ['MR'], skills: req, timeLimitMs: secB * 1000, resultCount: 1 });
   const bestB = resB.builds[0] ? { armor: resB.builds[0].armor, charm: resB.builds[0].charm, weapon: resB.builds[0].weapon, weaponSlots: resB.builds[0].weaponSlots, decos: resB.builds[0].decos.map(d => ({ slot: d.slot, deco: d.deco })) } : null;
   out.bTruncated = resB.stats.truncated;

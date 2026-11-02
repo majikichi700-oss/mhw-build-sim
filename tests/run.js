@@ -108,12 +108,17 @@ section('v1.1 の計算（属性・武器の種類ごとの数値・カスタム
   ok(ro.builds.length && ro.builds[0].weaponSlots.join() === '4,4,1', '入れた武器のスロットで探す');
   checkResult(ro, qo, '武器の強化');
   ok(ro.builds.every(b => C.check(b, qo.skills).ok), '武器の強化を入れた案も検算が合う');
+  const wiO = E.weaponInfo(game, qo), wiN = E.weaponInfo(game, { weaponId: ls.id });
+  ok(Math.abs(wiO.raw - (ls.attack + 33) / E.WEAPON_BLOAT['long-sword']) < 1e-9 && wiO.aff === 30 && wiN.aff === ls.affinity, '入れた表示攻撃力と会心率が、武器の基礎攻撃力と会心率になる');
+  const sO = E.scoreParts(game, { objective: 'fire' }, wiO, {}, [], 0, [0, 0, 0, 0, 0]), sN = E.scoreParts(game, { objective: 'fire' }, wiN, {}, [], 0, [0, 0, 0, 0, 0]);
+  ok(sO.detail.phys0 > sN.detail.phys0, '入れた攻撃力・会心率で、スキルなしの物理期待値が上がる');
   // 防具の強化を自分で入れる・防御力をカスタム強化の最大で計算する
   const someHead = game.armors.find(a => a.part === 'head' && a.rarity === 12);
   const qa = { weaponType: 'hammer', weaponSlots: [2], objective: 'defense', armorAugMax: true, fixedArmor: { head: someHead.id }, armorOverrides: { [someHead.id]: { slots: [4, 4, 4], addSkills: [[sk('Health Boost'), 1]] } }, skills: [{ id: sk('Health Boost'), lv: 3 }], timeLimitMs: 4000 };
   const ra = E.search(game, qa);
   ok(ra.builds.length && ra.builds[0].mods && ra.builds[0].mods.armorOverrides && ra.builds[0].mods.armorAugMax, '防具の強化の入力が案に付く');
   checkResult(ra, qa, '防具の強化');
+  ok(ra.builds.every(b => b.score.detail.defBase === C.recompute(b).defenseBase), '防御力をカスタム強化の最大で計算した値が、検算と合う');
   // Inheritance（データの英語の説明：極意の上限をなくす）
   const qi = { weaponType: 'long-sword', weaponSlots: [2, 2], objective: 'fire', skills: [{ id: sk('Agitator'), lv: 7 }], timeLimitMs: 8000, minRarity: 10 };
   const ri = E.search(game, qi);
@@ -174,11 +179,22 @@ section('見直しで見つかった問題が直っていること');
   ok(rz.builds.every(b => b.decos.every(d => d.slot !== 'weapon#2' || d.slotSize === 2)), '強化で足した武器のスロットの大きさで差す');
 }
 
+{
+  // 防御・耐性の下限：装飾品で埋めれば満たせる防具の組を、案ごと捨てない（見直しで見つかった例）
+  const qmr = { weaponType: 'long-sword', objective: 'fire', skills: [], minRarity: 10, fixedArmor: { head: 1576, chest: 1577, arms: 1578, waist: 1579, legs: 1580 }, minRes: [1, null, null, null, null], timeLimitMs: 4000 };
+  if (game.armors.find(a => a.id === 1576)) {
+    const rmr = E.search(game, qmr);
+    ok(rmr.builds.length > 0 && rmr.builds.every(b => b.score.detail.res[0] >= 1), '火耐性の下限を、装飾品で埋めて満たす');
+    checkResult(rmr, qmr, '耐性の下限');
+  }
+}
+
 // ---- 4. 小さな例で総当たりと比べる
 section('小さな例で総当たりと比べる');
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
 const objectives = ['fire', 'defense', 'comfort', 'balance'];
 const skillPool = ['Attack Boost', 'Critical Eye', 'Weakness Exploit', 'Health Boost', 'Evade Window', 'Critical Boost', 'Agitator', 'Divine Blessing', 'Earplugs', 'Guard'];
+const refineStats = { n: 0, hit: 0, miss: [] };
 for (let t = 0; t < 24; t++) {
   const R = rng(1000 + t);
   const rank = ['HR', 'MR'][t % 2];
@@ -214,10 +230,23 @@ for (let t = 0; t < 24; t++) {
   }
   const got = r.builds.length ? r.builds[0].score.total : -Infinity;
   ok(!r.stats.truncated, '例' + t + ' は打ち切らずに終わる');
-  ok((nFeas === 0 && r.builds.length === 0) || Math.abs(best - got) < 1e-6, '例' + t + ' 最良の点数が総当たりと同じ（総当たり ' + best + '、検索 ' + got + '）');
+  // 検索は、探している途中の装飾品の入れ方（effort 1）で全部の組み合わせを比べたときの最良を、必ず下回らない
+  ok((nFeas === 0 && r.builds.length === 0) || got >= best - 1e-6, '例' + t + ' 最良の点数が総当たり以上（総当たり ' + best + '、検索 ' + got + '）');
+  // 参考：最後に磨くときの入れ方（effort 3）で全部の組み合わせを比べた最良に、届いたかどうか
+  if (nFeas && t < 6) { // 時間がかかるので、最初の 6 例だけ
+    P.q.fillEffort = 3; P._solveCache = {};
+    let best3 = -Infinity;
+    for (const h of keep.head) for (const c of keep.chest) for (const a of keep.arms) for (const w of keep.waist) for (const l of keep.legs) for (const ch of charms) {
+      const b = E.finishBuild(P, [h, c, a, w, l].map(x => ({ a: x })), ch ? { a: ch } : null);
+      if (b && !b.below && b.score.total > best3) best3 = b.score.total;
+    }
+    refineStats.n++; if (got >= best3 - 1e-6) refineStats.hit++; else refineStats.miss.push('例' + t + '（' + got.toFixed(3) + ' / ' + best3.toFixed(3) + '）');
+  }
   checkResult(r, q, '例' + t);
   if (t < 4 || Math.abs(best - got) >= 1e-6) console.log('  例' + t + ' ' + q.objective + ': 条件を満たす組み合わせ ' + nFeas + '、総当たりの最良 ' + (isFinite(best) ? best.toFixed(3) : 'なし') + '、検索の最良 ' + (isFinite(got) ? got.toFixed(3) : 'なし'));
 }
+
+console.log('  参考：磨き直しの入れ方で全部の組み合わせを比べた最良に、検索が届いた例 ' + refineStats.hit + ' / ' + refineStats.n + (refineStats.miss.length ? '（届かなかった例：' + refineStats.miss.join('、') + '）' : ''));
 
 // ---- 5. あらかじめ作った案
 const presetPath = path.join(__dirname, '..', 'data', 'presets.json');

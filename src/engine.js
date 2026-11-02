@@ -164,7 +164,8 @@
       if (ov.attack) info.raw = +ov.attack / WEAPON_BLOAT[info.type];
       if (ov.affinity != null && ov.affinity !== '') info.aff = +ov.affinity;
       // 入れた属性：もとが隠し属性の武器なら、隠し属性として扱います（属性解放が要るのは変わらないため）
-      if (ov.element && ov.element[0] && ov.element[1] > 0) {
+      if (ov.element && ov.element[0] && !(ov.element[1] > 0)) { info.elems = []; info.hidden = []; info.elemDiv = 1; } // 0 を入れたら属性なし
+      else if (ov.element && ov.element[0] && ov.element[1] > 0) {
         if (w && w.elemHidden) { info.hidden = [[ov.element[0], +ov.element[1]]]; info.elems = []; }
         else { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
         info.elemDiv = 1;
@@ -306,7 +307,7 @@
       total: total, fire: fire, def: def, comfort: comfort,
       detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, elemShown: elemShown, critElem: a.critElem ? critElemMul(wi.type, a.critElem) : 0, hiddenFrac: hf,
         raw: wi.raw + a.atk, atkMul: a.atkMul, affinity: a.aff, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
-        defense: defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
+        defense: defense, defBase: baseDef + wi.defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
     };
   }
 
@@ -323,7 +324,15 @@
       if (!o.fireCounted && !defCounted) notCounted.push(+k);
     }
     var r = evalAgg(g, q, wi, a, spare, spare.length, baseDef, baseRes, true);
-    r.notCounted = notCounted;
+    // 極意スキルと Inheritance は、上限を上げる働きで計算に入っているので、「数値に入れていないスキル」から外します
+    var over = false;
+    for (var k2 in levels) { var s2 = I.skillById[k2]; if (levels[k2] > s2.max) over = true; }
+    r.notCounted = notCounted.filter(function (id) {
+      var s3 = I.skillById[id];
+      if (s3.unlocks != null && (levels[s3.unlocks] || 0) > I.skillById[s3.unlocks].max) return false;
+      if (id === I.inheritId && over) return false;
+      return true;
+    });
     return r;
   }
 
@@ -739,6 +748,144 @@
     return { total: total, lv: lv };
   }
 
+  /* 余りスロットの埋め方。
+   * 1. どのスロットでもよいので点数が一番上がる装飾品を選び、入る一番小さいスロットに入れる（欲張り法）。
+   * 2. スロットを 1 つずつ見て、中身を「空き」かほかの装飾品に入れかえて上がるなら入れかえる。2 つのスロットの中身の入れかえも試す。
+   * effort 2 以上：1 の各手で、次の 1 手まで見て選ぶ（2 手先読み）。最後の上位の案を磨くときに使います。
+   * rp は点数に関わるスキルのポイント（必要な装飾品まで入れたもの）。終わったときは元の値に戻します。 */
+  function fillSpare(P, F, rp, spare0, def, res, effort) {
+    var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
+    var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
+    var slots = spare0.slice().sort(function (a, b) { return b - a; });
+    var n = slots.length, asg = new Int16Array(n).fill(-1);
+    var buf = new Int8Array(n + 1);
+    function add(ci, sign) { var v = candV[ci]; for (var k = 0; k < v.length; k++) rp[v[k][0]] += sign * v[k][1]; }
+    function total() {
+      var m = 0; for (var j = 0; j < n; j++) if (asg[j] < 0) buf[m++] = slots[j];
+      return F.total(F.levels(rp), buf, m, def, res);
+    }
+    function smallestFree(size) { for (var j = n - 1; j >= 0; j--) if (asg[j] < 0 && slots[j] >= size) return j; return -1; }
+    var cur = total();
+    // 1. 欲張り法：同じ装飾品を 1〜3 個まとめて入れる手も比べ、「1 個あたりの点数の上がり方」が一番大きい手を選びます。
+    //    （防御のように、何レベルか重ねて初めて大きく上がるスキルを見落とさないため）
+    var KMAX = effort >= 2 ? 3 : 2;
+    var js = new Int16Array(KMAX);
+    while (true) {
+      var bestEff = 1e-9, bestC = -1, bestK = 0, bestJs = null;
+      for (var c = 0; c < cand.length; c++) {
+        var placed = 0, base = cur;
+        for (var k = 0; k < KMAX; k++) {
+          var j = smallestFree(cand[c].size); if (j < 0) break;
+          add(c, 1); asg[j] = c; js[k] = j; placed++;
+          var t = total(), eff = (t - base) / placed;
+          if (effort >= 2 && placed === 1) {
+            // 2 手先読み：もう 1 個（別の装飾品でもよい）入れたときの一番よい点数も見ます
+            for (var c2 = 0; c2 < cand.length; c2++) {
+              var j2 = smallestFree(cand[c2].size); if (j2 < 0) continue;
+              add(c2, 1); asg[j2] = c2;
+              var t2 = total(); if ((t2 - base) / 2 > eff) eff = (t2 - base) / 2;
+              asg[j2] = -1; add(c2, -1);
+            }
+          }
+          if (t > cur + 1e-9 && (eff > bestEff + 1e-9 || (bestC >= 0 && Math.abs(eff - bestEff) <= 1e-9 && cand[c].size < cand[bestC].size))) {
+            bestEff = eff; bestC = c; bestK = placed; bestJs = Array.prototype.slice.call(js, 0, placed);
+          }
+        }
+        for (var u = placed - 1; u >= 0; u--) { asg[js[u]] = -1; add(c, -1); }
+      }
+      if (bestC < 0) break;
+      // 先読みの値で選んだときも、実際に入れるのは選んだ装飾品だけです（1 個ずつ確かめながら進みます）
+      for (var u2 = 0; u2 < bestK; u2++) { add(bestC, 1); asg[bestJs[u2]] = bestC; }
+      cur = total();
+    }
+    // 2. 入れかえ（1 つずつ、そして 2 つの中身の交換）。探している途中（effort 1）は 1 つずつを 1 回だけにして速くします
+    var passes = effort >= 2 ? 4 : 1;
+    for (var pass = 0; pass < passes; pass++) {
+      var improved = false;
+      for (var j3 = 0; j3 < n; j3++) {
+        var old = asg[j3];
+        if (old >= 0) add(old, -1);
+        asg[j3] = -1;
+        var bT = total(), bC = -1;
+        for (var c3 = 0; c3 < cand.length; c3++) {
+          if (cand[c3].size > slots[j3]) continue;
+          add(c3, 1); asg[j3] = c3;
+          var t3 = total();
+          asg[j3] = -1; add(c3, -1);
+          if (t3 > bT + 1e-9) { bT = t3; bC = c3; }
+        }
+        if (bC !== old && bT > cur + 1e-9) { if (bC >= 0) add(bC, 1); asg[j3] = bC; cur = bT; improved = true; }
+        else { if (old >= 0) add(old, 1); asg[j3] = old; }
+      }
+      // 2 つのスロットの中身を入れかえる（大きいスロットを空けて、別の装飾品を入れられるように）。最後に磨くときだけ
+      if (effort >= 2) for (var a1 = 0; a1 < n; a1++) for (var a2 = a1 + 1; a2 < n; a2++) {
+        var x1 = asg[a1], x2 = asg[a2];
+        if (x1 === x2) continue;
+        if ((x2 >= 0 && cand[x2].size > slots[a1]) || (x1 >= 0 && cand[x1].size > slots[a2])) continue;
+        asg[a1] = x2; asg[a2] = x1;
+        // 入れかえただけでは点数は同じなので、空いたスロットに 1 つ足せるかを見ます
+        var fj = -1; for (var z = 0; z < n; z++) if (asg[z] < 0) { fj = z; break; }
+        var gainC = -1, gainT = cur + 1e-9;
+        if (fj >= 0) {
+          for (var c4 = 0; c4 < cand.length; c4++) {
+            if (cand[c4].size > slots[fj]) continue;
+            add(c4, 1); asg[fj] = c4;
+            var t4 = total();
+            asg[fj] = -1; add(c4, -1);
+            if (t4 > gainT) { gainT = t4; gainC = c4; }
+          }
+        }
+        if (gainC >= 0) { add(gainC, 1); asg[fj] = gainC; cur = gainT; improved = true; }
+        else { asg[a1] = x1; asg[a2] = x2; }
+      }
+      if (!improved) break;
+    }
+    // 3. 最後に磨くとき（effort 3）：ビーム探索（途中の埋め方を上位 12 通り残しながら進む）と、
+    //    残りのスロットが 3 つ以下なら全部の埋め方を試し、一番よいものを使います
+    if (effort >= 3 && n > 0) {
+      var keepAsg = Array.prototype.slice.call(asg);
+      for (var r0 = 0; r0 < n; r0++) if (asg[r0] >= 0) { add(asg[r0], -1); asg[r0] = -1; }
+      var evalPlan = function (plan) {
+        for (var q1 = 0; q1 < n; q1++) if (plan[q1] >= 0) { add(plan[q1], 1); asg[q1] = plan[q1]; }
+        var tt = total();
+        for (var q2 = 0; q2 < n; q2++) if (plan[q2] >= 0) { add(plan[q2], -1); asg[q2] = -1; }
+        return tt;
+      };
+      var bestPlan = keepAsg, bestTotal = cur;
+      if (n <= 3) {
+        var plan = new Array(n).fill(-1);
+        var rec = function (i) {
+          if (i === n) { var tt = evalPlan(plan); if (tt > bestTotal + 1e-9) { bestTotal = tt; bestPlan = plan.slice(); } return; }
+          plan[i] = -1; rec(i + 1);
+          for (var cc = 0; cc < cand.length; cc++) if (cand[cc].size <= slots[i]) { plan[i] = cc; rec(i + 1); }
+          plan[i] = -1;
+        };
+        rec(0);
+      } else {
+        var W = 12, beam = [{ plan: new Array(n).fill(-1), t: evalPlan(new Array(n).fill(-1)) }];
+        for (var bi = 0; bi < n; bi++) {
+          var next = [];
+          beam.forEach(function (st) {
+            next.push({ plan: st.plan, t: st.t });
+            for (var cc = 0; cc < cand.length; cc++) {
+              if (cand[cc].size > slots[bi]) continue;
+              var p2 = st.plan.slice(); p2[bi] = cc;
+              next.push({ plan: p2, t: evalPlan(p2) });
+            }
+          });
+          next.sort(function (x, y) { return y.t - x.t; });
+          beam = next.slice(0, W);
+        }
+        if (beam[0].t > bestTotal + 1e-9) { bestTotal = beam[0].t; bestPlan = beam[0].plan; }
+      }
+      for (var r1 = 0; r1 < n; r1++) if (bestPlan[r1] >= 0) { add(bestPlan[r1], 1); asg[r1] = bestPlan[r1]; }
+      cur = total();
+    }
+    var picks = [], left = [];
+    for (var j5 = 0; j5 < n; j5++) { if (asg[j5] >= 0) { picks.push(asg[j5]); add(asg[j5], -1); } else left.push(slots[j5]); }
+    return { picks: picks, spare: left, total: cur };
+  }
+
   // 防具・護石が決まったときの最良の案（必要な装飾品を入れ、余りを目的に合わせて埋める）
   function finishBuild(P, armorCands, charmCand, thr) {
     var G = gearPoints(P, armorCands, charmCand);
@@ -773,6 +920,33 @@
       var sc = scoreParts(P.g, P.q, P.wi, L.lv, sp, G.def, G.res);
       return { L: L, sc: sc, pts: pts };
     }
+    // 防御・耐性の下限があるときは、足りない分を先に、防御・耐性の装飾品で埋めます（足りない量が一番減る物を 1 つずつ）
+    var hasMinQ = P.q.minDefense > 0 || P.q.minRes.some(function (x) { return x != null && x !== ''; });
+    if (hasMinQ) {
+      var shortOf = function (sc) {
+        var d = 0;
+        if (P.q.minDefense) d += Math.max(0, P.q.minDefense - sc.detail.defense);
+        for (var i = 0; i < 5; i++) { var mm = P.q.minRes[i]; if (mm != null && mm !== '') d += Math.max(0, +mm - sc.detail.res[i]) * 10; }
+        return d;
+      };
+      var deficit = shortOf(evalWith(decoList, spare).sc);
+      var defDecos = P.minDecos || (P.minDecos = P.decos.filter(function (d) { return d.skills.some(function (x) { return P.I.defSkill[x[0]]; }); }));
+      var guardN = 0;
+      while (deficit > 1e-9 && spare.length && guardN++ < 30) {
+        spare.sort(function (x, y) { return x - y; });
+        var bestD = null, bestDef = deficit, bestIdx = -1;
+        for (var dd = 0; dd < defDecos.length; dd++) {
+          var d0 = defDecos[dd], jj = -1;
+          for (var z = 0; z < spare.length; z++) if (spare[z] >= d0.size) { jj = z; break; }
+          if (jj < 0) continue;
+          var sp2 = spare.slice(); sp2.splice(jj, 1);
+          var df = shortOf(evalWith(decoList.concat([d0]), sp2).sc);
+          if (df < bestDef - 1e-9 || (bestD && Math.abs(df - bestDef) <= 1e-9 && d0.size < bestD.size)) { bestD = d0; bestDef = df; bestIdx = jj; }
+        }
+        if (!bestD) break;
+        decoList.push(bestD); spare.splice(bestIdx, 1); deficit = bestDef;
+      }
+    }
     var F = compileScorer(P), R = F.R;
     var rp = new Int16Array(R);
     for (var kk in G.pts) if (P.relPos[kk] != null) rp[P.relPos[kk]] += G.pts[kk];
@@ -780,30 +954,11 @@
     decoList.forEach(function (d) { d.skills.forEach(function (x) { if (P.relPos[x[0]] != null) rp[P.relPos[x[0]]] += x[1]; }); });
     var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
     var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
-    // 大きいスロットから順に、点数が一番上がる装飾品を入れます（上がらなければ空けたまま）
-    spare.sort(function (a, b) { return b - a; });
-    var buf = new Int8Array(32);
-    function fill(arr) { for (var z = 0; z < arr.length; z++) buf[z] = arr[z]; return arr.length; }
-    var n0 = fill(spare);
-    var curTotal = F.total(F.levels(rp), buf, n0, G.def, G.res);
-    var keepSpare = [];
-    while (spare.length) {
-      var sz = spare.shift();
-      var rest = keepSpare.concat(spare), nr = fill(rest);
-      var bestGain = 1e-9, bestI = -1, bestT = 0;
-      for (var di = 0; di < cand.length; di++) {
-        if (cand[di].size > sz) continue;
-        var vv = candV[di];
-        for (var a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] += vv[a1][1];
-        var tt = F.total(F.levels(rp), buf, nr, G.def, G.res);
-        for (a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] -= vv[a1][1];
-        if (tt - curTotal > bestGain + 1e-9) { bestGain = tt - curTotal; bestI = di; bestT = tt; }
-      }
-      if (bestI < 0) { keepSpare.push(sz); continue; }
-      var bv = candV[bestI]; for (var a2 = 0; a2 < bv.length; a2++) rp[bv[a2][0]] += bv[a2][1];
-      decoList.push(cand[bestI]); curTotal = bestT;
-    }
-    spare = keepSpare;
+    // 余ったスロットに、目的の点数が上がる装飾品を入れます（fillSpare：欲張り法と入れかえ。上がらなければ空けたまま）
+    var fr = fillSpare(P, F, rp, spare, G.def, G.res, P.q.fillEffort || 1);
+    fr.picks.forEach(function (ci) { decoList.push(cand[ci]); });
+    spare = fr.spare;
+    var curTotal = fr.total;
     if (thr != null && curTotal < thr - 1e-9) return { below: true };
     var cur = evalWith(decoList, spare);
     // 防御・耐性の下限
@@ -1024,6 +1179,26 @@
       } else stats.passes = pass + 1;
     }
     stats.passTotal = widths.length;
+    // 見つけた上位の案の装飾品の入れ方を、もっと丁寧に磨き直してから並べ直します（fillSpare の effort 3）
+    var savedEffort = q.fillEffort;
+    q.fillEffort = 3;
+    // 磨き直しに使う時間：探す時間の 2 割（1.5 秒から 20 秒の間）。点数の高い案から順に磨きます
+    var budget = Math.min(20000, Math.max(1500, isFinite(q.timeLimitMs) ? q.timeLimitMs * 0.2 : 20000));
+    var tr = Date.now(), refined = [], nRef = 0;
+    for (var hi = 0; hi < heap.length; hi++) {
+      var b0 = heap[hi];
+      if (Date.now() - tr > budget || (q.stopSignal && q.stopSignal() && hi > 0)) { refined.push(b0); continue; }
+      var armorC = b0.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
+      var charmC = b0.charm != null ? { a: P.I.charmById[b0.charm] } : null;
+      var nb = finishBuild(P, armorC, charmC, null);
+      refined.push(nb && !nb.below && nb.score.total >= b0.score.total - 1e-9 ? nb : b0);
+      nRef++;
+      if (Date.now() - lastYield > 100) { lastYield = Date.now(); yield { progress: true, refining: true, refined: nRef, total: heap.length, nodes: stats.nodes, leaves: stats.leaves, found: heap.length, ms: Date.now() - t0, pass: stats.passes, passes: widths.length }; }
+    }
+    stats.refined = nRef;
+    q.fillEffort = savedEffort;
+    refined.sort(function (x, y) { return y.score.total - x.score.total; });
+    heap = refined;
     stats.timeMs = Date.now() - t0;
     var picked = diversify(heap, q.resultCount);
     picked = picked.map(function (b, i) { return Object.assign({}, b, { rank: i + 1, id: 'b' + (i + 1) }); });

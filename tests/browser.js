@@ -105,6 +105,61 @@ async function conditionSearch(p) {
     await ctx.close();
   }
 
+  console.log('■ カスタム強化の入力');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 900, height: 900 });
+    await p.waitForTimeout(500);
+    await p.click('summary:has-text("くわしい条件")');
+    const wid = await p.$eval('#weapon', s => s.options[1].value);
+    await p.selectOption('#weapon', wid);
+    await p.fill('#wo-attack', '1000');
+    await p.selectOption('#wo-s1', '4'); await p.selectOption('#wo-s2', '4'); await p.selectOption('#wo-s3', '2');
+    await p.check('#armor-augmax');
+    // 強化した防具：スロットは「データのまま」、スキルだけ足す
+    const label = await p.$eval('#armor-list', dl => Array.from(dl.options).map(o => o.value).find(v => /｜頭｜マスターランク｜/.test(v)));
+    await p.fill('#ao-input', label);
+    await p.fill('#ao-skill', '攻撃'); await p.selectOption('#ao-lv', '1');
+    await p.click('#add-ao');
+    ok(/データのまま/.test(await p.textContent('#ao-chips')), '強化した防具のスロットを「データのまま」にできる');
+    await p.evaluate(() => { const o = document.createElement('option'); o.value = '5'; document.getElementById('time-limit').appendChild(o); });
+    await p.selectOption('#time-limit', '5');
+    await p.click('#go');
+    await p.waitForSelector('#go:not([disabled])', { timeout: 60000 });
+    const card = await p.$('#results .card');
+    ok(!!card, '強化を入れて探すと案が出る');
+    if (card) {
+      const wslots = await p.$eval('#results .card table.parts tr', tr => tr.querySelectorAll('.slot').length);
+      ok(wslots === 3, '入れた武器のスロット（3 つ）が表に出る（' + wslots + '）');
+      const txt = await p.textContent('#results .card');
+      ok(/武器（入力した値）：表示攻撃力 1000/.test(txt) && /カスタム強化の最大/.test(txt), '強化の入力と、防御力の書き方がカードに出る');
+    }
+    // 武器を変えたら、入れた数値は消える
+    const wid2 = await p.$eval('#weapon', s => s.options[2].value);
+    await p.selectOption('#weapon', wid2);
+    ok((await p.inputValue('#wo-attack')) === '', '武器を変えると、前の武器のための数値が消える');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
+  console.log('■ まねた window.claude（選んだモデルがそのまま答える）');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => {
+      const s = async function (input, opts) {
+        const T = n => opts.tools.find(t => t.name === n);
+        const r = await T('searchBuilds').execute({ weaponType: 'bow', objective: 'comfort', skills: [{ name: '回避距離ＵＰ', level: 1 }] });
+        return { text: JSON.stringify({ summary: 'ok', ranking: [{ buildId: r.builds[0].buildId, reason: 'r' }], relax: '' }), truncated: false, modelTierApplied: 'default', modelApplied: opts.model };
+      };
+      window.claude = { use: (n) => Promise.resolve(n === 'sample' ? s : null) };
+    });
+    await p.waitForSelector('#nl:not([hidden])');
+    await p.selectOption('#nl-model', 'claude-sonnet-5-5');
+    await p.click('#nl-go');
+    await p.waitForSelector('#nl-out .card', { timeout: 60000 });
+    ok(/Sonnet 5\.5（claude-sonnet-5-5）が答えました/.test(await p.textContent('#nl-status')), '選んだモデルが答えたときは、そのことを出す');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
   console.log('■ Web Worker が使えないとき');
   {
     const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => { window.Worker = undefined; });

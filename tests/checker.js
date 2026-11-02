@@ -109,6 +109,10 @@ function makeChecker(game) {
       const b = build.bonuses.map(x => x.id + ':' + x.count).sort().join(' ');
       if (a !== b) errs.push('シリーズスキルの部位数が違います（検算 ' + a + '、検索 ' + b + '）');
     }
+    // 防具と武器の防御力の合計（スキルの前）。強化の入力（防御力をカスタム強化の最大で計算・武器の防御）も入ります
+    if (build.score && build.score.detail && build.score.detail.defBase != null && build.score.detail.defBase !== r.defenseBase) {
+      errs.push('防具と武器の防御力の合計が違います（検算 ' + r.defenseBase + '、検索 ' + build.score.detail.defBase + '）');
+    }
     for (const q of required || []) {
       if ((r.levels[q.id] || 0) < q.lv) errs.push('条件の ' + skill.get(q.id).ja + ' Lv' + q.lv + ' に足りません（' + (r.levels[q.id] || 0) + '）');
     }

@@ -160,7 +160,7 @@
     if (m.weaponOverride) {
       var w = m.weaponOverride, x = [];
       if (w.attack) x.push('表示攻撃力 ' + w.attack); if (w.affinity != null) x.push('会心率 ' + w.affinity + '%');
-      if (w.element) x.push((E.ELEM_JA[w.element[0]] || '') + ' ' + w.element[1]); if (w.slots) x.push('スロット ' + slotsLabel(w.slots)); if (w.defense != null) x.push('防御 ' + w.defense);
+      if (w.element) x.push(w.element[1] > 0 ? (E.ELEM_JA[w.element[0]] || '') + ' ' + w.element[1] : '属性なし'); if (w.slots) x.push('スロット ' + slotsLabel(w.slots)); if (w.defense != null) x.push('防御 ' + w.defense);
       t.push('武器（入力した値）：' + x.join('、'));
     }
     if (m.armorAugMax) t.push('防具の防御力はカスタム強化の最大');
@@ -193,12 +193,12 @@
       '<header><h3>' + esc(opt.title || ('案 ' + (b.rank || ''))) + '</h3>' +
       '<div class="pts"><span>合計 <b>' + fmt(b.score.total) + '</b></span><span>火力 ' + fmt(b.score.fire) + '</span><span>守り ' + fmt(b.score.def) + '</span><span>快適 ' + fmt(b.score.comfort) + '</span></div></header>' +
       (opt.reason ? '<p class="reason">' + esc(opt.reason) + '</p>' : '') +
-      (b.mods ? '<p class="note">' + esc(modsText(b.mods)) + '</p>' : '') +
+      (modsText(b.mods) ? '<p class="note">' + esc(modsText(b.mods)) + '</p>' : '') +
       '<table class="parts">' + partRows(b) + '</table>' +
       '<div class="cols"><div><h4>発動スキル</h4><ul class="skills">' + skillList(b, opt.query && opt.query.skills) + '</ul></div>' +
       '<div><h4>シリーズスキル</h4><ul class="skills">' + bonusList(b) + '</ul>' +
       '<h4>余るスロット</h4><p>' + (sp || 'なし') + '</p>' +
-      '<h4>防御力と耐性</h4><p>防御力 ' + fmt(d.defense, 0) + '（強化最大、スキル込み）<br>' + d.res.map(function (r, i) { return E.ELEM_JA[E.ELEMS[i]] + '耐性 ' + fmt(r, 0); }).join('、') + '</p></div></div>' +
+      '<h4>防御力と耐性</h4><p>防御力 ' + fmt(d.defense, 0) + '（' + (b.mods && b.mods.armorAugMax ? 'カスタム強化の最大' : '強化最大') + '、スキル込み）<br>' + d.res.map(function (r, i) { return E.ELEM_JA[E.ELEMS[i]] + '耐性 ' + fmt(r, 0); }).join('、') + '</p></div></div>' +
       scoreBlock(b) +
       '<div class="actions"><button type="button" data-copy="' + esc(id) + '">一覧をコピー</button><button type="button" data-share="' + esc(id) + '">この案の URL をコピー</button><span class="copied" aria-live="polite"></span></div>' +
       '</article>';
@@ -215,7 +215,7 @@
     lines.push('発動スキル: ' + Object.keys(b.levels).filter(function (k) { return b.levels[k] > 0; }).sort(function (x, y) { return b.levels[y] - b.levels[x]; }).map(function (k) { return skillName(k) + ' Lv' + b.levels[k]; }).join('、'));
     var bo = (b.bonuses || []).filter(function (x) { return x.active.length; }).map(function (x) { return I.bonusById[x.id].ja + '（' + x.active.map(skillName).join('・') + '）'; });
     if (bo.length) lines.push('シリーズスキル: ' + bo.join('、'));
-    if (b.mods) lines.push('強化：' + modsText(b.mods));
+    if (modsText(b.mods)) lines.push('強化：' + modsText(b.mods));
     lines.push('防御力 ' + Math.round(b.score.detail.defense) + '（' + (b.mods && b.mods.armorAugMax ? 'カスタム強化の最大' : '強化最大') + 'の値。ゲーム内で確かめてください）');
     return lines.join('\n');
   }
@@ -366,10 +366,12 @@
     t += '候補の防具（各部位、外せるものを外した後）：' + E.PARTS.map(function (p) { return E.PART_JA[p] + st.poolSizes[p]; }).join('・') + '、護石 ' + st.poolSizes.charm + '。';
     if (st.stoppedByUser) t += ' ⚠ 「止める」で途中で止めました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。ここまでに見つけた中の上位を出しています。';
     else if (st.truncated) t += ' ⚠ 時間切れで途中で打ち切りました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。もっと良い案が残っているかもしれません。探す時間を長くするか、「最後まで」を選ぶと、さらに調べます。';
-    else t += ' 最後まで調べ終わりました（全部の組み合わせを調べたのと同じ結果です）。';
+    else t += ' 最後まで調べ終わりました（防具と護石の組み合わせは全部調べたのと同じ結果です）。';
+    if (st.refined != null) t += ' 上位の案のうち ' + st.refined + ' 案は、装飾品の入れ方を丁寧に磨き直しました（それでも一番よい入れ方とは限りません）。';
     return t;
   }
   function progressText(p) {
+    if (p.refining) return 'このページの検索プログラムが、見つけた上位の案の装飾品の入れ方を磨き直しています（Claude ではありません）… ' + p.refined + ' / ' + p.total + ' 案（' + fmt(p.ms / 1000) + ' 秒）';
     // ここで考えているのは Claude ではなく、このページの検索プログラム（ブラウザの中の計算）です
     return 'このページの検索プログラムが探しています（Claude ではありません）… 調べた枝 ' + p.nodes.toLocaleString() +
       '、調べた組み合わせ ' + (p.leaves || 0).toLocaleString() + ' 通り、いまの上位の候補 ' + p.found + '（' + fmt(p.ms / 1000) + ' 秒、' + p.passes + ' 段のうち ' + p.pass + ' 段目）';
@@ -397,6 +399,10 @@
       .then(function (r) {
         $('#stop').hidden = true; $('#go').disabled = false;
         statusEl.textContent = describeStats(r.stats);
+        if (!r.builds.length && r.stats.truncated) {
+          resultsEl.innerHTML = '<p class="warn">' + (r.stats.stoppedByUser ? '止めるまでに' : '時間内に') + '、条件をすべて満たす組み合わせは見つかりませんでした。まだ調べていない組み合わせが残っています。探す時間を長くするか、「最後まで」を選んでください。</p>';
+          return;
+        }
         if (!r.builds.length) {
           resultsEl.innerHTML = '<p class="warn">条件をすべて満たす組み合わせは見つかりませんでした。スキルのレベルを下げる、ランクを広げる、使わない装備や持っていない装飾品を減らす、防具のレア度の下限を下げる、などを試してください。</p>';
           return;

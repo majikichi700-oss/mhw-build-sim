@@ -165,7 +165,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 </div>
 <label><input type="checkbox" id="armor-augmax"> 防具の防御力を、カスタム強化の最大（データの defense_augment_max）で計算する</label>
 <div class="row"><span class="muted">強化した防具：</span><input id="ao-input" list="armor-list" placeholder="防具の名前" aria-label="強化した防具">
-<label>強化のあとのスロット <select id="ao-s1"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+<label>強化のあとのスロット <select id="ao-s1"><option value="">データのまま</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
 <label>足したスキル <input id="ao-skill" list="skill-list" placeholder="なし" aria-label="足したスキル"></label><label>Lv <select id="ao-lv"><option>1</option><option>2</option><option>3</option></select></label>
 <button type="button" id="add-ao">追加</button></div>
 <div class="chips" id="ao-chips"></div>
@@ -208,7 +208,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <li>隠し属性（属性解放で出る属性）：属性解放／装填拡張 Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部（データの説明文より）。属性加速と真・属性加速は、データの説明文のとおり属性解放 Lv2・Lv3 として、働いている時間の割合をかけて数えます。属性加速の「属性攻撃力も少し上昇」の量は調べきれなかったので入れていません。</li>
 <li>属性の重み：属性ダメージを物理と比べてどれだけ重く見るかを、画面で 0.5 倍から 3 倍まで選べます（はじめは 1 倍）。手数の多い武器や、属性がよく効く相手では大きくしてください。</li>
 <li>Inheritance（Fatalis Legend の 2 部位）：データの英語の説明（Removes the skill level cap for the skill secrets.）のとおり、極意スキルと同じように上限を上げるものとして扱います。</li>
-<li>スキルの数値は、すべて <code>skill_levels.csv</code> の日本語の説明文（description_ja）から読み取りました。読み取れたものは下の表のとおりです。数値が読めないスキル（たとえば 匠、会心撃【属性】、無属性強化）は点数に入れず、案ごとに「数値に入れていないスキル」として表示します。</li>
+<li>スキルの数値は、すべて <code>skill_levels.csv</code> の日本語の説明文（description_ja）から読み取りました。読み取れたものは下の表のとおりです。数値が読めないスキル（たとえば 匠、無属性強化）は点数に入れず、案ごとに「数値に入れていないスキル」として表示します。</li>
 </ul>
 <h3>会心撃【属性】の倍率（検索で調べた値）</h3>
 <table><tr><th>武器</th><th>会心撃【属性】</th><th>真・会心撃【属性】</th></tr>
@@ -252,7 +252,8 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <ul>
 <li>部位ごとに、ほかの防具より「スキルもスロットも防御も上回らない」防具を候補から外します（支配される防具）。さらに、ほかの防具のスロットに装飾品を差すとそのスキルを作れて、しかも同じ大きさ以上のスロットが残る防具も外します。どちらも、外しても一番良い案は変わりません。</li>
 <li>候補を良さそうな順に並べ、各部位の上位 2 個、3 個、4 個…と少しずつ広げながら全部の組み合わせを調べます。途中で「この先どう選んでも条件を満たせない」「この先どう選んでもいまの上位の点数に届かない」とわかった枝は切ります。</li>
-<li>決めた時間で終わらないときは、そこで止めて、何段まで調べたかを表示します。最後の段まで終われば、全部の組み合わせを調べたのと同じ結果になります（小さな例で総当たりと同じになることを自動の試験で確かめています）。</li>
+<li>決めた時間で終わらないときは、そこで止めて、何段まで調べたかを表示します。最後の段まで終われば、防具と護石の組み合わせは全部調べたのと同じ結果になります（小さな例で総当たりと同じになることを自動の試験で確かめています）。</li>
+<li>装飾品の入れ方（余ったスロットに何を差すか）は、全部の入れ方を試すと間に合わないため、工夫した欲張り法（同じ装飾品をまとめて入れる手も比べる）と入れかえで決めます。最後に、上位の案だけ、もっと丁寧な方法（2 手先読み、ビーム探索、スロットが 3 つ以下なら全部の入れ方）で磨き直します。それでも一番よい入れ方になるとは限りません。</li>
 <li>似た案ばかりにならないよう、上位の案のうち、すでに選んだ案と防具が 2 部位以上違う案を先に並べます。</li>
 </ul>
 <details><summary>説明文から読み取ったスキルの数値（34 個）</summary><table><tr><th>スキル</th><th>条件</th><th>読み取った数値</th></tr><tr><td>攻撃</td><td>常に</td><td>Lv1 攻撃+3、Lv2 攻撃+6、Lv3 攻撃+9、Lv4 攻撃+12・会心+5%、Lv5 攻撃+15・会心+5%、Lv6 攻撃+18・会心+5%、Lv7 攻撃+21・会心+5%</td></tr><tr><td>防御</td><td>常に</td><td>Lv1 防御+5、Lv2 防御+10、Lv3 防御+10・防御×1.05、Lv4 防御+20・防御×1.05・全耐性+3、Lv5 防御+20・防御×1.08・全耐性+3、Lv6 防御+35・防御×1.08・全耐性+5、Lv7 防御+35・防御×1.1・全耐性+5</td></tr><tr><td>体力増強</td><td>常に</td><td>Lv1 体力+15、Lv2 体力+30、Lv3 体力+50</td></tr><tr><td>火耐性</td><td>常に</td><td>Lv1 火耐性+6、Lv2 火耐性+12、Lv3 防御+10・火耐性+20</td></tr><tr><td>水耐性</td><td>常に</td><td>Lv1 水耐性+6、Lv2 水耐性+12、Lv3 防御+10・水耐性+20</td></tr><tr><td>氷耐性</td><td>常に</td><td>Lv1 氷耐性+6、Lv2 氷耐性+12、Lv3 防御+10・氷耐性+20</td></tr><tr><td>雷耐性</td><td>常に</td><td>Lv1 雷耐性+6、Lv2 雷耐性+12、Lv3 防御+10・雷耐性+20</td></tr><tr><td>龍耐性</td><td>常に</td><td>Lv1 龍耐性+6、Lv2 龍耐性+12、Lv3 防御+10・龍耐性+20</td></tr><tr><td>火属性攻撃強化</td><td>常に</td><td>Lv1 火+30、Lv2 火+60、Lv3 火+100、Lv4 火+100・火×1.05、Lv5 火+100・火×1.1、Lv6 火+100・火×1.2</td></tr><tr><td>水属性攻撃強化</td><td>常に</td><td>Lv1 水+30、Lv2 水+60、Lv3 水+100、Lv4 水+100・水×1.05、Lv5 水+100・水×1.1、Lv6 水+100・水×1.2</td></tr><tr><td>氷属性攻撃強化</td><td>常に</td><td>Lv1 氷+30、Lv2 氷+60、Lv3 氷+100、Lv4 氷+100・氷×1.05、Lv5 氷+100・氷×1.1、Lv6 氷+100・氷×1.2</td></tr><tr><td>雷属性攻撃強化</td><td>常に</td><td>Lv1 雷+30、Lv2 雷+60、Lv3 雷+100、Lv4 雷+100・雷×1.05、Lv5 雷+100・雷×1.1、Lv6 雷+100・雷×1.2</td></tr><tr><td>龍属性攻撃強化</td><td>常に</td><td>Lv1 龍+30、Lv2 龍+60、Lv3 龍+100、Lv4 龍+100・龍×1.05、Lv5 龍+100・龍×1.1、Lv6 龍+100・龍×1.2</td></tr><tr><td>属性解放／装填拡張</td><td>常に</td><td>Lv1 、Lv2 、Lv3 </td></tr><tr><td>見切り</td><td>常に</td><td>Lv1 会心+5%、Lv2 会心+10%、Lv3 会心+15%、Lv4 会心+20%、Lv5 会心+25%、Lv6 会心+30%、Lv7 会心+40%</td></tr><tr><td>超会心</td><td>常に</td><td>Lv1 会心倍率1.3、Lv2 会心倍率1.35、Lv3 会心倍率1.4</td></tr><tr><td>弱点特効</td><td>有効部位</td><td>Lv1 会心+10%、Lv2 会心+15%、Lv3 会心+30%</td></tr><tr><td>抜刀術【技】</td><td>武器出し攻撃だけ（数えない）</td><td>Lv1 会心+30%、Lv2 会心+60%、Lv3 会心+100%</td></tr><tr><td>飛燕</td><td>常に</td><td>Lv1 </td></tr><tr><td>力の解放</td><td>条件付き</td><td>Lv1 会心+10%、Lv2 会心+20%、Lv3 会心+30%、Lv4 会心+40%、Lv5 会心+50%、Lv6 会心+50%、Lv7 会心+60%</td></tr><tr><td>挑戦者</td><td>条件付き</td><td>Lv1 攻撃+4・会心+5%、Lv2 攻撃+8・会心+5%、Lv3 攻撃+12・会心+7%、Lv4 攻撃+16・会心+7%、Lv5 攻撃+20・会心+10%、Lv6 攻撃+24・会心+15%、Lv7 攻撃+28・会心+20%</td></tr><tr><td>フルチャージ</td><td>条件付き</td><td>Lv1 攻撃+5、Lv2 攻撃+10、Lv3 攻撃+20</td></tr><tr><td>火事場力</td><td>条件付き</td><td>Lv1 防御+50、Lv2 攻撃×1.05・防御+50、Lv3 攻撃×1.05・防御+100、Lv4 攻撃×1.1・防御+100、Lv5 攻撃×1.15・防御+100、Lv6 攻撃×1.25・防御+150、Lv7 攻撃×1.4・防御+150</td></tr><tr><td>不屈</td><td>力尽きたとき（数えない）</td><td>Lv1 攻撃×1.1</td></tr><tr><td>逆恨み</td><td>条件付き</td><td>Lv1 攻撃+5、Lv2 攻撃+10、Lv3 攻撃+15、Lv4 攻撃+20、Lv5 攻撃+25</td></tr><tr><td>特殊射撃強化</td><td>常に</td><td>Lv1 、Lv2 </td></tr><tr><td>砲術</td><td>常に</td><td>Lv1 、Lv2 、Lv3 、Lv4 、Lv5 </td></tr><tr><td>精霊の加護</td><td>条件付き</td><td>Lv1 軽減15%、Lv2 軽減30%、Lv3 軽減50%、Lv4 軽減60%、Lv5 軽減60%</td></tr><tr><td>渾身</td><td>条件付き</td><td>Lv1 会心+10%、Lv2 会心+20%、Lv3 会心+30%、Lv4 会心+40%、Lv5 会心+40%</td></tr><tr><td>攻めの守勢</td><td>条件付き</td><td>Lv1 攻撃×1.05、Lv2 攻撃×1.1、Lv3 攻撃×1.15</td></tr><tr><td>災禍転福</td><td>条件付き</td><td>Lv1 攻撃+12・属性+30、Lv2 攻撃+15・属性+60、Lv3 攻撃+18・属性+90</td></tr><tr><td>属性加速</td><td>条件付き</td><td>Lv1 </td></tr><tr><td>真・属性加速</td><td>条件付き</td><td>Lv1 </td></tr><tr><td>全属性耐性強化</td><td>常に</td><td>Lv1 耐性×1.2</td></tr></table></details>
@@ -430,7 +431,12 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
   function weaponParts(q, type) {
     var d = PARTS_DEFAULT[type] || { art: 0, special: 0, jump: 0 };
     var o = q.parts || {};
-    return { art: o.art != null ? +o.art : d.art, special: o.special != null ? +o.special : d.special, jump: o.jump != null ? +o.jump : d.jump };
+    var cl = function (x) { x = +x; return isFinite(x) ? Math.max(0, Math.min(1, x)) : 0; };
+    var r = { art: cl(o.art != null ? o.art : d.art), special: cl(o.special != null ? o.special : d.special), jump: cl(o.jump != null ? o.jump : d.jump) };
+    // 爆発と特殊弾の合計が 100% を超えるときは、合計が 100% になるように縮めます（ふつうの攻撃の割合が負にならないように）
+    var sum = r.art + r.special;
+    if (sum > 1) { r.art /= sum; r.special /= sum; }
+    return r;
   }
 
   function weaponInfo(g, q) {
@@ -439,18 +445,25 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     var info;
     if (w) {
       var el = w.elements.filter(function (e) { return ELEMS.indexOf(e[0]) >= 0; });
+      // 属性と状態異常を 1 つずつ持つ武器（例：氷と爆破）は、属性が攻撃の半分に乗るとして、属性の数（状態異常も含む）で割ります
       info = { w: w, raw: w.attack / WEAPON_BLOAT[w.type], aff: w.affinity, elems: w.elemHidden ? [] : el, hidden: w.elemHidden ? el : [],
-        defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
+        elemDiv: Math.max(1, w.elements.length), defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
     } else {
       // 武器を選ばないときの「基準の武器」（判断）：基礎攻撃力 200、会心率 0%、属性なし
-      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
+      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], elemDiv: 1, defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
     }
     // カスタム強化・覚醒のあとの数値を自分で入れたとき（データにない強化なので、入れた値をそのまま使います）
     var ov = q.weaponOverride;
     if (ov && info.type) {
       if (ov.attack) info.raw = +ov.attack / WEAPON_BLOAT[info.type];
       if (ov.affinity != null && ov.affinity !== '') info.aff = +ov.affinity;
-      if (ov.element && ov.element[0] && ov.element[1] > 0) { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+      // 入れた属性：もとが隠し属性の武器なら、隠し属性として扱います（属性解放が要るのは変わらないため）
+      if (ov.element && ov.element[0] && !(ov.element[1] > 0)) { info.elems = []; info.hidden = []; info.elemDiv = 1; } // 0 を入れたら属性なし
+      else if (ov.element && ov.element[0] && ov.element[1] > 0) {
+        if (w && w.elemHidden) { info.hidden = [[ov.element[0], +ov.element[1]]]; info.elems = []; }
+        else { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+        info.elemDiv = 1;
+      }
       if (ov.slots) info.slots = ov.slots.filter(function (x) { return x > 0; }).map(Number).sort(function (a, b) { return b - a; });
       if (ov.defense != null && ov.defense !== '') info.defense = +ov.defense;
       info.overridden = true;
@@ -558,7 +571,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     for (var j = 0; j < nE; j++) {
       var v = wi.elems[j][1] * a.eMul[j] + a.eAdd[j];
       elemShown.push([wi.elems[j][0], v]);
-      elem += v / ELEM_DIV / nE * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / nE * ew;
+      elem += v / ELEM_DIV / wi.elemDiv * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / wi.elemDiv * ew;
     }
     // 隠し属性：属性解放（データ：Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部）と属性加速（データ：属性解放 Lv2・Lv3 として働く）
     var hf = a.hidden;
@@ -567,7 +580,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       if (hf <= 0) { elemShown.push([wi.hidden[k][0], 0]); continue; }
       var hv = wi.hidden[k][1] * hf * a.hMul[k] + a.hAdd[k];
       elemShown.push([wi.hidden[k][0], hv]);
-      elem += hv / ELEM_DIV / nH * ceF * ew;
+      elem += hv / ELEM_DIV / wi.elemDiv * ceF * ew;
     }
     var hit = phys + elem, hit0 = phys0 + elem0;
     var P = wi.parts;
@@ -588,7 +601,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       total: total, fire: fire, def: def, comfort: comfort,
       detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, elemShown: elemShown, critElem: a.critElem ? critElemMul(wi.type, a.critElem) : 0, hiddenFrac: hf,
         raw: wi.raw + a.atk, atkMul: a.atkMul, affinity: a.aff, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
-        defense: defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
+        defense: defense, defBase: baseDef + wi.defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
     };
   }
 
@@ -605,7 +618,15 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       if (!o.fireCounted && !defCounted) notCounted.push(+k);
     }
     var r = evalAgg(g, q, wi, a, spare, spare.length, baseDef, baseRes, true);
-    r.notCounted = notCounted;
+    // 極意スキルと Inheritance は、上限を上げる働きで計算に入っているので、「数値に入れていないスキル」から外します
+    var over = false;
+    for (var k2 in levels) { var s2 = I.skillById[k2]; if (levels[k2] > s2.max) over = true; }
+    r.notCounted = notCounted.filter(function (id) {
+      var s3 = I.skillById[id];
+      if (s3.unlocks != null && (levels[s3.unlocks] || 0) > I.skillById[s3.unlocks].max) return false;
+      if (id === I.inheritId && over) return false;
+      return true;
+    });
     return r;
   }
 
@@ -626,7 +647,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     q.weakUptime = q.weakUptime == null ? 1 : q.weakUptime;
     q.maxRarity = q.maxRarity || 12;        // 防具・護石の上限レア度
     q.decoMaxRarity = q.decoMaxRarity || 12; // 装飾品の上限レア度
-    q.minRarity = q.minRarity || 1;         // 防具の下限レア度（マスターランク序盤の防具を外すときに使う）
+    q.minRarity = q.minRarity || 1;         // マスターランクの防具の下限レア度（序盤の防具を外すときに使う。上位・下位の防具には使わない）
     // untilDone のときは時間で止めず、最後まで探します（止めるのは画面の「止める」だけ）
     q.timeLimitMs = q.untilDone ? Infinity : (q.timeLimitMs || 60000);
     q.topK = q.topK || 120;
@@ -672,7 +693,10 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       for (var lv = 1; lv <= s.maxAll; lv++) if (effContrib(g, s, lv, q, wi).fireCounted) return true;
       return false;
     }
+    // 防御・耐性の下限があるときは、防御・耐性のスキルも関わるものとします（それを持つ防具を外さないため）
+    var hasMin = q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
     g.skills.forEach(function (s) {
+      if (hasMin && I.defSkill[s.id]) rel[s.id] = 1;
       if ((ow[0] && fireRel(s)) || (ow[1] && (I.defSkill[s.id] || I.survival[s.id])) || (ow[2] && I.comfort[s.id])) rel[s.id] = 1;
     });
     // 極意スキル：解放先が点数に関わるなら関わる。Inheritance も同じ
@@ -734,7 +758,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       var list;
       if (q.fixedArmor[p] != null) list = [mkCand(armorOf(g, q, q.fixedArmor[p]))];
       else list = g.armors.filter(function (a) {
-        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && a.rarity >= q.minRarity;
+        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && (a.rank !== 'MR' || a.rarity >= q.minRarity);
       }).map(function (a) { return mkCand(armorOf(g, q, a.id)); });
       poolSizes[p] = list.length;
       pools[p] = q.fixedArmor[p] != null ? list : prune(list);
@@ -954,7 +978,10 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       a.resMul = ACC[27]; a.health = ACC[28]; a.cut = ACC[29]; a.surv = ACC[30]; a.comf = ACC[31];
       return evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, false);
     }
-    P._fast = { levels: levels, total: total, R: R };
+    // 点数を下げることがあるスキル（全属性耐性強化：耐性がマイナスだと、もっとマイナスになる）の位置
+    var downIdx = [];
+    T.forEach(function (arr, i) { if (arr.some(function (o) { return o && o.resMul !== 1; })) downIdx.push(i); });
+    P._fast = { levels: levels, total: total, R: R, downIdx: downIdx };
     return P._fast;
   }
 
@@ -1015,6 +1042,144 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     return { total: total, lv: lv };
   }
 
+  /* 余りスロットの埋め方。
+   * 1. どのスロットでもよいので点数が一番上がる装飾品を選び、入る一番小さいスロットに入れる（欲張り法）。
+   * 2. スロットを 1 つずつ見て、中身を「空き」かほかの装飾品に入れかえて上がるなら入れかえる。2 つのスロットの中身の入れかえも試す。
+   * effort 2 以上：1 の各手で、次の 1 手まで見て選ぶ（2 手先読み）。最後の上位の案を磨くときに使います。
+   * rp は点数に関わるスキルのポイント（必要な装飾品まで入れたもの）。終わったときは元の値に戻します。 */
+  function fillSpare(P, F, rp, spare0, def, res, effort) {
+    var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
+    var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
+    var slots = spare0.slice().sort(function (a, b) { return b - a; });
+    var n = slots.length, asg = new Int16Array(n).fill(-1);
+    var buf = new Int8Array(n + 1);
+    function add(ci, sign) { var v = candV[ci]; for (var k = 0; k < v.length; k++) rp[v[k][0]] += sign * v[k][1]; }
+    function total() {
+      var m = 0; for (var j = 0; j < n; j++) if (asg[j] < 0) buf[m++] = slots[j];
+      return F.total(F.levels(rp), buf, m, def, res);
+    }
+    function smallestFree(size) { for (var j = n - 1; j >= 0; j--) if (asg[j] < 0 && slots[j] >= size) return j; return -1; }
+    var cur = total();
+    // 1. 欲張り法：同じ装飾品を 1〜3 個まとめて入れる手も比べ、「1 個あたりの点数の上がり方」が一番大きい手を選びます。
+    //    （防御のように、何レベルか重ねて初めて大きく上がるスキルを見落とさないため）
+    var KMAX = effort >= 2 ? 3 : 2;
+    var js = new Int16Array(KMAX);
+    while (true) {
+      var bestEff = 1e-9, bestC = -1, bestK = 0, bestJs = null;
+      for (var c = 0; c < cand.length; c++) {
+        var placed = 0, base = cur;
+        for (var k = 0; k < KMAX; k++) {
+          var j = smallestFree(cand[c].size); if (j < 0) break;
+          add(c, 1); asg[j] = c; js[k] = j; placed++;
+          var t = total(), eff = (t - base) / placed;
+          if (effort >= 2 && placed === 1) {
+            // 2 手先読み：もう 1 個（別の装飾品でもよい）入れたときの一番よい点数も見ます
+            for (var c2 = 0; c2 < cand.length; c2++) {
+              var j2 = smallestFree(cand[c2].size); if (j2 < 0) continue;
+              add(c2, 1); asg[j2] = c2;
+              var t2 = total(); if ((t2 - base) / 2 > eff) eff = (t2 - base) / 2;
+              asg[j2] = -1; add(c2, -1);
+            }
+          }
+          if (t > cur + 1e-9 && (eff > bestEff + 1e-9 || (bestC >= 0 && Math.abs(eff - bestEff) <= 1e-9 && cand[c].size < cand[bestC].size))) {
+            bestEff = eff; bestC = c; bestK = placed; bestJs = Array.prototype.slice.call(js, 0, placed);
+          }
+        }
+        for (var u = placed - 1; u >= 0; u--) { asg[js[u]] = -1; add(c, -1); }
+      }
+      if (bestC < 0) break;
+      // 先読みの値で選んだときも、実際に入れるのは選んだ装飾品だけです（1 個ずつ確かめながら進みます）
+      for (var u2 = 0; u2 < bestK; u2++) { add(bestC, 1); asg[bestJs[u2]] = bestC; }
+      cur = total();
+    }
+    // 2. 入れかえ（1 つずつ、そして 2 つの中身の交換）。探している途中（effort 1）は 1 つずつを 1 回だけにして速くします
+    var passes = effort >= 2 ? 4 : 1;
+    for (var pass = 0; pass < passes; pass++) {
+      var improved = false;
+      for (var j3 = 0; j3 < n; j3++) {
+        var old = asg[j3];
+        if (old >= 0) add(old, -1);
+        asg[j3] = -1;
+        var bT = total(), bC = -1;
+        for (var c3 = 0; c3 < cand.length; c3++) {
+          if (cand[c3].size > slots[j3]) continue;
+          add(c3, 1); asg[j3] = c3;
+          var t3 = total();
+          asg[j3] = -1; add(c3, -1);
+          if (t3 > bT + 1e-9) { bT = t3; bC = c3; }
+        }
+        if (bC !== old && bT > cur + 1e-9) { if (bC >= 0) add(bC, 1); asg[j3] = bC; cur = bT; improved = true; }
+        else { if (old >= 0) add(old, 1); asg[j3] = old; }
+      }
+      // 2 つのスロットの中身を入れかえる（大きいスロットを空けて、別の装飾品を入れられるように）。最後に磨くときだけ
+      if (effort >= 2) for (var a1 = 0; a1 < n; a1++) for (var a2 = a1 + 1; a2 < n; a2++) {
+        var x1 = asg[a1], x2 = asg[a2];
+        if (x1 === x2) continue;
+        if ((x2 >= 0 && cand[x2].size > slots[a1]) || (x1 >= 0 && cand[x1].size > slots[a2])) continue;
+        asg[a1] = x2; asg[a2] = x1;
+        // 入れかえただけでは点数は同じなので、空いたスロットに 1 つ足せるかを見ます
+        var fj = -1; for (var z = 0; z < n; z++) if (asg[z] < 0) { fj = z; break; }
+        var gainC = -1, gainT = cur + 1e-9;
+        if (fj >= 0) {
+          for (var c4 = 0; c4 < cand.length; c4++) {
+            if (cand[c4].size > slots[fj]) continue;
+            add(c4, 1); asg[fj] = c4;
+            var t4 = total();
+            asg[fj] = -1; add(c4, -1);
+            if (t4 > gainT) { gainT = t4; gainC = c4; }
+          }
+        }
+        if (gainC >= 0) { add(gainC, 1); asg[fj] = gainC; cur = gainT; improved = true; }
+        else { asg[a1] = x1; asg[a2] = x2; }
+      }
+      if (!improved) break;
+    }
+    // 3. 最後に磨くとき（effort 3）：ビーム探索（途中の埋め方を上位 12 通り残しながら進む）と、
+    //    残りのスロットが 3 つ以下なら全部の埋め方を試し、一番よいものを使います
+    if (effort >= 3 && n > 0) {
+      var keepAsg = Array.prototype.slice.call(asg);
+      for (var r0 = 0; r0 < n; r0++) if (asg[r0] >= 0) { add(asg[r0], -1); asg[r0] = -1; }
+      var evalPlan = function (plan) {
+        for (var q1 = 0; q1 < n; q1++) if (plan[q1] >= 0) { add(plan[q1], 1); asg[q1] = plan[q1]; }
+        var tt = total();
+        for (var q2 = 0; q2 < n; q2++) if (plan[q2] >= 0) { add(plan[q2], -1); asg[q2] = -1; }
+        return tt;
+      };
+      var bestPlan = keepAsg, bestTotal = cur;
+      if (n <= 3) {
+        var plan = new Array(n).fill(-1);
+        var rec = function (i) {
+          if (i === n) { var tt = evalPlan(plan); if (tt > bestTotal + 1e-9) { bestTotal = tt; bestPlan = plan.slice(); } return; }
+          plan[i] = -1; rec(i + 1);
+          for (var cc = 0; cc < cand.length; cc++) if (cand[cc].size <= slots[i]) { plan[i] = cc; rec(i + 1); }
+          plan[i] = -1;
+        };
+        rec(0);
+      } else {
+        var W = 12, beam = [{ plan: new Array(n).fill(-1), t: evalPlan(new Array(n).fill(-1)) }];
+        for (var bi = 0; bi < n; bi++) {
+          var next = [];
+          beam.forEach(function (st) {
+            next.push({ plan: st.plan, t: st.t });
+            for (var cc = 0; cc < cand.length; cc++) {
+              if (cand[cc].size > slots[bi]) continue;
+              var p2 = st.plan.slice(); p2[bi] = cc;
+              next.push({ plan: p2, t: evalPlan(p2) });
+            }
+          });
+          next.sort(function (x, y) { return y.t - x.t; });
+          beam = next.slice(0, W);
+        }
+        if (beam[0].t > bestTotal + 1e-9) { bestTotal = beam[0].t; bestPlan = beam[0].plan; }
+      }
+      for (var r1 = 0; r1 < n; r1++) if (bestPlan[r1] >= 0) { add(bestPlan[r1], 1); asg[r1] = bestPlan[r1]; }
+      cur = total();
+    }
+    var picks = [], left = [];
+    for (var j5 = 0; j5 < n; j5++) { if (asg[j5] >= 0) { picks.push(asg[j5]); add(asg[j5], -1); } else left.push(slots[j5]); }
+    return { picks: picks, spare: left, total: cur };
+  }
+
   // 防具・護石が決まったときの最良の案（必要な装飾品を入れ、余りを目的に合わせて埋める）
   function finishBuild(P, armorCands, charmCand, thr) {
     var G = gearPoints(P, armorCands, charmCand);
@@ -1049,6 +1214,33 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       var sc = scoreParts(P.g, P.q, P.wi, L.lv, sp, G.def, G.res);
       return { L: L, sc: sc, pts: pts };
     }
+    // 防御・耐性の下限があるときは、足りない分を先に、防御・耐性の装飾品で埋めます（足りない量が一番減る物を 1 つずつ）
+    var hasMinQ = P.q.minDefense > 0 || P.q.minRes.some(function (x) { return x != null && x !== ''; });
+    if (hasMinQ) {
+      var shortOf = function (sc) {
+        var d = 0;
+        if (P.q.minDefense) d += Math.max(0, P.q.minDefense - sc.detail.defense);
+        for (var i = 0; i < 5; i++) { var mm = P.q.minRes[i]; if (mm != null && mm !== '') d += Math.max(0, +mm - sc.detail.res[i]) * 10; }
+        return d;
+      };
+      var deficit = shortOf(evalWith(decoList, spare).sc);
+      var defDecos = P.minDecos || (P.minDecos = P.decos.filter(function (d) { return d.skills.some(function (x) { return P.I.defSkill[x[0]]; }); }));
+      var guardN = 0;
+      while (deficit > 1e-9 && spare.length && guardN++ < 30) {
+        spare.sort(function (x, y) { return x - y; });
+        var bestD = null, bestDef = deficit, bestIdx = -1;
+        for (var dd = 0; dd < defDecos.length; dd++) {
+          var d0 = defDecos[dd], jj = -1;
+          for (var z = 0; z < spare.length; z++) if (spare[z] >= d0.size) { jj = z; break; }
+          if (jj < 0) continue;
+          var sp2 = spare.slice(); sp2.splice(jj, 1);
+          var df = shortOf(evalWith(decoList.concat([d0]), sp2).sc);
+          if (df < bestDef - 1e-9 || (bestD && Math.abs(df - bestDef) <= 1e-9 && d0.size < bestD.size)) { bestD = d0; bestDef = df; bestIdx = jj; }
+        }
+        if (!bestD) break;
+        decoList.push(bestD); spare.splice(bestIdx, 1); deficit = bestDef;
+      }
+    }
     var F = compileScorer(P), R = F.R;
     var rp = new Int16Array(R);
     for (var kk in G.pts) if (P.relPos[kk] != null) rp[P.relPos[kk]] += G.pts[kk];
@@ -1056,30 +1248,11 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     decoList.forEach(function (d) { d.skills.forEach(function (x) { if (P.relPos[x[0]] != null) rp[P.relPos[x[0]]] += x[1]; }); });
     var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
     var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
-    // 大きいスロットから順に、点数が一番上がる装飾品を入れます（上がらなければ空けたまま）
-    spare.sort(function (a, b) { return b - a; });
-    var buf = new Int8Array(32);
-    function fill(arr) { for (var z = 0; z < arr.length; z++) buf[z] = arr[z]; return arr.length; }
-    var n0 = fill(spare);
-    var curTotal = F.total(F.levels(rp), buf, n0, G.def, G.res);
-    var keepSpare = [];
-    while (spare.length) {
-      var sz = spare.shift();
-      var rest = keepSpare.concat(spare), nr = fill(rest);
-      var bestGain = 1e-9, bestI = -1, bestT = 0;
-      for (var di = 0; di < cand.length; di++) {
-        if (cand[di].size > sz) continue;
-        var vv = candV[di];
-        for (var a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] += vv[a1][1];
-        var tt = F.total(F.levels(rp), buf, nr, G.def, G.res);
-        for (a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] -= vv[a1][1];
-        if (tt - curTotal > bestGain + 1e-9) { bestGain = tt - curTotal; bestI = di; bestT = tt; }
-      }
-      if (bestI < 0) { keepSpare.push(sz); continue; }
-      var bv = candV[bestI]; for (var a2 = 0; a2 < bv.length; a2++) rp[bv[a2][0]] += bv[a2][1];
-      decoList.push(cand[bestI]); curTotal = bestT;
-    }
-    spare = keepSpare;
+    // 余ったスロットに、目的の点数が上がる装飾品を入れます（fillSpare：欲張り法と入れかえ。上がらなければ空けたまま）
+    var fr = fillSpare(P, F, rp, spare, G.def, G.res, P.q.fillEffort || 1);
+    fr.picks.forEach(function (ci) { decoList.push(cand[ci]); });
+    spare = fr.spare;
+    var curTotal = fr.total;
     if (thr != null && curTotal < thr - 1e-9) return { below: true };
     var cur = evalWith(decoList, spare);
     // 防御・耐性の下限
@@ -1102,6 +1275,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       armor: armorCands.map(function (c) { return c.a.id; }),
       charm: charmCand && charmCand.a ? charmCand.a.id : null,
       weapon: P.q.weaponId != null ? P.q.weaponId : null,
+      weaponType: P.wi.type,
       weaponSlots: P.wi.slots,
       decos: placed,
       spare: freeSlots.map(function (s) { return { slot: s.ref, size: s.size }; }),
@@ -1223,7 +1397,15 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       var n = 0;
       for (var t3 = 4; t3 >= 1; t3--) for (var k = 0; k < ge[t3] - (ge[t3 + 1] || 0); k++) spB[n++] = t3;
       for (var e = 0; e < 5; e++) resB[e] = curRes[e] + sufRes[d][e];
-      return FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      var ub = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      if (FS.downIdx.length) {
+        // そのスキルがない場合も計算し、大きいほうを上限にします
+        var keep = FS.downIdx.map(function (i) { var v = lvB[i]; lvB[i] = 0; return v; });
+        var ub2 = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+        FS.downIdx.forEach(function (i, k) { lvB[i] = keep[k]; });
+        if (ub2 > ub) ub = ub2;
+      }
+      return ub;
     }
     var lastYield = Date.now();
     function apply(c, sign) {
@@ -1291,6 +1473,26 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
       } else stats.passes = pass + 1;
     }
     stats.passTotal = widths.length;
+    // 見つけた上位の案の装飾品の入れ方を、もっと丁寧に磨き直してから並べ直します（fillSpare の effort 3）
+    var savedEffort = q.fillEffort;
+    q.fillEffort = 3;
+    // 磨き直しに使う時間：探す時間の 2 割（1.5 秒から 20 秒の間）。点数の高い案から順に磨きます
+    var budget = Math.min(20000, Math.max(1500, isFinite(q.timeLimitMs) ? q.timeLimitMs * 0.2 : 20000));
+    var tr = Date.now(), refined = [], nRef = 0;
+    for (var hi = 0; hi < heap.length; hi++) {
+      var b0 = heap[hi];
+      if (Date.now() - tr > budget || (q.stopSignal && q.stopSignal() && hi > 0)) { refined.push(b0); continue; }
+      var armorC = b0.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
+      var charmC = b0.charm != null ? { a: P.I.charmById[b0.charm] } : null;
+      var nb = finishBuild(P, armorC, charmC, null);
+      refined.push(nb && !nb.below && nb.score.total >= b0.score.total - 1e-9 ? nb : b0);
+      nRef++;
+      if (Date.now() - lastYield > 100) { lastYield = Date.now(); yield { progress: true, refining: true, refined: nRef, total: heap.length, nodes: stats.nodes, leaves: stats.leaves, found: heap.length, ms: Date.now() - t0, pass: stats.passes, passes: widths.length }; }
+    }
+    stats.refined = nRef;
+    q.fillEffort = savedEffort;
+    refined.sort(function (x, y) { return y.score.total - x.score.total; });
+    heap = refined;
     stats.timeMs = Date.now() - t0;
     var picked = diversify(heap, q.resultCount);
     picked = picked.map(function (b, i) { return Object.assign({}, b, { rank: i + 1, id: 'b' + (i + 1) }); });
@@ -1331,7 +1533,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
   }
   function evaluateBuild(g, spec, q0) {
     var q = normalizeQuery(g, Object.assign({}, q0 || {}, spec.mods || {}));
-    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, fixedArmor: {}, minRarity: 1 }));
+    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, weaponType: spec.weaponType || q.weaponType, fixedArmor: {}, minRarity: 1 }));
     var I = P.I;
     var armorC = spec.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
     if (armorC.some(function (c) { return !c.a; })) return null;
@@ -1351,7 +1553,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     var spare = G.slots.filter(function (s) { return !used[s.ref]; });
     var sc = scoreParts(g, q, P.wi, L.lv, spare.map(function (s) { return s.size; }), G.def, G.res);
     return {
-      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponSlots: P.wi.slots,
+      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponType: P.wi.type, weaponSlots: P.wi.slots,
       decos: spec.decos.map(function (x) { return { slot: x.slot, slotSize: slotSize[x.slot], deco: x.deco }; }),
       spare: spare.map(function (s) { return { slot: s.ref, size: s.size }; }),
       levels: L.lv, points: L.total,
@@ -1554,7 +1756,12 @@ self.onmessage = function (ev) {
   function weaponParts(q, type) {
     var d = PARTS_DEFAULT[type] || { art: 0, special: 0, jump: 0 };
     var o = q.parts || {};
-    return { art: o.art != null ? +o.art : d.art, special: o.special != null ? +o.special : d.special, jump: o.jump != null ? +o.jump : d.jump };
+    var cl = function (x) { x = +x; return isFinite(x) ? Math.max(0, Math.min(1, x)) : 0; };
+    var r = { art: cl(o.art != null ? o.art : d.art), special: cl(o.special != null ? o.special : d.special), jump: cl(o.jump != null ? o.jump : d.jump) };
+    // 爆発と特殊弾の合計が 100% を超えるときは、合計が 100% になるように縮めます（ふつうの攻撃の割合が負にならないように）
+    var sum = r.art + r.special;
+    if (sum > 1) { r.art /= sum; r.special /= sum; }
+    return r;
   }
 
   function weaponInfo(g, q) {
@@ -1563,18 +1770,25 @@ self.onmessage = function (ev) {
     var info;
     if (w) {
       var el = w.elements.filter(function (e) { return ELEMS.indexOf(e[0]) >= 0; });
+      // 属性と状態異常を 1 つずつ持つ武器（例：氷と爆破）は、属性が攻撃の半分に乗るとして、属性の数（状態異常も含む）で割ります
       info = { w: w, raw: w.attack / WEAPON_BLOAT[w.type], aff: w.affinity, elems: w.elemHidden ? [] : el, hidden: w.elemHidden ? el : [],
-        defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
+        elemDiv: Math.max(1, w.elements.length), defense: w.defense, slots: w.slots.slice(), skills: w.skills, bonus: w.bonus, type: w.type };
     } else {
       // 武器を選ばないときの「基準の武器」（判断）：基礎攻撃力 200、会心率 0%、属性なし
-      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
+      info = { w: null, raw: 200, aff: 0, elems: [], hidden: [], elemDiv: 1, defense: 0, slots: (q.weaponSlots || []).slice().sort(function (a, b) { return b - a; }), skills: [], bonus: null, type: q.weaponType || null };
     }
     // カスタム強化・覚醒のあとの数値を自分で入れたとき（データにない強化なので、入れた値をそのまま使います）
     var ov = q.weaponOverride;
     if (ov && info.type) {
       if (ov.attack) info.raw = +ov.attack / WEAPON_BLOAT[info.type];
       if (ov.affinity != null && ov.affinity !== '') info.aff = +ov.affinity;
-      if (ov.element && ov.element[0] && ov.element[1] > 0) { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+      // 入れた属性：もとが隠し属性の武器なら、隠し属性として扱います（属性解放が要るのは変わらないため）
+      if (ov.element && ov.element[0] && !(ov.element[1] > 0)) { info.elems = []; info.hidden = []; info.elemDiv = 1; } // 0 を入れたら属性なし
+      else if (ov.element && ov.element[0] && ov.element[1] > 0) {
+        if (w && w.elemHidden) { info.hidden = [[ov.element[0], +ov.element[1]]]; info.elems = []; }
+        else { info.elems = [[ov.element[0], +ov.element[1]]]; info.hidden = []; }
+        info.elemDiv = 1;
+      }
       if (ov.slots) info.slots = ov.slots.filter(function (x) { return x > 0; }).map(Number).sort(function (a, b) { return b - a; });
       if (ov.defense != null && ov.defense !== '') info.defense = +ov.defense;
       info.overridden = true;
@@ -1682,7 +1896,7 @@ self.onmessage = function (ev) {
     for (var j = 0; j < nE; j++) {
       var v = wi.elems[j][1] * a.eMul[j] + a.eAdd[j];
       elemShown.push([wi.elems[j][0], v]);
-      elem += v / ELEM_DIV / nE * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / nE * ew;
+      elem += v / ELEM_DIV / wi.elemDiv * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / wi.elemDiv * ew;
     }
     // 隠し属性：属性解放（データ：Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部）と属性加速（データ：属性解放 Lv2・Lv3 として働く）
     var hf = a.hidden;
@@ -1691,7 +1905,7 @@ self.onmessage = function (ev) {
       if (hf <= 0) { elemShown.push([wi.hidden[k][0], 0]); continue; }
       var hv = wi.hidden[k][1] * hf * a.hMul[k] + a.hAdd[k];
       elemShown.push([wi.hidden[k][0], hv]);
-      elem += hv / ELEM_DIV / nH * ceF * ew;
+      elem += hv / ELEM_DIV / wi.elemDiv * ceF * ew;
     }
     var hit = phys + elem, hit0 = phys0 + elem0;
     var P = wi.parts;
@@ -1712,7 +1926,7 @@ self.onmessage = function (ev) {
       total: total, fire: fire, def: def, comfort: comfort,
       detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, elemShown: elemShown, critElem: a.critElem ? critElemMul(wi.type, a.critElem) : 0, hiddenFrac: hf,
         raw: wi.raw + a.atk, atkMul: a.atkMul, affinity: a.aff, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
-        defense: defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
+        defense: defense, defBase: baseDef + wi.defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
     };
   }
 
@@ -1729,7 +1943,15 @@ self.onmessage = function (ev) {
       if (!o.fireCounted && !defCounted) notCounted.push(+k);
     }
     var r = evalAgg(g, q, wi, a, spare, spare.length, baseDef, baseRes, true);
-    r.notCounted = notCounted;
+    // 極意スキルと Inheritance は、上限を上げる働きで計算に入っているので、「数値に入れていないスキル」から外します
+    var over = false;
+    for (var k2 in levels) { var s2 = I.skillById[k2]; if (levels[k2] > s2.max) over = true; }
+    r.notCounted = notCounted.filter(function (id) {
+      var s3 = I.skillById[id];
+      if (s3.unlocks != null && (levels[s3.unlocks] || 0) > I.skillById[s3.unlocks].max) return false;
+      if (id === I.inheritId && over) return false;
+      return true;
+    });
     return r;
   }
 
@@ -1750,7 +1972,7 @@ self.onmessage = function (ev) {
     q.weakUptime = q.weakUptime == null ? 1 : q.weakUptime;
     q.maxRarity = q.maxRarity || 12;        // 防具・護石の上限レア度
     q.decoMaxRarity = q.decoMaxRarity || 12; // 装飾品の上限レア度
-    q.minRarity = q.minRarity || 1;         // 防具の下限レア度（マスターランク序盤の防具を外すときに使う）
+    q.minRarity = q.minRarity || 1;         // マスターランクの防具の下限レア度（序盤の防具を外すときに使う。上位・下位の防具には使わない）
     // untilDone のときは時間で止めず、最後まで探します（止めるのは画面の「止める」だけ）
     q.timeLimitMs = q.untilDone ? Infinity : (q.timeLimitMs || 60000);
     q.topK = q.topK || 120;
@@ -1796,7 +2018,10 @@ self.onmessage = function (ev) {
       for (var lv = 1; lv <= s.maxAll; lv++) if (effContrib(g, s, lv, q, wi).fireCounted) return true;
       return false;
     }
+    // 防御・耐性の下限があるときは、防御・耐性のスキルも関わるものとします（それを持つ防具を外さないため）
+    var hasMin = q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
     g.skills.forEach(function (s) {
+      if (hasMin && I.defSkill[s.id]) rel[s.id] = 1;
       if ((ow[0] && fireRel(s)) || (ow[1] && (I.defSkill[s.id] || I.survival[s.id])) || (ow[2] && I.comfort[s.id])) rel[s.id] = 1;
     });
     // 極意スキル：解放先が点数に関わるなら関わる。Inheritance も同じ
@@ -1858,7 +2083,7 @@ self.onmessage = function (ev) {
       var list;
       if (q.fixedArmor[p] != null) list = [mkCand(armorOf(g, q, q.fixedArmor[p]))];
       else list = g.armors.filter(function (a) {
-        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && a.rarity >= q.minRarity;
+        return a.part === p && a.rank && q.ranks.indexOf(a.rank) >= 0 && !ex[a.id] && a.rarity <= q.maxRarity && (a.rank !== 'MR' || a.rarity >= q.minRarity);
       }).map(function (a) { return mkCand(armorOf(g, q, a.id)); });
       poolSizes[p] = list.length;
       pools[p] = q.fixedArmor[p] != null ? list : prune(list);
@@ -2078,7 +2303,10 @@ self.onmessage = function (ev) {
       a.resMul = ACC[27]; a.health = ACC[28]; a.cut = ACC[29]; a.surv = ACC[30]; a.comf = ACC[31];
       return evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, false);
     }
-    P._fast = { levels: levels, total: total, R: R };
+    // 点数を下げることがあるスキル（全属性耐性強化：耐性がマイナスだと、もっとマイナスになる）の位置
+    var downIdx = [];
+    T.forEach(function (arr, i) { if (arr.some(function (o) { return o && o.resMul !== 1; })) downIdx.push(i); });
+    P._fast = { levels: levels, total: total, R: R, downIdx: downIdx };
     return P._fast;
   }
 
@@ -2139,6 +2367,144 @@ self.onmessage = function (ev) {
     return { total: total, lv: lv };
   }
 
+  /* 余りスロットの埋め方。
+   * 1. どのスロットでもよいので点数が一番上がる装飾品を選び、入る一番小さいスロットに入れる（欲張り法）。
+   * 2. スロットを 1 つずつ見て、中身を「空き」かほかの装飾品に入れかえて上がるなら入れかえる。2 つのスロットの中身の入れかえも試す。
+   * effort 2 以上：1 の各手で、次の 1 手まで見て選ぶ（2 手先読み）。最後の上位の案を磨くときに使います。
+   * rp は点数に関わるスキルのポイント（必要な装飾品まで入れたもの）。終わったときは元の値に戻します。 */
+  function fillSpare(P, F, rp, spare0, def, res, effort) {
+    var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
+    var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
+    var slots = spare0.slice().sort(function (a, b) { return b - a; });
+    var n = slots.length, asg = new Int16Array(n).fill(-1);
+    var buf = new Int8Array(n + 1);
+    function add(ci, sign) { var v = candV[ci]; for (var k = 0; k < v.length; k++) rp[v[k][0]] += sign * v[k][1]; }
+    function total() {
+      var m = 0; for (var j = 0; j < n; j++) if (asg[j] < 0) buf[m++] = slots[j];
+      return F.total(F.levels(rp), buf, m, def, res);
+    }
+    function smallestFree(size) { for (var j = n - 1; j >= 0; j--) if (asg[j] < 0 && slots[j] >= size) return j; return -1; }
+    var cur = total();
+    // 1. 欲張り法：同じ装飾品を 1〜3 個まとめて入れる手も比べ、「1 個あたりの点数の上がり方」が一番大きい手を選びます。
+    //    （防御のように、何レベルか重ねて初めて大きく上がるスキルを見落とさないため）
+    var KMAX = effort >= 2 ? 3 : 2;
+    var js = new Int16Array(KMAX);
+    while (true) {
+      var bestEff = 1e-9, bestC = -1, bestK = 0, bestJs = null;
+      for (var c = 0; c < cand.length; c++) {
+        var placed = 0, base = cur;
+        for (var k = 0; k < KMAX; k++) {
+          var j = smallestFree(cand[c].size); if (j < 0) break;
+          add(c, 1); asg[j] = c; js[k] = j; placed++;
+          var t = total(), eff = (t - base) / placed;
+          if (effort >= 2 && placed === 1) {
+            // 2 手先読み：もう 1 個（別の装飾品でもよい）入れたときの一番よい点数も見ます
+            for (var c2 = 0; c2 < cand.length; c2++) {
+              var j2 = smallestFree(cand[c2].size); if (j2 < 0) continue;
+              add(c2, 1); asg[j2] = c2;
+              var t2 = total(); if ((t2 - base) / 2 > eff) eff = (t2 - base) / 2;
+              asg[j2] = -1; add(c2, -1);
+            }
+          }
+          if (t > cur + 1e-9 && (eff > bestEff + 1e-9 || (bestC >= 0 && Math.abs(eff - bestEff) <= 1e-9 && cand[c].size < cand[bestC].size))) {
+            bestEff = eff; bestC = c; bestK = placed; bestJs = Array.prototype.slice.call(js, 0, placed);
+          }
+        }
+        for (var u = placed - 1; u >= 0; u--) { asg[js[u]] = -1; add(c, -1); }
+      }
+      if (bestC < 0) break;
+      // 先読みの値で選んだときも、実際に入れるのは選んだ装飾品だけです（1 個ずつ確かめながら進みます）
+      for (var u2 = 0; u2 < bestK; u2++) { add(bestC, 1); asg[bestJs[u2]] = bestC; }
+      cur = total();
+    }
+    // 2. 入れかえ（1 つずつ、そして 2 つの中身の交換）。探している途中（effort 1）は 1 つずつを 1 回だけにして速くします
+    var passes = effort >= 2 ? 4 : 1;
+    for (var pass = 0; pass < passes; pass++) {
+      var improved = false;
+      for (var j3 = 0; j3 < n; j3++) {
+        var old = asg[j3];
+        if (old >= 0) add(old, -1);
+        asg[j3] = -1;
+        var bT = total(), bC = -1;
+        for (var c3 = 0; c3 < cand.length; c3++) {
+          if (cand[c3].size > slots[j3]) continue;
+          add(c3, 1); asg[j3] = c3;
+          var t3 = total();
+          asg[j3] = -1; add(c3, -1);
+          if (t3 > bT + 1e-9) { bT = t3; bC = c3; }
+        }
+        if (bC !== old && bT > cur + 1e-9) { if (bC >= 0) add(bC, 1); asg[j3] = bC; cur = bT; improved = true; }
+        else { if (old >= 0) add(old, 1); asg[j3] = old; }
+      }
+      // 2 つのスロットの中身を入れかえる（大きいスロットを空けて、別の装飾品を入れられるように）。最後に磨くときだけ
+      if (effort >= 2) for (var a1 = 0; a1 < n; a1++) for (var a2 = a1 + 1; a2 < n; a2++) {
+        var x1 = asg[a1], x2 = asg[a2];
+        if (x1 === x2) continue;
+        if ((x2 >= 0 && cand[x2].size > slots[a1]) || (x1 >= 0 && cand[x1].size > slots[a2])) continue;
+        asg[a1] = x2; asg[a2] = x1;
+        // 入れかえただけでは点数は同じなので、空いたスロットに 1 つ足せるかを見ます
+        var fj = -1; for (var z = 0; z < n; z++) if (asg[z] < 0) { fj = z; break; }
+        var gainC = -1, gainT = cur + 1e-9;
+        if (fj >= 0) {
+          for (var c4 = 0; c4 < cand.length; c4++) {
+            if (cand[c4].size > slots[fj]) continue;
+            add(c4, 1); asg[fj] = c4;
+            var t4 = total();
+            asg[fj] = -1; add(c4, -1);
+            if (t4 > gainT) { gainT = t4; gainC = c4; }
+          }
+        }
+        if (gainC >= 0) { add(gainC, 1); asg[fj] = gainC; cur = gainT; improved = true; }
+        else { asg[a1] = x1; asg[a2] = x2; }
+      }
+      if (!improved) break;
+    }
+    // 3. 最後に磨くとき（effort 3）：ビーム探索（途中の埋め方を上位 12 通り残しながら進む）と、
+    //    残りのスロットが 3 つ以下なら全部の埋め方を試し、一番よいものを使います
+    if (effort >= 3 && n > 0) {
+      var keepAsg = Array.prototype.slice.call(asg);
+      for (var r0 = 0; r0 < n; r0++) if (asg[r0] >= 0) { add(asg[r0], -1); asg[r0] = -1; }
+      var evalPlan = function (plan) {
+        for (var q1 = 0; q1 < n; q1++) if (plan[q1] >= 0) { add(plan[q1], 1); asg[q1] = plan[q1]; }
+        var tt = total();
+        for (var q2 = 0; q2 < n; q2++) if (plan[q2] >= 0) { add(plan[q2], -1); asg[q2] = -1; }
+        return tt;
+      };
+      var bestPlan = keepAsg, bestTotal = cur;
+      if (n <= 3) {
+        var plan = new Array(n).fill(-1);
+        var rec = function (i) {
+          if (i === n) { var tt = evalPlan(plan); if (tt > bestTotal + 1e-9) { bestTotal = tt; bestPlan = plan.slice(); } return; }
+          plan[i] = -1; rec(i + 1);
+          for (var cc = 0; cc < cand.length; cc++) if (cand[cc].size <= slots[i]) { plan[i] = cc; rec(i + 1); }
+          plan[i] = -1;
+        };
+        rec(0);
+      } else {
+        var W = 12, beam = [{ plan: new Array(n).fill(-1), t: evalPlan(new Array(n).fill(-1)) }];
+        for (var bi = 0; bi < n; bi++) {
+          var next = [];
+          beam.forEach(function (st) {
+            next.push({ plan: st.plan, t: st.t });
+            for (var cc = 0; cc < cand.length; cc++) {
+              if (cand[cc].size > slots[bi]) continue;
+              var p2 = st.plan.slice(); p2[bi] = cc;
+              next.push({ plan: p2, t: evalPlan(p2) });
+            }
+          });
+          next.sort(function (x, y) { return y.t - x.t; });
+          beam = next.slice(0, W);
+        }
+        if (beam[0].t > bestTotal + 1e-9) { bestTotal = beam[0].t; bestPlan = beam[0].plan; }
+      }
+      for (var r1 = 0; r1 < n; r1++) if (bestPlan[r1] >= 0) { add(bestPlan[r1], 1); asg[r1] = bestPlan[r1]; }
+      cur = total();
+    }
+    var picks = [], left = [];
+    for (var j5 = 0; j5 < n; j5++) { if (asg[j5] >= 0) { picks.push(asg[j5]); add(asg[j5], -1); } else left.push(slots[j5]); }
+    return { picks: picks, spare: left, total: cur };
+  }
+
   // 防具・護石が決まったときの最良の案（必要な装飾品を入れ、余りを目的に合わせて埋める）
   function finishBuild(P, armorCands, charmCand, thr) {
     var G = gearPoints(P, armorCands, charmCand);
@@ -2173,6 +2539,33 @@ self.onmessage = function (ev) {
       var sc = scoreParts(P.g, P.q, P.wi, L.lv, sp, G.def, G.res);
       return { L: L, sc: sc, pts: pts };
     }
+    // 防御・耐性の下限があるときは、足りない分を先に、防御・耐性の装飾品で埋めます（足りない量が一番減る物を 1 つずつ）
+    var hasMinQ = P.q.minDefense > 0 || P.q.minRes.some(function (x) { return x != null && x !== ''; });
+    if (hasMinQ) {
+      var shortOf = function (sc) {
+        var d = 0;
+        if (P.q.minDefense) d += Math.max(0, P.q.minDefense - sc.detail.defense);
+        for (var i = 0; i < 5; i++) { var mm = P.q.minRes[i]; if (mm != null && mm !== '') d += Math.max(0, +mm - sc.detail.res[i]) * 10; }
+        return d;
+      };
+      var deficit = shortOf(evalWith(decoList, spare).sc);
+      var defDecos = P.minDecos || (P.minDecos = P.decos.filter(function (d) { return d.skills.some(function (x) { return P.I.defSkill[x[0]]; }); }));
+      var guardN = 0;
+      while (deficit > 1e-9 && spare.length && guardN++ < 30) {
+        spare.sort(function (x, y) { return x - y; });
+        var bestD = null, bestDef = deficit, bestIdx = -1;
+        for (var dd = 0; dd < defDecos.length; dd++) {
+          var d0 = defDecos[dd], jj = -1;
+          for (var z = 0; z < spare.length; z++) if (spare[z] >= d0.size) { jj = z; break; }
+          if (jj < 0) continue;
+          var sp2 = spare.slice(); sp2.splice(jj, 1);
+          var df = shortOf(evalWith(decoList.concat([d0]), sp2).sc);
+          if (df < bestDef - 1e-9 || (bestD && Math.abs(df - bestDef) <= 1e-9 && d0.size < bestD.size)) { bestD = d0; bestDef = df; bestIdx = jj; }
+        }
+        if (!bestD) break;
+        decoList.push(bestD); spare.splice(bestIdx, 1); deficit = bestDef;
+      }
+    }
     var F = compileScorer(P), R = F.R;
     var rp = new Int16Array(R);
     for (var kk in G.pts) if (P.relPos[kk] != null) rp[P.relPos[kk]] += G.pts[kk];
@@ -2180,30 +2573,11 @@ self.onmessage = function (ev) {
     decoList.forEach(function (d) { d.skills.forEach(function (x) { if (P.relPos[x[0]] != null) rp[P.relPos[x[0]]] += x[1]; }); });
     var cand = P.fillDecos || (P.fillDecos = fillCandidates(P));
     var candV = P.fillVec || (P.fillVec = cand.map(function (d) { return d.skills.filter(function (x) { return P.relPos[x[0]] != null; }).map(function (x) { return [P.relPos[x[0]], x[1]]; }); }));
-    // 大きいスロットから順に、点数が一番上がる装飾品を入れます（上がらなければ空けたまま）
-    spare.sort(function (a, b) { return b - a; });
-    var buf = new Int8Array(32);
-    function fill(arr) { for (var z = 0; z < arr.length; z++) buf[z] = arr[z]; return arr.length; }
-    var n0 = fill(spare);
-    var curTotal = F.total(F.levels(rp), buf, n0, G.def, G.res);
-    var keepSpare = [];
-    while (spare.length) {
-      var sz = spare.shift();
-      var rest = keepSpare.concat(spare), nr = fill(rest);
-      var bestGain = 1e-9, bestI = -1, bestT = 0;
-      for (var di = 0; di < cand.length; di++) {
-        if (cand[di].size > sz) continue;
-        var vv = candV[di];
-        for (var a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] += vv[a1][1];
-        var tt = F.total(F.levels(rp), buf, nr, G.def, G.res);
-        for (a1 = 0; a1 < vv.length; a1++) rp[vv[a1][0]] -= vv[a1][1];
-        if (tt - curTotal > bestGain + 1e-9) { bestGain = tt - curTotal; bestI = di; bestT = tt; }
-      }
-      if (bestI < 0) { keepSpare.push(sz); continue; }
-      var bv = candV[bestI]; for (var a2 = 0; a2 < bv.length; a2++) rp[bv[a2][0]] += bv[a2][1];
-      decoList.push(cand[bestI]); curTotal = bestT;
-    }
-    spare = keepSpare;
+    // 余ったスロットに、目的の点数が上がる装飾品を入れます（fillSpare：欲張り法と入れかえ。上がらなければ空けたまま）
+    var fr = fillSpare(P, F, rp, spare, G.def, G.res, P.q.fillEffort || 1);
+    fr.picks.forEach(function (ci) { decoList.push(cand[ci]); });
+    spare = fr.spare;
+    var curTotal = fr.total;
     if (thr != null && curTotal < thr - 1e-9) return { below: true };
     var cur = evalWith(decoList, spare);
     // 防御・耐性の下限
@@ -2226,6 +2600,7 @@ self.onmessage = function (ev) {
       armor: armorCands.map(function (c) { return c.a.id; }),
       charm: charmCand && charmCand.a ? charmCand.a.id : null,
       weapon: P.q.weaponId != null ? P.q.weaponId : null,
+      weaponType: P.wi.type,
       weaponSlots: P.wi.slots,
       decos: placed,
       spare: freeSlots.map(function (s) { return { slot: s.ref, size: s.size }; }),
@@ -2347,7 +2722,15 @@ self.onmessage = function (ev) {
       var n = 0;
       for (var t3 = 4; t3 >= 1; t3--) for (var k = 0; k < ge[t3] - (ge[t3 + 1] || 0); k++) spB[n++] = t3;
       for (var e = 0; e < 5; e++) resB[e] = curRes[e] + sufRes[d][e];
-      return FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      var ub = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+      if (FS.downIdx.length) {
+        // そのスキルがない場合も計算し、大きいほうを上限にします
+        var keep = FS.downIdx.map(function (i) { var v = lvB[i]; lvB[i] = 0; return v; });
+        var ub2 = FS.total(lvB, spB, n, curDef + sufDef[d], resB);
+        FS.downIdx.forEach(function (i, k) { lvB[i] = keep[k]; });
+        if (ub2 > ub) ub = ub2;
+      }
+      return ub;
     }
     var lastYield = Date.now();
     function apply(c, sign) {
@@ -2415,6 +2798,26 @@ self.onmessage = function (ev) {
       } else stats.passes = pass + 1;
     }
     stats.passTotal = widths.length;
+    // 見つけた上位の案の装飾品の入れ方を、もっと丁寧に磨き直してから並べ直します（fillSpare の effort 3）
+    var savedEffort = q.fillEffort;
+    q.fillEffort = 3;
+    // 磨き直しに使う時間：探す時間の 2 割（1.5 秒から 20 秒の間）。点数の高い案から順に磨きます
+    var budget = Math.min(20000, Math.max(1500, isFinite(q.timeLimitMs) ? q.timeLimitMs * 0.2 : 20000));
+    var tr = Date.now(), refined = [], nRef = 0;
+    for (var hi = 0; hi < heap.length; hi++) {
+      var b0 = heap[hi];
+      if (Date.now() - tr > budget || (q.stopSignal && q.stopSignal() && hi > 0)) { refined.push(b0); continue; }
+      var armorC = b0.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
+      var charmC = b0.charm != null ? { a: P.I.charmById[b0.charm] } : null;
+      var nb = finishBuild(P, armorC, charmC, null);
+      refined.push(nb && !nb.below && nb.score.total >= b0.score.total - 1e-9 ? nb : b0);
+      nRef++;
+      if (Date.now() - lastYield > 100) { lastYield = Date.now(); yield { progress: true, refining: true, refined: nRef, total: heap.length, nodes: stats.nodes, leaves: stats.leaves, found: heap.length, ms: Date.now() - t0, pass: stats.passes, passes: widths.length }; }
+    }
+    stats.refined = nRef;
+    q.fillEffort = savedEffort;
+    refined.sort(function (x, y) { return y.score.total - x.score.total; });
+    heap = refined;
     stats.timeMs = Date.now() - t0;
     var picked = diversify(heap, q.resultCount);
     picked = picked.map(function (b, i) { return Object.assign({}, b, { rank: i + 1, id: 'b' + (i + 1) }); });
@@ -2455,7 +2858,7 @@ self.onmessage = function (ev) {
   }
   function evaluateBuild(g, spec, q0) {
     var q = normalizeQuery(g, Object.assign({}, q0 || {}, spec.mods || {}));
-    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, fixedArmor: {}, minRarity: 1 }));
+    var P = prepare(g, Object.assign({}, q, { skills: [], weaponId: spec.weapon, weaponSlots: spec.weaponSlots, weaponType: spec.weaponType || q.weaponType, fixedArmor: {}, minRarity: 1 }));
     var I = P.I;
     var armorC = spec.armor.map(function (id) { return { a: armorOf(g, q, id) }; });
     if (armorC.some(function (c) { return !c.a; })) return null;
@@ -2475,7 +2878,7 @@ self.onmessage = function (ev) {
     var spare = G.slots.filter(function (s) { return !used[s.ref]; });
     var sc = scoreParts(g, q, P.wi, L.lv, spare.map(function (s) { return s.size; }), G.def, G.res);
     return {
-      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponSlots: P.wi.slots,
+      armor: spec.armor.slice(), charm: spec.charm, weapon: spec.weapon, weaponType: P.wi.type, weaponSlots: P.wi.slots,
       decos: spec.decos.map(function (x) { return { slot: x.slot, slotSize: slotSize[x.slot], deco: x.deco }; }),
       spare: spare.map(function (s) { return { slot: s.ref, size: s.size }; }),
       levels: L.lv, points: L.total,
@@ -2532,48 +2935,49 @@ self.onmessage = function (ev) {
 
   // 検索を始めます。返り値の promise は、最後まで探し終えたときか、「止める」を押したときに、
   // それまでに見つけた案を返します（止めても途中の結果は消えません）。
-  var currentJob = null, stopFlag = false;
-  function runSearch(q, onProgress) {
+  // tag：だれの検索か（'form' は条件検索、'claude' は Claude の道具）。「止める」は tag ごとに止めます。
+  var mainStops = {};
+  function runSearch(q, onProgress, tag) {
+    tag = tag || 'form';
     if (worker && workerOk) {
       return new Promise(function (resolve, reject) {
         var id = ++jobSeq;
-        jobs[id] = { resolve: resolve, reject: reject, onProgress: onProgress };
-        currentJob = id;
+        jobs[id] = { resolve: resolve, reject: reject, onProgress: onProgress, tag: tag };
         worker.postMessage({ type: 'search', job: id, query: q });
       });
     }
     // Web Worker が使えないとき：少しずつ処理して、そのたびに画面へ戻ります
     return new Promise(function (resolve, reject) {
-      var it;
-      stopFlag = false; currentJob = 'main';
-      var q2 = Object.assign({}, q, { stopSignal: function () { return stopFlag; } });
-      try { it = E.searchGen(GAME, q2); } catch (e) { reject(e); return; }
+      var it, key = 'm' + (++jobSeq);
+      mainStops[key] = { tag: tag, stop: false };
+      var q2 = Object.assign({}, q, { stopSignal: function () { return mainStops[key].stop; } });
+      try { it = E.searchGen(GAME, q2); } catch (e) { delete mainStops[key]; reject(e); return; }
       (function step() {
         try {
           var t = Date.now(), r;
           while (true) {
             r = it.next();
-            if (r.done) { resolve(stripResult(r.value)); return; }
+            if (r.done) { delete mainStops[key]; resolve(stripResult(r.value)); return; }
             onProgress && onProgress(r.value);
             if (Date.now() - t > 40) break;
           }
           setTimeout(step, 0);
-        } catch (e) { reject(e); }
+        } catch (e) { delete mainStops[key]; reject(e); }
       })();
     });
   }
-  // 「止める」：検索プログラムに止まるよう知らせ、それまでの結果を受け取ります。
-  // 3 秒たっても返事がないときだけ、Web Worker ごと止めます。
-  function stopWorker() {
-    stopFlag = true;
-    if (currentJob === 'main' || currentJob == null) return;
-    var id = currentJob;
-    if (worker) worker.postMessage({ type: 'stop', job: id });
+  // 「止める」：その tag の検索に止まるよう知らせ、それまでの結果を受け取ります。
+  // 3 秒たっても返事がないときだけ、Web Worker ごと止めます（そのときは、動いていた検索を全部「止めました」で終えます）。
+  function stopWorker(tag) {
+    tag = tag || 'form';
+    for (var k in mainStops) if (mainStops[k].tag === tag) mainStops[k].stop = true;
+    var ids = Object.keys(jobs).filter(function (id) { return jobs[id].tag === tag; });
+    if (!ids.length) return;
+    ids.forEach(function (id) { if (worker) worker.postMessage({ type: 'stop', job: +id }); });
     setTimeout(function () {
-      if (!jobs[id]) return;
+      if (!ids.some(function (id) { return jobs[id]; })) return;
       if (worker) worker.terminate();
-      jobs[id].reject(new Error('止めました'));
-      delete jobs[id];
+      Object.keys(jobs).forEach(function (id) { jobs[id].reject(new Error('止めました')); delete jobs[id]; });
       makeWorker();
     }, 3000);
   }
@@ -2603,10 +3007,10 @@ self.onmessage = function (ev) {
         return '<span class="slot">' + NUM[sz] + ' ' + (d ? esc(decoName(d.deco)) + noJa(I.decoById[d.deco]) : '<span class="muted">空き</span>') + '</span>';
       }).join('');
     }
-    var wsl = b.weapon != null ? I.weaponById[b.weapon].slots : (b.weaponSlots || []);
+    var wsl = b.weaponSlots || (b.weapon != null ? I.weaponById[b.weapon].slots : []);
     rows.push('<tr><th>武器</th><td>' + esc(weaponLabel(b)) + '<div class="slots">' + slotCells('weapon', wsl) + '</div></td></tr>');
     E.PARTS.forEach(function (p, i) {
-      var a = I.armorById[b.armor[i]];
+      var a = E.armorOf(GAME, b.mods || {}, b.armor[i]); // カスタム強化を入れた防具は、入れたスロットで表示します
       rows.push('<tr><th>' + E.PART_JA[p] + '</th><td>' + esc(a.ja) + noJa(a) + ' <span class="muted">レア' + a.rarity + '</span><div class="slots">' + slotCells(p, a.slots) + '</div></td></tr>');
     });
     rows.push('<tr><th>護石</th><td>' + esc(charmName(b.charm)) + noJa(b.charm != null && I.charmById[b.charm]) + (b.charm != null ? ' <span class="muted">' + I.charmById[b.charm].skills.map(function (x) { return esc(skillName(x[0])) + x[1]; }).join('・') + '</span>' : '') + '</td></tr>');
@@ -2620,7 +3024,7 @@ self.onmessage = function (ev) {
     ks.sort(function (x, y) { return (reqSet[y] || 0) - (reqSet[x] || 0) || b.levels[y] - b.levels[x] || x - y; });
     return ks.map(function (k) {
       var s = I.skillById[k];
-      var unlocked = s.unlockedBy != null && (b.levels[s.unlockedBy] || 0) > 0;
+      var unlocked = s.unlockedBy != null && ((b.levels[s.unlockedBy] || 0) > 0 || (I.inheritId != null && (b.levels[I.inheritId] || 0) > 0));
       var cap = unlocked ? s.maxAll : s.max;
       var over = b.points && b.points[k] > b.levels[k] ? '<span class="muted">（' + b.points[k] + 'pt、上限で切り）</span>' : '';
       return '<li class="' + (reqSet[k] ? 'req' : '') + '">' + esc(s.ja) + ' <b>Lv' + b.levels[k] + '</b><span class="muted">/' + cap + '</span>' + (bs[k] ? ' <span class="tag">シリーズ</span>' : '') + over + '</li>';
@@ -2656,11 +3060,11 @@ self.onmessage = function (ev) {
     if (m.weaponOverride) {
       var w = m.weaponOverride, x = [];
       if (w.attack) x.push('表示攻撃力 ' + w.attack); if (w.affinity != null) x.push('会心率 ' + w.affinity + '%');
-      if (w.element) x.push((E.ELEM_JA[w.element[0]] || '') + ' ' + w.element[1]); if (w.slots) x.push('スロット ' + slotsLabel(w.slots)); if (w.defense != null) x.push('防御 ' + w.defense);
+      if (w.element) x.push(w.element[1] > 0 ? (E.ELEM_JA[w.element[0]] || '') + ' ' + w.element[1] : '属性なし'); if (w.slots) x.push('スロット ' + slotsLabel(w.slots)); if (w.defense != null) x.push('防御 ' + w.defense);
       t.push('武器（入力した値）：' + x.join('、'));
     }
     if (m.armorAugMax) t.push('防具の防御力はカスタム強化の最大');
-    if (m.armorOverrides) t.push('強化した防具（入力した値）：' + Object.keys(m.armorOverrides).map(function (id) { var o = m.armorOverrides[id]; return armorName(+id) + '［' + slotsLabel(o.slots) + (o.addSkills ? '・' + o.addSkills.map(function (y) { return skillName(y[0]) + '+' + y[1]; }).join('・') : '') + '］'; }).join('、'));
+    if (m.armorOverrides) t.push('強化した防具（入力した値）：' + Object.keys(m.armorOverrides).map(function (id) { var o = m.armorOverrides[id]; return armorName(+id) + '［' + (o.slots ? slotsLabel(o.slots) : 'スロットはデータのまま') + (o.addSkills ? '・' + o.addSkills.map(function (y) { return skillName(y[0]) + '+' + y[1]; }).join('・') : '') + '］'; }).join('、'));
     return t.join('。');
   }
   function scoreBlock(b) {
@@ -2689,12 +3093,12 @@ self.onmessage = function (ev) {
       '<header><h3>' + esc(opt.title || ('案 ' + (b.rank || ''))) + '</h3>' +
       '<div class="pts"><span>合計 <b>' + fmt(b.score.total) + '</b></span><span>火力 ' + fmt(b.score.fire) + '</span><span>守り ' + fmt(b.score.def) + '</span><span>快適 ' + fmt(b.score.comfort) + '</span></div></header>' +
       (opt.reason ? '<p class="reason">' + esc(opt.reason) + '</p>' : '') +
-      (b.mods ? '<p class="note">' + esc(modsText(b.mods)) + '</p>' : '') +
+      (modsText(b.mods) ? '<p class="note">' + esc(modsText(b.mods)) + '</p>' : '') +
       '<table class="parts">' + partRows(b) + '</table>' +
       '<div class="cols"><div><h4>発動スキル</h4><ul class="skills">' + skillList(b, opt.query && opt.query.skills) + '</ul></div>' +
       '<div><h4>シリーズスキル</h4><ul class="skills">' + bonusList(b) + '</ul>' +
       '<h4>余るスロット</h4><p>' + (sp || 'なし') + '</p>' +
-      '<h4>防御力と耐性</h4><p>防御力 ' + fmt(d.defense, 0) + '（強化最大、スキル込み）<br>' + d.res.map(function (r, i) { return E.ELEM_JA[E.ELEMS[i]] + '耐性 ' + fmt(r, 0); }).join('、') + '</p></div></div>' +
+      '<h4>防御力と耐性</h4><p>防御力 ' + fmt(d.defense, 0) + '（' + (b.mods && b.mods.armorAugMax ? 'カスタム強化の最大' : '強化最大') + '、スキル込み）<br>' + d.res.map(function (r, i) { return E.ELEM_JA[E.ELEMS[i]] + '耐性 ' + fmt(r, 0); }).join('、') + '</p></div></div>' +
       scoreBlock(b) +
       '<div class="actions"><button type="button" data-copy="' + esc(id) + '">一覧をコピー</button><button type="button" data-share="' + esc(id) + '">この案の URL をコピー</button><span class="copied" aria-live="polite"></span></div>' +
       '</article>';
@@ -2704,19 +3108,19 @@ self.onmessage = function (ev) {
     var lines = ['【MHW:IB 装備案】' + (title || '')];
     var byslot = {}; b.decos.forEach(function (d) { byslot[d.slot] = d; });
     function sl(prefix, slots) { return slots.map(function (sz, j) { var d = byslot[prefix + '#' + j]; return NUM[sz] + (d ? decoName(d.deco) : '空き'); }).join(' / '); }
-    var wsl = b.weapon != null ? I.weaponById[b.weapon].slots : (b.weaponSlots || []);
+    var wsl = b.weaponSlots || (b.weapon != null ? I.weaponById[b.weapon].slots : []);
     lines.push('武器: ' + weaponLabel(b) + (wsl.length ? '［' + sl('weapon', wsl) + '］' : ''));
-    E.PARTS.forEach(function (p, i) { var a = I.armorById[b.armor[i]]; lines.push(E.PART_JA[p] + ': ' + a.ja + (a.slots.length ? '［' + sl(p, a.slots) + '］' : '')); });
+    E.PARTS.forEach(function (p, i) { var a = E.armorOf(GAME, b.mods || {}, b.armor[i]); lines.push(E.PART_JA[p] + ': ' + a.ja + (a.slots.length ? '［' + sl(p, a.slots) + '］' : '')); });
     lines.push('護石: ' + charmName(b.charm));
     lines.push('発動スキル: ' + Object.keys(b.levels).filter(function (k) { return b.levels[k] > 0; }).sort(function (x, y) { return b.levels[y] - b.levels[x]; }).map(function (k) { return skillName(k) + ' Lv' + b.levels[k]; }).join('、'));
     var bo = (b.bonuses || []).filter(function (x) { return x.active.length; }).map(function (x) { return I.bonusById[x.id].ja + '（' + x.active.map(skillName).join('・') + '）'; });
     if (bo.length) lines.push('シリーズスキル: ' + bo.join('、'));
-    if (b.mods) lines.push('強化：' + modsText(b.mods));
+    if (modsText(b.mods)) lines.push('強化：' + modsText(b.mods));
     lines.push('防御力 ' + Math.round(b.score.detail.defense) + '（' + (b.mods && b.mods.armorAugMax ? 'カスタム強化の最大' : '強化最大') + 'の値。ゲーム内で確かめてください）');
     return lines.join('\n');
   }
   function shareUrl(b, q) {
-    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale, m: b.mods || undefined };
+    var o = { v: 1, w: b.weapon, ws: b.weapon == null ? b.weaponSlots : undefined, a: b.armor, c: b.charm, d: b.decos.map(function (x) { return [x.slot, x.deco]; }), o: b.objective || 'fire', u: q && q.uptimeScale, m: b.mods || undefined, t: b.weaponType || (q && q.weaponType) || undefined };
     var s = btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return location.href.split('#')[0] + '#b=' + s;
   }
@@ -2725,8 +3129,8 @@ self.onmessage = function (ev) {
     try {
       var s = m[1].replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
       var o = JSON.parse(decodeURIComponent(escape(atob(s))));
-      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }), mods: o.m || null };
-      var q = { objective: o.o, uptimeScale: o.u, weaponId: spec.weapon, weaponSlots: spec.weaponSlots };
+      var spec = { weapon: o.w == null ? null : o.w, weaponSlots: o.ws || [], armor: o.a, charm: o.c, decos: (o.d || []).map(function (x) { return { slot: x[0], deco: x[1] }; }), mods: o.m || null, weaponType: o.t || null };
+      var q = { objective: o.o, uptimeScale: o.u, weaponId: spec.weapon, weaponSlots: spec.weaponSlots, weaponType: o.t || null };
       var b = E.evaluateBuild(GAME, spec, q);
       return b ? { b: b, q: q } : null;
     } catch (e) { return null; }
@@ -2768,8 +3172,10 @@ self.onmessage = function (ev) {
     var d = E.PARTS_DEFAULT[wtSel.value] || { art: 0, special: 0, jump: 0 };
     $('#part-art').value = Math.round(d.art * 100); $('#part-special').value = Math.round(d.special * 100); $('#part-jump').value = Math.round(d.jump * 100);
   }
-  wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); });
-  wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; });
+  wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); clearWeaponOverride(); });
+  // 武器を変えたら、前の武器のために入れたカスタム強化の数値を消します
+  function clearWeaponOverride() { ['#wo-attack', '#wo-aff', '#wo-eval', '#wo-def'].forEach(function (k) { $(k).value = ''; }); $('#wo-etype').value = ''; $('#wo-s1').value = ''; $('#wo-s2').value = '0'; $('#wo-s3').value = '0'; }
+  wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; clearWeaponOverride(); });
   form.querySelectorAll('input[name=rank]').forEach(function (x) { x.addEventListener('change', fillWeapons); });
 
   // スキルの選択
@@ -2792,7 +3198,7 @@ self.onmessage = function (ev) {
     $('#ex-chips').innerHTML = excludeArmor.map(function (id, i) { return '<span class="chip">' + esc(armorName(id)) + '<button type="button" data-rm-ex="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#ao-chips').innerHTML = Object.keys(armorOverrides).map(function (id) {
       var o = armorOverrides[id];
-      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + slotsLabel(o.slots) + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
+      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + (o.slots ? slotsLabel(o.slots) : 'データのまま') + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
     }).join('') || '<span class="muted">なし</span>';
     $('#exd-chips').innerHTML = excludeDecos.map(function (id, i) { return '<span class="chip">' + esc(decoName(id)) + '<button type="button" data-rm-exd="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
   }
@@ -2816,9 +3222,12 @@ self.onmessage = function (ev) {
   $('#add-ex').addEventListener('click', function () { var id = idFromLabel($('#ex-input').value); if (id != null && I.armorById[id] && excludeArmor.indexOf(id) < 0) { excludeArmor.push(id); $('#ex-input').value = ''; renderChips(); } });
   $('#add-ao').addEventListener('click', function () {
     var id = idFromLabel($('#ao-input').value); if (id == null || !I.armorById[id]) return;
-    var o = { slots: [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; }) };
+    var o = {};
+    // スロットが「データのまま」なら、スロットは変えません
+    if ($('#ao-s1').value !== '') o.slots = [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; });
     var sk = findSkillByName($('#ao-skill').value);
     if (sk) o.addSkills = [[sk.id, +$('#ao-lv').value]];
+    if (!o.slots && !o.addSkills) return;
     armorOverrides[id] = o; $('#ao-input').value = ''; $('#ao-skill').value = ''; renderChips();
   });
   $('#add-exd').addEventListener('click', function () { var id = idFromLabel($('#exd-input').value); if (id != null && I.decoById[id] && excludeDecos.indexOf(id) < 0) { excludeDecos.push(id); $('#exd-input').value = ''; renderChips(); } });
@@ -2857,10 +3266,12 @@ self.onmessage = function (ev) {
     t += '候補の防具（各部位、外せるものを外した後）：' + E.PARTS.map(function (p) { return E.PART_JA[p] + st.poolSizes[p]; }).join('・') + '、護石 ' + st.poolSizes.charm + '。';
     if (st.stoppedByUser) t += ' ⚠ 「止める」で途中で止めました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。ここまでに見つけた中の上位を出しています。';
     else if (st.truncated) t += ' ⚠ 時間切れで途中で打ち切りました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。もっと良い案が残っているかもしれません。探す時間を長くするか、「最後まで」を選ぶと、さらに調べます。';
-    else t += ' 最後まで調べ終わりました（全部の組み合わせを調べたのと同じ結果です）。';
+    else t += ' 最後まで調べ終わりました（防具と護石の組み合わせは全部調べたのと同じ結果です）。';
+    if (st.refined != null) t += ' 上位の案のうち ' + st.refined + ' 案は、装飾品の入れ方を丁寧に磨き直しました（それでも一番よい入れ方とは限りません）。';
     return t;
   }
   function progressText(p) {
+    if (p.refining) return 'このページの検索プログラムが、見つけた上位の案の装飾品の入れ方を磨き直しています（Claude ではありません）… ' + p.refined + ' / ' + p.total + ' 案（' + fmt(p.ms / 1000) + ' 秒）';
     // ここで考えているのは Claude ではなく、このページの検索プログラム（ブラウザの中の計算）です
     return 'このページの検索プログラムが探しています（Claude ではありません）… 調べた枝 ' + p.nodes.toLocaleString() +
       '、調べた組み合わせ ' + (p.leaves || 0).toLocaleString() + ' 通り、いまの上位の候補 ' + p.found + '（' + fmt(p.ms / 1000) + ' 秒、' + p.passes + ' 段のうち ' + p.pass + ' 段目）';
@@ -2888,6 +3299,10 @@ self.onmessage = function (ev) {
       .then(function (r) {
         $('#stop').hidden = true; $('#go').disabled = false;
         statusEl.textContent = describeStats(r.stats);
+        if (!r.builds.length && r.stats.truncated) {
+          resultsEl.innerHTML = '<p class="warn">' + (r.stats.stoppedByUser ? '止めるまでに' : '時間内に') + '、条件をすべて満たす組み合わせは見つかりませんでした。まだ調べていない組み合わせが残っています。探す時間を長くするか、「最後まで」を選んでください。</p>';
+          return;
+        }
         if (!r.builds.length) {
           resultsEl.innerHTML = '<p class="warn">条件をすべて満たす組み合わせは見つかりませんでした。スキルのレベルを下げる、ランクを広げる、使わない装備や持っていない装飾品を減らす、防具のレア度の下限を下げる、などを試してください。</p>';
           return;
@@ -2895,7 +3310,7 @@ self.onmessage = function (ev) {
         resultsEl.innerHTML = r.builds.map(function (b, i) { return buildCard(b, { id: 'q' + n + '-' + (i + 1), title: (i + 1) + '位', query: q }); }).join('');
       }, function (e) { $('#stop').hidden = true; $('#go').disabled = false; statusEl.textContent = 'うまく探せませんでした：' + e.message; });
   });
-  $('#stop').addEventListener('click', function () { stopWorker(); });
+  $('#stop').addEventListener('click', function () { stopWorker('form'); });
 
   /* ---------- あらかじめ作った案 ---------- */
   var pt = $('#preset-type'), po = $('#preset-obj');
@@ -2983,7 +3398,12 @@ self.onmessage = function (ev) {
     };
     var sid = 's' + (++nlSeq);
     nlStatus.textContent = 'ページの中で検索しています（' + sid + '）…';
-    return runSearch(q).then(function (r) {
+    // 画面で入れた計算の設定（条件付きスキルの見込み・属性の重み・攻撃の内わけ・防具の強化）も同じように使います
+    var page = currentQuery();
+    q.uptimeScale = page.uptimeScale; q.elemWeight = page.elemWeight; q.armorAugMax = page.armorAugMax; q.armorOverrides = page.armorOverrides;
+    if (t === wtSel.value) q.parts = page.parts;
+    if (q.weaponId != null && page.weaponId === q.weaponId) q.weaponOverride = page.weaponOverride;
+    return runSearch(q, null, 'claude').then(function (r) {
       var out = r.builds.map(function (b, i) { var id = sid + '-b' + (i + 1); store[id] = { build: b, query: q, title: '' }; return summarize(id, b); });
       return { searchId: sid, truncated: r.stats.truncated, found: r.stats.feasible, builds: out, note: out.length ? '' : '条件を満たす案がありません' };
     });
@@ -3067,7 +3487,7 @@ self.onmessage = function (ev) {
       nlStatus.textContent = 'うまくいきませんでした（' + (c || '') + '）：' + (e && e.message || '');
     }).then(function () { nlBusy = false; $('#nl-go').disabled = false; $('#nl-stop').hidden = true; });
   });
-  $('#nl-stop').addEventListener('click', function () { if (nlCtl) nlCtl.abort(); });
+  $('#nl-stop').addEventListener('click', function () { if (nlCtl) nlCtl.abort(); stopWorker('claude'); });
 
   // 試験用に一部を外から見えるようにします
   window.__app = { store: store, TOOLS: TOOLS, runSearch: runSearch, workerOk: function () { return workerOk; }, parseAnswer: parseAnswer };
