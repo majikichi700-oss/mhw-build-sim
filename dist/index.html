@@ -128,7 +128,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>目的 <select id="objective"><option value="fire">火力</option><option value="balance">守りとの両立</option><option value="defense">守り</option><option value="comfort">快適さ</option></select></label>
 <span><label><input type="checkbox" name="rank" value="LR">下位</label><label><input type="checkbox" name="rank" value="HR">上位</label><label><input type="checkbox" name="rank" value="MR" checked>マスターランク</label></span>
 </fieldset>
-<details><summary>くわしい条件（外せない防具・使わない防具・持っていない装飾品・防御力など）</summary>
+<details><summary>くわしい条件（外せない防具・使わない防具・使わないシリーズ・持っていない装飾品・防御力など）</summary>
 <fieldset><legend>外せない防具</legend>
 <div class="row"><input id="fixed-input" list="armor-list" placeholder="防具の名前" aria-label="外せない防具"><button type="button" id="add-fixed">追加</button></div>
 <div class="chips" id="fixed-chips"></div></fieldset>
@@ -136,6 +136,12 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <div class="row"><input id="ex-input" list="armor-list" placeholder="防具の名前" aria-label="使わない防具"><button type="button" id="add-ex">追加</button></div>
 <div class="chips" id="ex-chips"></div></fieldset>
 <datalist id="armor-list"></datalist>
+<fieldset><legend>使わないシリーズ</legend>
+<div class="row"><input id="exs-input" list="series-list" placeholder="シリーズの名前（例：EXドラゴンα）" aria-label="使わないシリーズ"><button type="button" id="add-exs">追加</button></div>
+<label><input type="checkbox" id="exs-family" checked> α・β・γ のなかまもまとめて外す（例：EXドラゴンα を選ぶと EXドラゴンβ も外す）</label>
+<datalist id="series-list"></datalist>
+<div class="chips" id="exs-chips"></div>
+<p class="muted">シリーズの防具を全部まとめて外します。レア度の上限で外すのと違い、ほかのレア度 12 の防具は残ります。外せない防具に入れた防具は、外しません。</p></fieldset>
 <fieldset><legend>持っていない装飾品</legend>
 <div class="row"><input id="exd-input" list="deco-list" placeholder="装飾品の名前" aria-label="持っていない装飾品"><button type="button" id="add-exd">追加</button></div>
 <datalist id="deco-list"></datalist>
@@ -377,6 +383,14 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
   }
   function defOf(q, a) { return a.def[q && q.armorAugMax ? 2 : 1]; }
 
+  // シリーズの「なかま」：名前の最後の α・β・γ を除いた名前が同じで、ランクが同じシリーズ（例：EXドラゴンα と EXドラゴンβ）
+  function seriesFamily(g, setId) {
+    var I = indexGame(g);
+    var st = I.setById[setId]; if (!st) return [];
+    var base = st.ja.replace(/[αβγ]+$/, '');
+    return g.sets.filter(function (x) { return x.rank === st.rank && x.ja.replace(/[αβγ]+$/, '') === base; }).map(function (x) { return x.id; });
+  }
+
   function rankOfRarity(r) { return r <= 4 ? 'LR' : (r <= 8 ? 'HR' : 'MR'); }
 
   /* スキルの上限（極意で上がる分を含む） */
@@ -637,6 +651,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     q.skills = (q.skills || []).filter(function (x) { return x && x.lv > 0; });
     q.ranks = q.ranks && q.ranks.length ? q.ranks : ['MR'];
     q.excludeArmor = q.excludeArmor || [];
+    q.excludeSets = q.excludeSets || [];     // 使わないシリーズ（armorset の id）。そのシリーズの防具を全部外します
     q.excludeDecos = q.excludeDecos || [];
     q.excludeCharms = q.excludeCharms || [];
     q.fixedArmor = q.fixedArmor || {};
@@ -710,6 +725,8 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
     var useDef = !!ow[1] || q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
 
     var ex = {}; q.excludeArmor.forEach(function (i) { ex[i] = 1; });
+    var exS = {}; q.excludeSets.forEach(function (i) { exS[i] = 1; });
+    g.armors.forEach(function (a) { if (a.set != null && exS[a.set]) ex[a.id] = 1; });
     function vecOf(skillsList) {
       var v = new Int16Array(relList.length);
       skillsList.forEach(function (x) { if (relPos[x[0]] != null) v[relPos[x[0]]] += x[1]; });
@@ -1566,7 +1583,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
     WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
-    indexGame: indexGame, armorOf: armorOf, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
+    indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
@@ -1702,6 +1719,14 @@ self.onmessage = function (ev) {
   }
   function defOf(q, a) { return a.def[q && q.armorAugMax ? 2 : 1]; }
 
+  // シリーズの「なかま」：名前の最後の α・β・γ を除いた名前が同じで、ランクが同じシリーズ（例：EXドラゴンα と EXドラゴンβ）
+  function seriesFamily(g, setId) {
+    var I = indexGame(g);
+    var st = I.setById[setId]; if (!st) return [];
+    var base = st.ja.replace(/[αβγ]+$/, '');
+    return g.sets.filter(function (x) { return x.rank === st.rank && x.ja.replace(/[αβγ]+$/, '') === base; }).map(function (x) { return x.id; });
+  }
+
   function rankOfRarity(r) { return r <= 4 ? 'LR' : (r <= 8 ? 'HR' : 'MR'); }
 
   /* スキルの上限（極意で上がる分を含む） */
@@ -1962,6 +1987,7 @@ self.onmessage = function (ev) {
     q.skills = (q.skills || []).filter(function (x) { return x && x.lv > 0; });
     q.ranks = q.ranks && q.ranks.length ? q.ranks : ['MR'];
     q.excludeArmor = q.excludeArmor || [];
+    q.excludeSets = q.excludeSets || [];     // 使わないシリーズ（armorset の id）。そのシリーズの防具を全部外します
     q.excludeDecos = q.excludeDecos || [];
     q.excludeCharms = q.excludeCharms || [];
     q.fixedArmor = q.fixedArmor || {};
@@ -2035,6 +2061,8 @@ self.onmessage = function (ev) {
     var useDef = !!ow[1] || q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
 
     var ex = {}; q.excludeArmor.forEach(function (i) { ex[i] = 1; });
+    var exS = {}; q.excludeSets.forEach(function (i) { exS[i] = 1; });
+    g.armors.forEach(function (a) { if (a.set != null && exS[a.set]) ex[a.id] = 1; });
     function vecOf(skillsList) {
       var v = new Int16Array(relList.length);
       skillsList.forEach(function (x) { if (relPos[x[0]] != null) v[relPos[x[0]]] += x[1]; });
@@ -2891,7 +2919,7 @@ self.onmessage = function (ev) {
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
     WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
-    indexGame: indexGame, armorOf: armorOf, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
+    indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
@@ -3164,6 +3192,12 @@ self.onmessage = function (ev) {
     list.sort(function (a, b) { return b.rarity - a.rarity || b.attack - a.attack; });
     wSel.innerHTML = '<option value="">武器を選ばず、スロットだけ指定する</option>' + list.map(function (w) {
       var el = w.elements.map(function (x) { return (w.elemHidden ? '(' : '') + (E.ELEM_JA[x[0]] || x[0]) + x[1] + (w.elemHidden ? ')' : ''); }).join(' ');
+      // ボウガンは武器に属性値がなく、属性は弾で出します。撃てる属性の弾を書きます（データの弾の設定より）
+      if (w.ammo && GAME.ammo[w.ammo]) {
+        var AM = { flaming: '火', water: '水', thunder: '雷', freeze: '氷', dragon: '龍' };
+        var ae = Object.keys(AM).filter(function (k) { return GAME.ammo[w.ammo].types[k]; }).map(function (k) { return AM[k]; });
+        if (ae.length) el = (el ? el + ' ' : '') + '属性の弾：' + ae.join('・');
+      }
       return '<option value="' + w.id + '">' + esc(w.ja) + (w.jaMissing ? '［日本語名なし］' : '') + '｜レア' + w.rarity + '｜攻' + w.attack + (w.affinity ? '｜会心' + w.affinity + '%' : '') + (el ? '｜' + esc(el) : '') + '｜' + slotsLabel(w.slots) + '</option>';
     }).join('');
     $('#weapon-slots').hidden = !!wSel.value;
@@ -3183,9 +3217,13 @@ self.onmessage = function (ev) {
   GAME.skills.slice().sort(function (a, b) { return a.ja.localeCompare(b.ja, 'ja'); }).forEach(function (s) { skillDl.insertAdjacentHTML('beforeend', '<option value="' + esc(s.ja) + '">'); });
   var armorDl = $('#armor-list');
   GAME.armors.forEach(function (a) { armorDl.insertAdjacentHTML('beforeend', '<option value="' + esc(a.ja + '｜' + E.PART_JA[a.part] + '｜' + (E.RANK_JA[a.rank] || '') + '｜#' + a.id) + '">'); });
+  var seriesDl = $('#series-list');
+  GAME.sets.slice().sort(function (a, b) { return (b.rank === 'MR') - (a.rank === 'MR') || a.ja.localeCompare(b.ja, 'ja'); }).forEach(function (st) {
+    seriesDl.insertAdjacentHTML('beforeend', '<option value="' + esc(st.ja + '｜' + (E.RANK_JA[st.rank] || '') + '｜#' + st.id) + '">');
+  });
   var decoDl = $('#deco-list');
   GAME.decos.forEach(function (d) { decoDl.insertAdjacentHTML('beforeend', '<option value="' + esc(d.ja + '｜#' + d.id) + '">'); });
-  var chosenSkills = [], fixedArmor = {}, excludeArmor = [], excludeDecos = [], armorOverrides = {};
+  var chosenSkills = [], fixedArmor = {}, excludeArmor = [], excludeDecos = [], armorOverrides = {}, excludeSets = [];
   function findSkillByName(n) { n = (n || '').trim(); return GAME.skills.filter(function (s) { return s.ja === n || s.en.toLowerCase() === n.toLowerCase(); })[0]; }
   function idFromLabel(v) { var m = /#(\d+)\s*$/.exec(v || ''); return m ? +m[1] : null; }
   function renderChips() {
@@ -3200,6 +3238,7 @@ self.onmessage = function (ev) {
       var o = armorOverrides[id];
       return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + (o.slots ? slotsLabel(o.slots) : 'データのまま') + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
     }).join('') || '<span class="muted">なし</span>';
+    $('#exs-chips').innerHTML = excludeSets.map(function (id, i) { var st = I.setById[id]; return '<span class="chip">' + esc(st.ja) + '<span class="muted">（' + esc(E.RANK_JA[st.rank] || '') + '）</span><button type="button" data-rm-exs="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#exd-chips').innerHTML = excludeDecos.map(function (id, i) { return '<span class="chip">' + esc(decoName(id)) + '<button type="button" data-rm-exd="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
   }
   form.addEventListener('click', function (ev) {
@@ -3209,6 +3248,7 @@ self.onmessage = function (ev) {
     if (d.rmEx != null) { excludeArmor.splice(+d.rmEx, 1); renderChips(); }
     if (d.rmExd != null) { excludeDecos.splice(+d.rmExd, 1); renderChips(); }
     if (d.rmAo != null) { delete armorOverrides[d.rmAo]; renderChips(); }
+    if (d.rmExs != null) { excludeSets.splice(+d.rmExs, 1); renderChips(); }
   });
   form.addEventListener('change', function (ev) { var t = ev.target; if (t.dataset && t.dataset.lv != null) chosenSkills[+t.dataset.lv].lv = +t.value; });
   $('#add-skill').addEventListener('click', function () {
@@ -3230,6 +3270,12 @@ self.onmessage = function (ev) {
     if (!o.slots && !o.addSkills) return;
     armorOverrides[id] = o; $('#ao-input').value = ''; $('#ao-skill').value = ''; renderChips();
   });
+  $('#add-exs').addEventListener('click', function () {
+    var id = idFromLabel($('#exs-input').value); if (id == null || !I.setById[id]) return;
+    var ids = $('#exs-family').checked ? E.seriesFamily(GAME, id) : [id];
+    ids.forEach(function (x) { if (excludeSets.indexOf(x) < 0) excludeSets.push(x); });
+    $('#exs-input').value = ''; renderChips();
+  });
   $('#add-exd').addEventListener('click', function () { var id = idFromLabel($('#exd-input').value); if (id != null && I.decoById[id] && excludeDecos.indexOf(id) < 0) { excludeDecos.push(id); $('#exd-input').value = ''; renderChips(); } });
 
   function currentQuery() {
@@ -3238,7 +3284,7 @@ self.onmessage = function (ev) {
     return {
       weaponType: wtSel.value, weaponId: wSel.value ? +wSel.value : null, weaponSlots: wSel.value ? [] : ws,
       ranks: ranks(), objective: objSel.value, skills: chosenSkills.slice(),
-      fixedArmor: Object.assign({}, fixedArmor), excludeArmor: excludeArmor.slice(), excludeDecos: excludeDecos.slice(),
+      fixedArmor: Object.assign({}, fixedArmor), excludeArmor: excludeArmor.slice(), excludeDecos: excludeDecos.slice(), excludeSets: excludeSets.slice(),
       minDefense: +$('#min-def').value || 0, minRes: minRes,
       maxRarity: +$('#max-rarity').value, decoMaxRarity: +$('#deco-rarity').value,
       uptimeScale: +$('#uptime').value, timeLimitMs: +$('#time-limit').value * 1000,
@@ -3401,6 +3447,13 @@ self.onmessage = function (ev) {
     // 画面で入れた計算の設定（条件付きスキルの見込み・属性の重み・攻撃の内わけ・防具の強化）も同じように使います
     var page = currentQuery();
     q.uptimeScale = page.uptimeScale; q.elemWeight = page.elemWeight; q.armorAugMax = page.armorAugMax; q.armorOverrides = page.armorOverrides;
+    // 使わないシリーズ：画面で選んだものと、Claude が名前で指定したもの（名前の一部が合うシリーズを、なかまごと外します）
+    var exs = (page.excludeSets || []).slice();
+    (input.excludeSeries || []).forEach(function (nm) {
+      nm = String(nm || '').trim(); if (!nm) return;
+      GAME.sets.forEach(function (st) { if (st.ja.indexOf(nm) >= 0 || st.en.toLowerCase().indexOf(nm.toLowerCase()) >= 0) E.seriesFamily(GAME, st.id).forEach(function (x) { if (exs.indexOf(x) < 0) exs.push(x); }); });
+    });
+    q.excludeSets = exs;
     if (t === wtSel.value) q.parts = page.parts;
     if (q.weaponId != null && page.weaponId === q.weaponId) q.weaponOverride = page.weaponOverride;
     return runSearch(q, null, 'claude').then(function (r) {
@@ -3422,7 +3475,7 @@ self.onmessage = function (ev) {
   var TOOLS = [
     { name: 'findSkills', description: 'スキルを日本語名・英語名・説明文の一部で探し、正しい日本語名と最大レベルを返します。searchBuilds に渡す前に名前を確かめるために使います。', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'たとえば「見切り」「会心」「回避」' } }, required: ['query'] }, execute: function (i) { return limitSize(toolSkills(i)); } },
     { name: 'findWeapons', description: '武器種の中から、マスターランクの武器を攻撃力の高い順に最大 20 個返します（weaponId・名前・レア度・攻撃力・会心率・属性・スロット）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, maxRarity: { type: 'number' }, element: { type: 'string', description: '火・水・雷・氷・龍 など（任意）' } }, required: ['weaponType'] }, execute: function (i) { return limitSize(toolWeapons(i)); } },
-    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, minRarity: { type: 'number', description: '防具のレア度の下限。はじめは 10（マスターランク序盤の防具を外す）' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
+    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, minRarity: { type: 'number', description: '防具のレア度の下限。はじめは 10（マスターランク序盤の防具を外す）' }, excludeSeries: { type: 'array', items: { type: 'string' }, description: '使わない防具のシリーズの名前（日本語名の一部。例：EXドラゴン、EXエスカドラ）。α・β・γ のなかまもまとめて外します' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
     { name: 'getBuild', description: 'searchBuilds が返した buildId の案の中身（装飾品の場所・シリーズスキル・点数の内訳）を返します。', inputSchema: { type: 'object', properties: { buildId: { type: 'string' } }, required: ['buildId'] }, execute: function (i) { return limitSize(toolGet(i)); } }
   ];
   function nlPrompt(text) {

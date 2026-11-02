@@ -141,6 +141,28 @@ async function conditionSearch(p) {
     await ctx.close();
   }
 
+  console.log('■ 使わないシリーズ');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 375, height: 760 });
+    await p.waitForTimeout(500);
+    await p.click('summary:has-text("くわしい条件")');
+    const lab = await p.$eval('#series-list', dl => Array.from(dl.options).map(o => o.value).find(v => v.startsWith('EXドラゴンα｜')));
+    await p.fill('#exs-input', lab);
+    await p.click('#add-exs');
+    const chips = await p.textContent('#exs-chips');
+    ok(/EXドラゴンα/.test(chips) && /EXドラゴンβ/.test(chips), 'α を選ぶと β もまとめて外す（' + chips.replace(/\s+/g, ' ') + '）');
+    await p.evaluate(() => { const o = document.createElement('option'); o.value = '5'; document.getElementById('time-limit').appendChild(o); });
+    await p.selectOption('#time-limit', '5');
+    await p.click('#go');
+    await p.waitForSelector('#go:not([disabled])', { timeout: 60000 });
+    const txt = await p.textContent('#results');
+    ok((await p.$$eval('#results .card', e => e.length)) > 0 && !/EXドラゴン/.test(txt), '外したシリーズの防具が結果に出ない');
+    const sw = await p.evaluate(() => document.documentElement.scrollWidth);
+    ok(sw <= 376, 'スマホの幅で横にはみ出さない（' + sw + 'px）');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
   console.log('■ まねた window.claude（選んだモデルがそのまま答える）');
   {
     const { p, ctx, errors } = await page(browser, { width: 800, height: 800 }, () => {

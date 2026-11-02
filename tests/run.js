@@ -189,6 +189,24 @@ section('見直しで見つかった問題が直っていること');
   }
 }
 
+{
+  // 使わないシリーズ：なかま（α・β）ごと外し、ほかのレア度 12 の防具は残す
+  section('使わないシリーズ');
+  const famOf = (ja) => E.seriesFamily(game, game.sets.find(st => st.ja === ja).id);
+  const exS = famOf('EXドラゴンα').concat(famOf('EXエスカドラα'), famOf('EX龍紋α'));
+  ok(exS.length === 6, 'EXドラゴン・EXエスカドラ・EX龍紋の α と β で 6 シリーズ（' + exS.length + '）');
+  const lsw = game.weapons.find(w => w.type === 'long-sword' && w.rarity === 12);
+  const qs = { weaponId: lsw.id, objective: 'fire', excludeSets: exS, minRarity: 10, timeLimitMs: 6000 };
+  const rs = E.search(game, qs);
+  ok(rs.builds.length > 0 && rs.builds.every(b => b.armor.every(id => exS.indexOf(I.armorById[id].set) < 0)), '外したシリーズの防具が案に入らない');
+  ok(rs.builds.some(b => b.armor.some(id => I.armorById[id].rarity === 12)), 'ほかのレア度 12 の防具は残る');
+  checkResult(rs, qs, '使わないシリーズ');
+  // 外せない防具は、使わないシリーズより強い
+  const dh = game.armors.find(a => a.set === exS[0] && a.part === 'head');
+  const rf = E.search(game, Object.assign({}, qs, { fixedArmor: { head: dh.id }, timeLimitMs: 3000 }));
+  ok(rf.builds.length > 0 && rf.builds.every(b => b.armor[0] === dh.id), '外せない防具に入れた防具は、外したシリーズでも使う');
+}
+
 // ---- 4. 小さな例で総当たりと比べる
 section('小さな例で総当たりと比べる');
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }

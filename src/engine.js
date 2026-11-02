@@ -83,6 +83,14 @@
   }
   function defOf(q, a) { return a.def[q && q.armorAugMax ? 2 : 1]; }
 
+  // シリーズの「なかま」：名前の最後の α・β・γ を除いた名前が同じで、ランクが同じシリーズ（例：EXドラゴンα と EXドラゴンβ）
+  function seriesFamily(g, setId) {
+    var I = indexGame(g);
+    var st = I.setById[setId]; if (!st) return [];
+    var base = st.ja.replace(/[αβγ]+$/, '');
+    return g.sets.filter(function (x) { return x.rank === st.rank && x.ja.replace(/[αβγ]+$/, '') === base; }).map(function (x) { return x.id; });
+  }
+
   function rankOfRarity(r) { return r <= 4 ? 'LR' : (r <= 8 ? 'HR' : 'MR'); }
 
   /* スキルの上限（極意で上がる分を含む） */
@@ -343,6 +351,7 @@
     q.skills = (q.skills || []).filter(function (x) { return x && x.lv > 0; });
     q.ranks = q.ranks && q.ranks.length ? q.ranks : ['MR'];
     q.excludeArmor = q.excludeArmor || [];
+    q.excludeSets = q.excludeSets || [];     // 使わないシリーズ（armorset の id）。そのシリーズの防具を全部外します
     q.excludeDecos = q.excludeDecos || [];
     q.excludeCharms = q.excludeCharms || [];
     q.fixedArmor = q.fixedArmor || {};
@@ -416,6 +425,8 @@
     var useDef = !!ow[1] || q.minDefense > 0 || q.minRes.some(function (x) { return x != null && x !== ''; });
 
     var ex = {}; q.excludeArmor.forEach(function (i) { ex[i] = 1; });
+    var exS = {}; q.excludeSets.forEach(function (i) { exS[i] = 1; });
+    g.armors.forEach(function (a) { if (a.set != null && exS[a.set]) ex[a.id] = 1; });
     function vecOf(skillsList) {
       var v = new Int16Array(relList.length);
       skillsList.forEach(function (x) { if (relPos[x[0]] != null) v[relPos[x[0]]] += x[1]; });
@@ -1272,7 +1283,7 @@
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
     WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
-    indexGame: indexGame, armorOf: armorOf, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
+    indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;

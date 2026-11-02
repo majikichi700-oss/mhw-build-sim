@@ -128,7 +128,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>目的 <select id="objective"><option value="fire">火力</option><option value="balance">守りとの両立</option><option value="defense">守り</option><option value="comfort">快適さ</option></select></label>
 <span><label><input type="checkbox" name="rank" value="LR">下位</label><label><input type="checkbox" name="rank" value="HR">上位</label><label><input type="checkbox" name="rank" value="MR" checked>マスターランク</label></span>
 </fieldset>
-<details><summary>くわしい条件（外せない防具・使わない防具・持っていない装飾品・防御力など）</summary>
+<details><summary>くわしい条件（外せない防具・使わない防具・使わないシリーズ・持っていない装飾品・防御力など）</summary>
 <fieldset><legend>外せない防具</legend>
 <div class="row"><input id="fixed-input" list="armor-list" placeholder="防具の名前" aria-label="外せない防具"><button type="button" id="add-fixed">追加</button></div>
 <div class="chips" id="fixed-chips"></div></fieldset>
@@ -136,6 +136,12 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <div class="row"><input id="ex-input" list="armor-list" placeholder="防具の名前" aria-label="使わない防具"><button type="button" id="add-ex">追加</button></div>
 <div class="chips" id="ex-chips"></div></fieldset>
 <datalist id="armor-list"></datalist>
+<fieldset><legend>使わないシリーズ</legend>
+<div class="row"><input id="exs-input" list="series-list" placeholder="シリーズの名前（例：EXドラゴンα）" aria-label="使わないシリーズ"><button type="button" id="add-exs">追加</button></div>
+<label><input type="checkbox" id="exs-family" checked> α・β・γ のなかまもまとめて外す（例：EXドラゴンα を選ぶと EXドラゴンβ も外す）</label>
+<datalist id="series-list"></datalist>
+<div class="chips" id="exs-chips"></div>
+<p class="muted">シリーズの防具を全部まとめて外します。レア度の上限で外すのと違い、ほかのレア度 12 の防具は残ります。外せない防具に入れた防具は、外しません。</p></fieldset>
 <fieldset><legend>持っていない装飾品</legend>
 <div class="row"><input id="exd-input" list="deco-list" placeholder="装飾品の名前" aria-label="持っていない装飾品"><button type="button" id="add-exd">追加</button></div>
 <datalist id="deco-list"></datalist>
