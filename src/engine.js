@@ -109,6 +109,8 @@
     'Offensive Guard': 0.3,    // ガードを決めたあと一定時間（ガードできる武器だけ）
     'Coalescence': 0.2,        // 状態異常などを解除したあと一定時間
     'Divine Blessing': 0.3,    // 一定の確率
+    'Dragonvein Awakening': 0.8,      // 抜刀中（v1.1。体力が減り続けるため、いつもではないと見ます）
+    'True Dragonvein Awakening': 0.8, // 同じ
     'Element Acceleration': 0.6,      // 続けて攻撃を当てたあと一定時間（v1.1）
     'True Element Acceleration': 0.6  // 同じ
   };
@@ -134,22 +136,70 @@
    * art：爆発を伴う攻撃（砲撃・竜撃砲・盾斧のビン攻撃・徹甲榴弾など。データの「砲術」の説明より）の割合。砲術だけが効くとして計算します。
    * special：ボウガンの特殊弾、弓の竜の一矢・千々矢（データの「特殊射撃強化」の説明より）の割合。
    * jump：ジャンプ攻撃（飛燕が効く）の割合。 */
-  var PARTS_DEFAULT = {
-    gunlance: { art: 0.3, special: 0, jump: 0 },
-    'charge-blade': { art: 0.2, special: 0, jump: 0 },
-    'light-bowgun': { art: 0.05, special: 0.1, jump: 0 },
-    'heavy-bowgun': { art: 0.05, special: 0.1, jump: 0 },
-    bow: { art: 0, special: 0.1, jump: 0 },
-    'insect-glaive': { art: 0, special: 0, jump: 0.5 }
+  /* ---- 武器の種類ごとの細かい決まり（v1.1。2026-11-03 に検索で調べた値。出典は README と画面の「点数の付け方」） ---- */
+  // 弾・矢の強化：通常弾・通常矢強化（通常弾・弓の連射の矢）、貫通弾・竜の一矢強化（貫通弾）、散弾・剛射強化（散弾・弓の剛射）
+  var SHOT_MUL = { 'Normal Shots': [1.1, 1.2], 'Piercing Shots': [1.1, 1.2], 'Spread/Power Shots': [1.1, 1.15] };
+  var SA_POWER_PHIAL = 1.2;                    // スラッシュアックスの強撃ビン：剣モードの物理 1.2 倍
+  var BOW_COATING = { power: 1.35, close: 1.18 }; // 弓の強撃ビン 1.35 倍・接撃ビン 1.18 倍（どちらも出典は 1 つ）
+  // 説明文に数値がなく、検索で調べた数値を使うスキル
+  var RES_EFF = {
+    'Element Acceleration': { accelElem: 60, cond: 'active' },        // 属性加速：属性値 +60（ほかに属性解放 Lv2：データの説明文）
+    'True Element Acceleration': { accelElem: 150, cond: 'active' },  // 真・属性加速：属性値 +150（ほかに属性解放 Lv3）
+    'Dragonvein Awakening': { dvAff: 20, dvElem: 80, cond: 'active' },       // 龍脈覚醒：抜刀中に会心率 +20%・属性値 +80
+    'True Dragonvein Awakening': { dvAff: 40, dvElem: 150, cond: 'active' }, // 真・龍脈覚醒：会心率 +40%・属性値 +150
+    'Non-elemental Boost': { nonElem: 1.05 }                           // 無属性強化：無属性の武器の元の攻撃力 1.05 倍（アイスボーン）
   };
-  function weaponParts(q, type) {
-    var d = PARTS_DEFAULT[type] || { art: 0, special: 0, jump: 0 };
+  // 属性値の上限（出典で食い違うため選べるようにします。はじめは「上限なし」）
+  function elemCapOf(q, base) {
+    if (q.elemCap === '1.3') return base * 1.3;
+    if (q.elemCap === '1.6') return Math.max(base * 1.6, base + 150);
+    return Infinity;
+  }
+
+  /* ---- 武器の種類ごとの「攻撃の内わけ」（判断。画面で変えられます） ----
+   * art：爆発を伴う攻撃（砲撃・竜撃砲・榴弾ビン・徹甲榴弾・竜撃弾）。砲術だけが効く固定のダメージとして計算します。
+   * phial：チャージアックスのビン爆発。榴弾ビンの武器なら art と同じ（砲術が効く）、強属性ビンの武器なら属性値で伸びる（会心は乗らない）。
+   * sword：スラッシュアックスの剣モードの割合。強撃ビンの武器なら、剣モードの物理が 1.2 倍。
+   * special：ボウガンの特殊弾、弓の竜の一矢・竜の千々矢（特殊射撃強化が効く）。
+   * jump：ジャンプ攻撃（飛燕が効く）。 power：弓の剛射（散弾・剛射強化が効く）。
+   * shot：ボウガンの主に使う弾（normal 通常弾・pierce 貫通弾・spread 散弾・sticky 徹甲榴弾・cluster 拡散弾・slicing 斬裂弾・other そのほか）。
+   * arrow：弓の主に使う矢（rapid 連射・pierce 貫通・spread 拡散）。 coating：弓のビン（none・power 強撃・close 接撃）。 */
+  var PARTS_DEFAULT = {
+    gunlance: { art: 0.3 },
+    'charge-blade': { phial: 0.2 },
+    'switch-axe': { sword: 0.5 },
+    'light-bowgun': { shot: 'normal', special: 0.1 },
+    'heavy-bowgun': { shot: 'normal', special: 0.1, art: 0.05 },
+    bow: { arrow: 'rapid', power: 0.1, special: 0.1, coating: 'none' },
+    'insect-glaive': { jump: 0.5 }
+  };
+  function weaponParts(q, wi) {
+    var type = wi && wi.type;
+    var d = PARTS_DEFAULT[type] || {};
     var o = q.parts || {};
+    var pick = function (k, def) { return o[k] != null && o[k] !== '' ? o[k] : (d[k] != null ? d[k] : def); };
     var cl = function (x) { x = +x; return isFinite(x) ? Math.max(0, Math.min(1, x)) : 0; };
-    var r = { art: cl(o.art != null ? o.art : d.art), special: cl(o.special != null ? o.special : d.special), jump: cl(o.jump != null ? o.jump : d.jump) };
-    // 爆発と特殊弾の合計が 100% を超えるときは、合計が 100% になるように縮めます（ふつうの攻撃の割合が負にならないように）
-    var sum = r.art + r.special;
-    if (sum > 1) { r.art /= sum; r.special /= sum; }
+    var r = { art: cl(pick('art', 0)), special: cl(pick('special', 0)), jump: cl(pick('jump', 0)), phial: cl(pick('phial', 0)),
+      sword: cl(pick('sword', 0)), power: type === 'bow' ? cl(pick('power', 0)) : 0, shot: String(pick('shot', '')), arrow: String(pick('arrow', '')), coating: String(pick('coating', 'none')) };
+    var ph = (wi && wi.w && wi.w.phial) || '';
+    r.phialType = ph;
+    r.artTotal = r.art; r.phialElem = 0;
+    if (type === 'charge-blade') { if (/impact/.test(ph)) r.artTotal += r.phial; else if (/element/.test(ph)) r.phialElem = r.phial; }
+    r.physConst = 1;
+    if (type === 'switch-axe' && ph === 'power') r.physConst *= 1 + r.sword * (SA_POWER_PHIAL - 1);
+    if (type === 'bow' && BOW_COATING[r.coating]) r.physConst *= BOW_COATING[r.coating];
+    r.shotKey = ''; r.noCrit = false;
+    var bowgun = type === 'light-bowgun' || type === 'heavy-bowgun';
+    if (bowgun) {
+      if (r.shot === 'normal') r.shotKey = 'N'; else if (r.shot === 'pierce') r.shotKey = 'P'; else if (r.shot === 'spread') r.shotKey = 'S';
+      else if (r.shot === 'cluster') r.noCrit = true;
+    }
+    if (type === 'bow' && r.arrow === 'rapid') r.shotKey = 'N';
+    // 合計が 100% を超えるときは、合計が 100% になるように縮めます（ふつうの攻撃の割合が負にならないように）
+    var sum = r.artTotal + r.special + r.phialElem + r.power;
+    if (sum > 1) { r.artTotal /= sum; r.special /= sum; r.phialElem /= sum; r.power /= sum; r.art = Math.min(r.art, r.artTotal); sum = 1; }
+    r.normal = Math.max(0, 1 - sum);
+    if (bowgun && r.shot === 'sticky') { r.artTotal += r.normal; r.normal = 0; } // 徹甲榴弾が主なら、ふつうの攻撃の分も砲術の効く攻撃
     return r;
   }
 
@@ -182,7 +232,9 @@
       if (ov.defense != null && ov.defense !== '') info.defense = +ov.defense;
       info.overridden = true;
     }
-    info.parts = weaponParts(q, info.type);
+    // 無属性の武器（属性も状態異常もない武器）か。無属性強化はこのときだけ効きます
+    info.noElem = !(info.elems.length || info.hidden.length) && !(w && w.elements.length);
+    info.parts = weaponParts(q, info);
     return info;
   }
 
@@ -202,10 +254,28 @@
     var nE = wi.elems.length, nH = wi.hidden.length;
     var o = { atk: 0, atkMul: 1, aff: 0, crit: 0, critElem: 0, eAdd: [0, 0], eMul: [1, 1], hAdd: [0, 0], hMul: [1, 1], hidden: 0, accelFrac: 0, accelW: 0,
       art: 1, special: 1, jump: 1, def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0,
+      shotN: 1, shotP: 1, shotS: 1, accelElem: 0, dvAff: 0, dvElem: 0, nonElem: 1,
       surv: I.survival[s.id] ? lv : 0, comf: I.comfort[s.id] ? lv : 0, fireCounted: false };
     if (s.en === 'Critical Element') o.critElem = 1;
     if (s.en === 'True Critical Element') o.critElem = 2;
     if (o.critElem && (nE || nH)) o.fireCounted = true;
+    var Pp = wi.parts || {};
+    // 弾・矢の強化（検索で調べた倍率）
+    if (SHOT_MUL[s.en]) {
+      var m0 = SHOT_MUL[s.en][Math.min(lv, SHOT_MUL[s.en].length) - 1];
+      if (s.en === 'Normal Shots') { o.shotN = m0; if (Pp.shotKey === 'N' && Pp.normal > 0) o.fireCounted = true; }
+      if (s.en === 'Piercing Shots') { o.shotP = m0; if ((Pp.shotKey === 'P' && Pp.normal > 0) || (wi.type === 'bow' && Pp.special > 0)) o.fireCounted = true; }
+      if (s.en === 'Spread/Power Shots') { o.shotS = m0; if ((Pp.shotKey === 'S' && Pp.normal > 0) || Pp.power > 0) o.fireCounted = true; }
+    }
+    // 説明文に数値がなく、検索で調べた数値を使うスキル
+    var re = RES_EFF[s.en];
+    if (re) {
+      var cwr = re.cond ? condWeight(re.cond, s, q, wi) : 1;
+      if (re.accelElem) { o.accelElem = cwr * re.accelElem; if (nE || nH) o.fireCounted = true; }
+      if (re.dvAff) { o.dvAff = cwr * re.dvAff; o.fireCounted = true; }
+      if (re.dvElem) { o.dvElem = cwr * re.dvElem; }
+      if (re.nonElem) { o.nonElem = re.nonElem; if (wi.noElem) o.fireCounted = true; }
+    }
     if (!e) return o;
     var cw = condWeight(e.cond, s, q, wi);
     if (cw > 0) {
@@ -243,12 +313,13 @@
     o.fireCounted = o.fireCounted || !!(o.atk || o.atkMul !== 1 || o.aff || o.crit ||
       (nE && (o.eAdd[0] || o.eAdd[1] || o.eMul[0] !== 1 || o.eMul[1] !== 1)) ||
       (nH && (o.hidden || o.accelFrac || o.hAdd[0] || o.hAdd[1] || o.hMul[0] !== 1 || o.hMul[1] !== 1)) ||
-      (o.art !== 1 && P.art > 0) || (o.special !== 1 && P.special > 0) || (o.jump !== 1 && P.jump > 0));
+      (o.art !== 1 && P.artTotal > 0) || (o.special !== 1 && P.special > 0) || (o.jump !== 1 && P.jump > 0 && P.normal > 0));
     return o;
   }
   function newAgg(wi) {
     return { atk: 0, atkMul: 1, aff: wi.aff, crit: 0, critElem: 0, eAdd: [0, 0], eMul: [1, 1], hAdd: [0, 0], hMul: [1, 1], hidden: 0, accelFrac: 0, accelW: 0,
-      art: 1, special: 1, jump: 1, def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0, surv: 0, comf: 0 };
+      art: 1, special: 1, jump: 1, def: 0, defMul: 1, resAll: 0, res: [0, 0, 0, 0, 0], resMul: 1, health: 0, cut: 0, surv: 0, comf: 0,
+      shotN: 1, shotP: 1, shotS: 1, accelElem: 0, dvAff: 0, dvElem: 0, nonElem: 1 };
   }
   function resetAgg(a, wi) {
     a.atk = 0; a.atkMul = 1; a.aff = wi.aff; a.crit = 0; a.critElem = 0;
@@ -256,6 +327,7 @@
     a.hidden = 0; a.accelFrac = 0; a.accelW = 0; a.art = 1; a.special = 1; a.jump = 1;
     a.def = 0; a.defMul = 1; a.resAll = 0; a.res[0] = 0; a.res[1] = 0; a.res[2] = 0; a.res[3] = 0; a.res[4] = 0;
     a.resMul = 1; a.health = 0; a.cut = 0; a.surv = 0; a.comf = 0;
+    a.shotN = 1; a.shotP = 1; a.shotS = 1; a.accelElem = 0; a.dvAff = 0; a.dvElem = 0; a.nonElem = 1;
   }
   function addContrib(a, o) {
     a.atk += o.atk; a.atkMul *= o.atkMul; a.aff += o.aff; if (o.crit > a.crit) a.crit = o.crit; if (o.critElem > a.critElem) a.critElem = o.critElem;
@@ -267,42 +339,60 @@
     a.def += o.def; a.defMul *= o.defMul; a.resAll += o.resAll;
     for (var i = 0; i < 5; i++) a.res[i] += o.res[i];
     a.resMul *= o.resMul; a.health += o.health; if (o.cut > a.cut) a.cut = o.cut; a.surv += o.surv; a.comf += o.comf;
+    if (o.shotN > a.shotN) a.shotN = o.shotN; if (o.shotP > a.shotP) a.shotP = o.shotP; if (o.shotS > a.shotS) a.shotS = o.shotS;
+    if (o.accelElem > a.accelElem) a.accelElem = o.accelElem; if (o.dvAff > a.dvAff) a.dvAff = o.dvAff; if (o.dvElem > a.dvElem) a.dvElem = o.dvElem;
+    if (o.nonElem > a.nonElem) a.nonElem = o.nonElem;
   }
   // 足し合わせた効果から、火力点・守り点・快適点を出します
   function evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, wantDetail) {
+    var P = wi.parts;
     var critBase = g._critBase || 1.25;
     var critMul = a.crit || critBase;
-    var affC = a.aff > 100 ? 100 : (a.aff < -100 ? -100 : a.aff);
+    var affT = a.aff + a.dvAff;                       // 龍脈覚醒の会心率も足します
+    var affC = affT > 100 ? 100 : (affT < -100 ? -100 : affT);
     var critF = affC >= 0 ? 1 + affC / 100 * (critMul - 1) : 1 + affC / 100 * NEG_CRIT;
-    var phys = (wi.raw + a.atk) * a.atkMul * critF;
     var aff0 = wi.aff > 100 ? 100 : (wi.aff < -100 ? -100 : wi.aff);
-    var phys0 = wi.raw * (aff0 >= 0 ? 1 + aff0 / 100 * (critBase - 1) : 1 + aff0 / 100 * NEG_CRIT);
+    var critF0 = aff0 >= 0 ? 1 + aff0 / 100 * (critBase - 1) : 1 + aff0 / 100 * NEG_CRIT;
+    // 物理：無属性強化は無属性の武器の元の攻撃力にかけます。強撃ビン（スラアク）・弓のビンは、物理にかかるいつもの倍率です
+    var rawB = wi.raw * (wi.noElem ? a.nonElem : 1);
+    var physNC = (rawB + a.atk) * a.atkMul * P.physConst, phys = physNC * critF;
+    var phys0NC = wi.raw * P.physConst, phys0 = phys0NC * critF0;
     // 属性：会心撃【属性】があれば、会心が出たときに武器の種類ごとの倍率がかかります（マイナス会心では属性は変わらないとして計算）
     var ceF = (a.critElem && affC > 0) ? 1 + affC / 100 * (critElemMul(wi.type, a.critElem) - 1) : 1;
     var ew = q.elemWeight == null ? 1 : +q.elemWeight;
-    var elem = 0, elem0 = 0, elemShown = [];
+    var elem = 0, elem0 = 0, elemNC = 0, elemNC0 = 0, elemShown = [];
     var nE = wi.elems.length, nH = wi.hidden.length;
+    var addE = a.accelElem + a.dvElem;                // 属性加速・龍脈覚醒の属性値（属性のある武器だけ）
     for (var j = 0; j < nE; j++) {
-      var v = wi.elems[j][1] * a.eMul[j] + a.eAdd[j];
+      var b0 = wi.elems[j][1];
+      var v = Math.min(b0 * a.eMul[j] + a.eAdd[j] + addE, elemCapOf(q, b0));
       elemShown.push([wi.elems[j][0], v]);
-      elem += v / ELEM_DIV / wi.elemDiv * ceF * ew; elem0 += wi.elems[j][1] / ELEM_DIV / wi.elemDiv * ew;
+      elem += v / ELEM_DIV / wi.elemDiv * ceF * ew; elem0 += b0 / ELEM_DIV / wi.elemDiv * ew;
+      elemNC += v; elemNC0 += b0;
     }
     // 隠し属性：属性解放（データ：Lv1 で 1/3、Lv2 で 2/3、Lv3 で全部）と属性加速（データ：属性解放 Lv2・Lv3 として働く）
     var hf = a.hidden;
     if (a.accelFrac > hf) hf = hf + a.accelW * (a.accelFrac - hf);
     for (var k = 0; k < nH; k++) {
       if (hf <= 0) { elemShown.push([wi.hidden[k][0], 0]); continue; }
-      var hv = wi.hidden[k][1] * hf * a.hMul[k] + a.hAdd[k];
+      var hb = wi.hidden[k][1];
+      var hv = Math.min(hb * hf * a.hMul[k] + a.hAdd[k] + addE, elemCapOf(q, hb));
       elemShown.push([wi.hidden[k][0], hv]);
       elem += hv / ELEM_DIV / wi.elemDiv * ceF * ew;
+      elemNC += hv;
     }
-    var hit = phys + elem, hit0 = phys0 + elem0;
-    var P = wi.parts;
-    var normal = 1 - P.art - P.special;
-    var ratio = hit / hit0;
-    var fire = 100 * (normal * ratio * (1 + P.jump * (a.jump - 1)) + P.art * a.art + P.special * a.special * ratio);
+    // 攻撃の内わけごとの伸び方
+    var shotOf = function (key) { return key === 'N' ? a.shotN : key === 'P' ? a.shotP : key === 'S' ? a.shotS : 1; };
+    var physN = P.noCrit ? physNC : phys, physN0 = P.noCrit ? phys0NC : phys0;
+    var hit0 = physN0 + elem0;
+    var rN = hit0 > 0 ? (physN * shotOf(P.shotKey) + elem) / hit0 : 1;            // ふつうの攻撃（弾・矢の強化も）
+    var rPow = (phys0 + elem0) > 0 ? (phys * a.shotS + elem) / (phys0 + elem0) : 1; // 弓の剛射（散弾・剛射強化）
+    var rPE = elemNC0 > 0 ? elemNC / elemNC0 : 1;                                  // 強属性ビンの爆発（属性値で伸びる、会心なし）
+    // 特殊弾・竜の一矢：特殊射撃強化。弓の竜の一矢には貫通弾・竜の一矢強化も効く（調べた結果）。ボウガンの特殊弾には弾の強化は効かない
+    var rS = hit0 > 0 ? (physN * (wi.type === 'bow' ? a.shotP : 1) + elem) / hit0 : 1;
+    var fire = 100 * (P.normal * rN * (1 + P.jump * (a.jump - 1)) + P.power * rPow + P.artTotal * a.art + P.special * a.special * rS + P.phialElem * rPE);
     // 武器もおまかせで探すとき：武器どうしを比べられるように、基準の武器（候補で一番強い武器）のスキルなしの期待値を 100 とします
-    if (q.fireRef) fire = fire * hit0 / q.fireRef;
+    if (q.fireRef) fire = fire * (phys0 + elem0) / q.fireRef;
     var defense = (baseDef + wi.defense) * a.defMul + a.def;
     var r0 = (baseRes[0] + a.resAll + a.res[0]) * a.resMul, r1 = (baseRes[1] + a.resAll + a.res[1]) * a.resMul, r2 = (baseRes[2] + a.resAll + a.res[2]) * a.resMul,
       r3 = (baseRes[3] + a.resAll + a.res[3]) * a.resMul, r4 = (baseRes[4] + a.resAll + a.res[4]) * a.resMul;
@@ -316,7 +406,8 @@
     return {
       total: total, fire: fire, def: def, comfort: comfort,
       detail: { phys: phys, phys0: phys0, elem: elem, elem0: elem0, elemShown: elemShown, critElem: a.critElem ? critElemMul(wi.type, a.critElem) : 0, hiddenFrac: hf,
-        raw: wi.raw + a.atk, atkMul: a.atkMul, affinity: a.aff, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
+        raw: rawB + a.atk, atkMul: a.atkMul, affinity: affT, critMul: critMul, art: a.art, special: a.special, jump: a.jump, parts: P, elemWeight: ew,
+        shotN: a.shotN, shotP: a.shotP, shotS: a.shotS, nonElem: wi.noElem && a.nonElem > 1 ? a.nonElem : 0, elemCap: q.elemCap || '',
         defense: defense, defBase: baseDef + wi.defense, res: [r0, r1, r2, r3, r4], health: a.health, cut: a.cut, survLv: a.surv, comfortLv: a.comf, spareP: spareP }
     };
   }
@@ -649,14 +740,18 @@
     }
     // 速くするため、効果を「欄の番号・値・足し方」の短い一覧にして、数の配列に足し込みます（足し方は addContrib と同じ）
     var F = ['atk', 'atkMul', 'aff', 'crit', 'critElem', 'eAdd0', 'eAdd1', 'eMul0', 'eMul1', 'hAdd0', 'hAdd1', 'hMul0', 'hMul1', 'hidden', 'accelFrac', 'accelW',
-      'art', 'special', 'jump', 'def', 'defMul', 'resAll', 'r0', 'r1', 'r2', 'r3', 'r4', 'resMul', 'health', 'cut', 'surv', 'comf'];
-    var OP = { atkMul: 'mul', eMul0: 'mul', eMul1: 'mul', hMul0: 'mul', hMul1: 'mul', defMul: 'mul', resMul: 'mul', crit: 'max', critElem: 'max', hidden: 'max', art: 'max', special: 'max', jump: 'max', cut: 'max', accelFrac: 'acc', accelW: 'skip' };
+      'art', 'special', 'jump', 'def', 'defMul', 'resAll', 'r0', 'r1', 'r2', 'r3', 'r4', 'resMul', 'health', 'cut', 'surv', 'comf',
+      'shotN', 'shotP', 'shotS', 'accelElem', 'dvAff', 'dvElem', 'nonElem'];
+    var OP = { atkMul: 'mul', eMul0: 'mul', eMul1: 'mul', hMul0: 'mul', hMul1: 'mul', defMul: 'mul', resMul: 'mul', crit: 'max', critElem: 'max', hidden: 'max', art: 'max', special: 'max', jump: 'max', cut: 'max', accelFrac: 'acc', accelW: 'skip',
+      shotN: 'max', shotP: 'max', shotS: 'max', accelElem: 'max', dvAff: 'max', dvElem: 'max', nonElem: 'max' };
+    var ONE = { art: 1, special: 1, jump: 1, shotN: 1, shotP: 1, shotS: 1, nonElem: 1 };
     var NEUTRAL = new Float64Array(F.length);
-    F.forEach(function (f, i) { NEUTRAL[i] = OP[f] === 'mul' || f === 'art' || f === 'special' || f === 'jump' ? 1 : 0; });
+    F.forEach(function (f, i) { NEUTRAL[i] = OP[f] === 'mul' || ONE[f] ? 1 : 0; });
     function flat(o) {
       return { atk: o.atk, atkMul: o.atkMul, aff: o.aff, crit: o.crit, critElem: o.critElem, eAdd0: o.eAdd[0], eAdd1: o.eAdd[1], eMul0: o.eMul[0], eMul1: o.eMul[1],
         hAdd0: o.hAdd[0], hAdd1: o.hAdd[1], hMul0: o.hMul[0], hMul1: o.hMul[1], hidden: o.hidden, accelFrac: o.accelFrac, accelW: o.accelW, art: o.art, special: o.special, jump: o.jump,
-        def: o.def, defMul: o.defMul, resAll: o.resAll, r0: o.res[0], r1: o.res[1], r2: o.res[2], r3: o.res[3], r4: o.res[4], resMul: o.resMul, health: o.health, cut: o.cut, surv: o.surv, comf: o.comf };
+        def: o.def, defMul: o.defMul, resAll: o.resAll, r0: o.res[0], r1: o.res[1], r2: o.res[2], r3: o.res[3], r4: o.res[4], resMul: o.resMul, health: o.health, cut: o.cut, surv: o.surv, comf: o.comf,
+        shotN: o.shotN, shotP: o.shotP, shotS: o.shotS, accelElem: o.accelElem, dvAff: o.dvAff, dvElem: o.dvElem, nonElem: o.nonElem };
     }
     // S[i][lv] = [欄の番号, 値, 種類(0 足す・1 かける・2 大きい方・3 属性加速), ...]
     var S = T.map(function (arr) {
@@ -695,6 +790,7 @@
       a.hidden = ACC[13]; a.accelFrac = ACC[14]; a.accelW = ACC[15]; a.art = ACC[16]; a.special = ACC[17]; a.jump = ACC[18];
       a.def = ACC[19]; a.defMul = ACC[20]; a.resAll = ACC[21]; a.res[0] = ACC[22]; a.res[1] = ACC[23]; a.res[2] = ACC[24]; a.res[3] = ACC[25]; a.res[4] = ACC[26];
       a.resMul = ACC[27]; a.health = ACC[28]; a.cut = ACC[29]; a.surv = ACC[30]; a.comf = ACC[31];
+      a.shotN = ACC[32]; a.shotP = ACC[33]; a.shotS = ACC[34]; a.accelElem = ACC[35]; a.dvAff = ACC[36]; a.dvElem = ACC[37]; a.nonElem = ACC[38];
       return evalAgg(g, q, wi, a, spare, nSpare, baseDef, baseRes, false);
     }
     // 点数を下げることがあるスキル（全属性耐性強化：耐性がマイナスだと、もっとマイナスになる）の位置
@@ -1325,6 +1421,7 @@
     if (q.parts) m.parts = q.parts;
     if (q.elemWeight != null && +q.elemWeight !== 1) m.elemWeight = +q.elemWeight;
     if (q.fireRef) m.fireRef = q.fireRef;
+    if (q.elemCap) m.elemCap = q.elemCap;
     return Object.keys(m).length ? m : null;
   }
   function evaluateBuild(g, spec, q0) {
@@ -1361,7 +1458,7 @@
 
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
-    WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
+    WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, SHOT_MUL: SHOT_MUL, RES_EFF: RES_EFF, BOW_COATING: BOW_COATING, SA_POWER_PHIAL: SA_POWER_PHIAL, weaponParts: weaponParts, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
     indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, weaponCandidates: weaponCandidates, weaponSeriesLabel: weaponSeriesLabel, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };

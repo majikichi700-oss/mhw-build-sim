@@ -149,9 +149,20 @@
   }
   function partsText(d) {
     var P = d.parts || {}, out = [];
-    if (P.art > 0) out.push('爆発を伴う攻撃 ' + Math.round(P.art * 100) + '%（砲術 ' + fmt(d.art, 2) + ' 倍）');
+    var SHOT = { normal: '通常弾', pierce: '貫通弾', spread: '散弾', sticky: '徹甲榴弾', cluster: '拡散弾', slicing: '斬裂弾', other: 'そのほかの弾' };
+    var ARROW = { rapid: '連射の矢', pierce: '貫通の矢', spread: '拡散の矢' };
+    var keyMul = { N: d.shotN, P: d.shotP, S: d.shotS };
+    if (P.shot && SHOT[P.shot]) out.push('主な弾：' + SHOT[P.shot] + (P.shotKey ? '（弾の強化 ' + fmt(keyMul[P.shotKey] || 1, 2) + ' 倍）' : '') + (P.noCrit ? '（会心なし）' : ''));
+    if (P.arrow && ARROW[P.arrow]) out.push('主な矢：' + ARROW[P.arrow] + (P.shotKey ? '（通常弾・通常矢強化 ' + fmt(d.shotN || 1, 2) + ' 倍）' : ''));
+    if (P.coating && P.coating !== 'none') out.push('ビン：' + (P.coating === 'power' ? '強撃ビン' : '接撃ビン'));
+    if (P.sword > 0 && P.phialType === 'power') out.push('剣モード ' + Math.round(P.sword * 100) + '%（強撃ビンで物理 1.2 倍）');
+    if (P.artTotal > 0) out.push('爆発する攻撃 ' + Math.round(P.artTotal * 100) + '%（砲術 ' + fmt(d.art, 2) + ' 倍）');
+    if (P.phialElem > 0) out.push('強属性ビンの爆発 ' + Math.round(P.phialElem * 100) + '%（属性値で伸びる）');
+    if (P.power > 0) out.push('剛射 ' + Math.round(P.power * 100) + '%（散弾・剛射強化 ' + fmt(d.shotS || 1, 2) + ' 倍）');
     if (P.special > 0) out.push('特殊弾など ' + Math.round(P.special * 100) + '%（' + fmt(d.special, 2) + ' 倍）');
     if (P.jump > 0) out.push('ジャンプ攻撃 ' + Math.round(P.jump * 100) + '%（飛燕 ' + fmt(d.jump, 2) + ' 倍）');
+    if (d.nonElem) out.push('無属性強化（元の攻撃力 ' + d.nonElem + ' 倍）');
+    if (d.elemCap) out.push('属性値の上限：' + (d.elemCap === '1.3' ? '元の 1.3 倍' : '元の 1.6 倍か +150'));
     return out.length ? '<tr><th>　攻撃の内わけ</th><td>' + out.join('、') + '</td></tr>' : '';
   }
   function modsText(m) {
@@ -307,13 +318,18 @@
   });
   $('#wx-chips').addEventListener('click', function (ev) { var d = ev.target.dataset || {}; if (d.rmWx != null) { excludeWSeries.splice(+d.rmWx, 1); renderWx(); fillWeapons(); } });
   ['#wx-kulve', '#wx-safi'].forEach(function (k) { $(k).addEventListener('change', fillWeapons); });
+  // 武器の種類ごとの計算：その種類に関わる欄だけを出し、作者が決めた初めの値に戻します
   function resetParts() {
-    var d = E.PARTS_DEFAULT[wtSel.value] || { art: 0, special: 0, jump: 0 };
-    $('#part-art').value = Math.round(d.art * 100); $('#part-special').value = Math.round(d.special * 100); $('#part-jump').value = Math.round(d.jump * 100);
+    var t = wtSel.value, d = E.PARTS_DEFAULT[t] || {};
+    var pct = function (x) { return Math.round((x || 0) * 100); };
+    $('#part-art').value = pct(d.art); $('#part-special').value = pct(d.special); $('#part-jump').value = pct(d.jump);
+    $('#part-phial').value = pct(d.phial); $('#part-sword').value = pct(d.sword); $('#part-power').value = pct(d.power);
+    $('#part-shot').value = d.shot || 'normal'; $('#part-arrow').value = d.arrow || 'rapid'; $('#part-coating').value = d.coating || 'none';
+    Array.prototype.forEach.call(document.querySelectorAll('#parts-rows [data-wt]'), function (el) { el.hidden = el.dataset.wt.split(' ').indexOf(t) < 0; });
   }
   wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); clearWeaponOverride(); });
   // 武器を変えたら、前の武器のために入れたカスタム強化の数値を消します
-  function clearWeaponOverride() { ['#wo-attack', '#wo-aff', '#wo-eval', '#wo-def'].forEach(function (k) { $(k).value = ''; }); $('#wo-etype').value = ''; $('#wo-s1').value = ''; $('#wo-s2').value = '0'; $('#wo-s3').value = '0'; }
+  function clearWeaponOverride() { ['#wo-attack', '#wo-aff', '#wo-eval', '#wo-def'].forEach(function (k) { $(k).value = ''; }); $('#wo-etype').value = ''; $('#wo-s1').value = ''; $('#wo-s2').value = '0'; $('#wo-s3').value = '0'; $('#aug-atk').value = '0'; $('#aug-aff').value = '0'; $('#aug-note').textContent = ''; }
   wSel.addEventListener('change', function () { weaponModeUi(); clearWeaponOverride(); });
   form.querySelectorAll('input[name=rank]').forEach(function (x) { x.addEventListener('change', fillWeapons); });
 
@@ -339,10 +355,6 @@
     }).join('') || '<span class="muted">まだありません</span>';
     $('#fixed-chips').innerHTML = Object.keys(fixedArmor).map(function (p) { return '<span class="chip">' + E.PART_JA[p] + '：' + esc(armorName(fixedArmor[p])) + '<button type="button" data-rm-fixed="' + p + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#ex-chips').innerHTML = excludeArmor.map(function (id, i) { return '<span class="chip">' + esc(armorName(id)) + '<button type="button" data-rm-ex="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
-    $('#ao-chips').innerHTML = Object.keys(armorOverrides).map(function (id) {
-      var o = armorOverrides[id];
-      return '<span class="chip">' + esc(armorName(+id)) + '：スロット ' + (o.slots ? slotsLabel(o.slots) : 'データのまま') + (o.addSkills && o.addSkills.length ? '、' + o.addSkills.map(function (x) { return esc(skillName(x[0])) + '+' + x[1]; }).join('・') : '') + '<button type="button" data-rm-ao="' + id + '" aria-label="外す">×</button></span>';
-    }).join('') || '<span class="muted">なし</span>';
     $('#exs-chips').innerHTML = excludeSets.map(function (id, i) { var st = I.setById[id]; return '<span class="chip">' + esc(st.ja) + '<span class="muted">（' + esc(E.RANK_JA[st.rank] || '') + '）</span><button type="button" data-rm-exs="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
     $('#exd-chips').innerHTML = excludeDecos.map(function (id, i) { return '<span class="chip">' + esc(decoName(id)) + '<button type="button" data-rm-exd="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
   }
@@ -352,7 +364,6 @@
     if (d.rmFixed != null) { delete fixedArmor[d.rmFixed]; renderChips(); }
     if (d.rmEx != null) { excludeArmor.splice(+d.rmEx, 1); renderChips(); }
     if (d.rmExd != null) { excludeDecos.splice(+d.rmExd, 1); renderChips(); }
-    if (d.rmAo != null) { delete armorOverrides[d.rmAo]; renderChips(); }
     if (d.rmExs != null) { excludeSets.splice(+d.rmExs, 1); renderChips(); }
   });
   form.addEventListener('change', function (ev) { var t = ev.target; if (t.dataset && t.dataset.lv != null) chosenSkills[+t.dataset.lv].lv = +t.value; });
@@ -365,16 +376,6 @@
   });
   $('#add-fixed').addEventListener('click', function () { var id = idFromLabel($('#fixed-input').value); if (id != null && I.armorById[id]) { fixedArmor[I.armorById[id].part] = id; $('#fixed-input').value = ''; renderChips(); } });
   $('#add-ex').addEventListener('click', function () { var id = idFromLabel($('#ex-input').value); if (id != null && I.armorById[id] && excludeArmor.indexOf(id) < 0) { excludeArmor.push(id); $('#ex-input').value = ''; renderChips(); } });
-  $('#add-ao').addEventListener('click', function () {
-    var id = idFromLabel($('#ao-input').value); if (id == null || !I.armorById[id]) return;
-    var o = {};
-    // スロットが「データのまま」なら、スロットは変えません
-    if ($('#ao-s1').value !== '') o.slots = [+$('#ao-s1').value, +$('#ao-s2').value, +$('#ao-s3').value].filter(function (x) { return x > 0; }).sort(function (a, b) { return b - a; });
-    var sk = findSkillByName($('#ao-skill').value);
-    if (sk) o.addSkills = [[sk.id, +$('#ao-lv').value]];
-    if (!o.slots && !o.addSkills) return;
-    armorOverrides[id] = o; $('#ao-input').value = ''; $('#ao-skill').value = ''; renderChips();
-  });
   $('#add-exs').addEventListener('click', function () {
     var id = idFromLabel($('#exs-input').value); if (id == null || !I.setById[id]) return;
     var ids = $('#exs-family').checked ? E.seriesFamily(GAME, id) : [id];
@@ -396,11 +397,35 @@
       uptimeScale: +$('#uptime').value, timeLimitMs: +$('#time-limit').value * 1000,
       untilDone: $('#time-limit').value === '0', minRarity: +$('#min-rarity').value,
       elemWeight: +$('#elem-weight').value,
-      parts: { art: (+$('#part-art').value || 0) / 100, special: (+$('#part-special').value || 0) / 100, jump: (+$('#part-jump').value || 0) / 100 },
+      parts: partsOf(), elemCap: $('#elem-cap').value || '',
       weaponOverride: weaponOverride(), armorAugMax: $('#armor-augmax').checked,
-      armorOverrides: Object.keys(armorOverrides).length ? JSON.parse(JSON.stringify(armorOverrides)) : null
+      armorOverrides: null
     };
   }
+  function partsOf() {
+    var t = wtSel.value, has = function (id) { var el = document.querySelector('#parts-rows [data-wt] #' + id); return el && !el.closest('[data-wt]').hidden; };
+    var n = function (id) { return has(id) ? (+$('#' + id).value || 0) / 100 : 0; };
+    var o = { art: n('part-art'), special: n('part-special'), jump: n('part-jump'), phial: n('part-phial'), sword: n('part-sword'), power: n('part-power') };
+    if (t === 'light-bowgun' || t === 'heavy-bowgun') o.shot = $('#part-shot').value;
+    if (t === 'bow') { o.arrow = $('#part-arrow').value; o.coating = $('#part-coating').value; }
+    return o;
+  }
+  // カスタム強化の回数から、表示攻撃力と会心率を出します（調べた結果：攻撃力強化 1 回で基礎攻撃力 +5、会心率強化は 1 回目 +10%・2 回目から +5%）
+  var AUG_CAP = { 10: 10, 11: 8, 12: 6 };          // 枠を広げたあとの最大の枠（レア度ごと、調べた結果）
+  var AUG_ATK_COST = [0, 3, 5, 7, 9];              // 攻撃力強化の累計の枠（調べた結果）
+  function applyAug() {
+    var w = wSel.value && wSel.value !== 'auto' ? I.weaponById[+wSel.value] : null;
+    var na = +$('#aug-atk').value, nc = +$('#aug-aff').value;
+    if (!w) { $('#aug-note').textContent = na || nc ? '武器を 1 本選んだときだけ使えます。' : ''; return; }
+    if (na || nc) {
+      $('#wo-attack').value = Math.round(w.attack + na * 5 * E.WEAPON_BLOAT[w.type]);
+      $('#wo-aff').value = w.affinity + (nc >= 1 ? 10 : 0) + Math.max(0, nc - 1) * 5;
+    } else { $('#wo-attack').value = ''; $('#wo-aff').value = ''; }
+    var used = AUG_ATK_COST[na] + (nc >= 1 ? 2 : 0);
+    var cap = AUG_CAP[w.rarity];
+    $('#aug-note').textContent = cap ? '使う枠：' + used + (nc >= 2 ? ' ＋ 会心率強化の 2 回目から（枠の数は調べきれませんでした）' : '') + '（レア度 ' + w.rarity + ' の最大は ' + cap + ' 枠）' + (used > cap ? ' ⚠ 枠が足りません' : '') : 'この武器のレア度の枠の数は調べられていません';
+  }
+  ['#aug-atk', '#aug-aff'].forEach(function (k) { $(k).addEventListener('change', applyAug); });
   function weaponOverride() {
     if (!wSel.value || wSel.value === 'auto') return null;
     var o = {};

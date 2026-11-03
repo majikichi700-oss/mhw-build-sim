@@ -115,12 +115,10 @@ async function conditionSearch(p) {
     await p.fill('#wo-attack', '1000');
     await p.selectOption('#wo-s1', '4'); await p.selectOption('#wo-s2', '4'); await p.selectOption('#wo-s3', '2');
     await p.check('#armor-augmax');
-    // 強化した防具：スロットは「データのまま」、スキルだけ足す
-    const label = await p.$eval('#armor-list', dl => Array.from(dl.options).map(o => o.value).find(v => /｜頭｜マスターランク｜/.test(v)));
-    await p.fill('#ao-input', label);
-    await p.fill('#ao-skill', '攻撃'); await p.selectOption('#ao-lv', '1');
-    await p.click('#add-ao');
-    ok(/データのまま/.test(await p.textContent('#ao-chips')), '強化した防具のスロットを「データのまま」にできる');
+    // カスタム強化の回数から数値が入る（攻撃力強化Ⅱ：基礎攻撃力 +10）
+    await p.selectOption('#aug-atk', '2');
+    ok((await p.inputValue('#wo-attack')) !== '' && /使う枠：5/.test(await p.textContent('#aug-note')), '攻撃力強化Ⅱで、表示攻撃力と使う枠（5）が入る');
+    await p.fill('#wo-attack', '1000');
     await p.evaluate(() => { const o = document.createElement('option'); o.value = '5'; document.getElementById('time-limit').appendChild(o); });
     await p.selectOption('#time-limit', '5');
     await p.click('#go');
@@ -159,6 +157,22 @@ async function conditionSearch(p) {
     ok((await p.$$eval('#results .card', e => e.length)) > 0 && !/EXドラゴン/.test(txt), '外したシリーズの防具が結果に出ない');
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);
     ok(sw <= 376, 'スマホの幅で横にはみ出さない（' + sw + 'px）');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
+  console.log('■ 武器の種類ごとの計算の欄');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 800, height: 900 });
+    await p.waitForTimeout(400);
+    await p.selectOption('#weapon-type', 'heavy-bowgun');
+    const vis = async (id) => p.$eval('#' + id, el => !el.closest('[data-wt]').hidden);
+    ok(await vis('part-shot') && !(await vis('part-arrow')) && !(await vis('part-phial')), 'ヘビィボウガンでは「主に使う弾」が出て、弓・チャアクの欄は出ない');
+    await p.selectOption('#weapon-type', 'charge-blade');
+    ok(await vis('part-phial') && !(await vis('part-shot')), 'チャージアックスでは「ビンの爆発の割合」が出る');
+    ok((await p.inputValue('#part-phial')) === '20', 'ビンの爆発の初めの割合は 20%');
+    await p.selectOption('#weapon-type', 'bow');
+    ok(await vis('part-arrow') && await vis('part-coating') && await vis('part-power'), '弓では矢・ビン・剛射の欄が出る');
     ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
     await ctx.close();
   }

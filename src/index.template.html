@@ -20,7 +20,9 @@ p{margin:.5em 0}
 .lead{color:var(--muted)}
 nav.jump{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
 nav.jump a{padding:4px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none;background:var(--card);font-size:.9rem}
-fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:var(--card)}
+fieldset{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:var(--card);min-width:0}
+label select,label input{max-width:100%;min-width:0}
+#parts-rows label{max-width:100%}
 legend{padding:0 6px;font-weight:600}
 label{display:inline-flex;align-items:center;gap:6px;margin:4px 12px 4px 0;flex-wrap:wrap}
 input,select,button,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%}
@@ -165,17 +167,29 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 </fieldset>
 <fieldset><legend>属性と、武器の種類ごとの計算</legend>
 <label>属性の重み <select id="elem-weight"><option value="0.5">0.5 倍</option><option value="1" selected>1 倍（はじめ）</option><option value="1.5">1.5 倍</option><option value="2">2 倍</option><option value="3">3 倍</option></select></label>
-<p class="muted">属性ダメージを物理ダメージと比べてどれだけ重く見るかです。手数（攻撃の回数）が多い武器や、属性がよく効くモンスターでは大きくしてください。会心撃【属性】・真・会心撃【属性】（調べた倍率）、属性解放と属性加速による隠し属性は、いつも計算に入ります。</p>
-<div class="row">
-<label>爆発を伴う攻撃の割合（砲術が効く） <input type="number" id="part-art" min="0" max="90" step="5">%</label>
-<label>特殊弾・竜の一矢・竜の千々矢の割合（特殊射撃強化が効く） <input type="number" id="part-special" min="0" max="90" step="5">%</label>
-<label>ジャンプ攻撃の割合（飛燕が効く） <input type="number" id="part-jump" min="0" max="100" step="5">%</label>
+<label>属性値の上限 <select id="elem-cap"><option value="" selected>なし（はじめ）</option><option value="1.3">元の属性値の 1.3 倍</option><option value="1.6">元の 1.6 倍か +150 の大きいほう</option></select></label>
+<p class="muted">属性の重みは、属性ダメージを物理と比べてどれだけ重く見るかです。手数（攻撃の回数）が多い武器や、属性がよく効く相手では大きくしてください。属性値の上限は、調べた出典で「1.3 倍」と「1.6 倍か +150」が食い違っていたため、選べるようにしました。会心撃【属性】、属性解放と属性加速による隠し属性、属性加速・龍脈覚醒の属性値は、いつも計算に入ります。</p>
+<div class="row" id="parts-rows">
+<label data-wt="gunlance heavy-bowgun light-bowgun">砲撃・竜撃砲・徹甲榴弾・竜撃弾など、爆発する攻撃の割合（砲術が効く） <input type="number" id="part-art" min="0" max="90" step="5">%</label>
+<label data-wt="charge-blade">ビンの爆発の割合（榴弾ビンの武器は砲術が効き、強属性ビンの武器は属性値で伸びる） <input type="number" id="part-phial" min="0" max="90" step="5">%</label>
+<label data-wt="switch-axe">剣モードの割合（強撃ビンの武器なら、剣モードの物理が 1.2 倍） <input type="number" id="part-sword" min="0" max="100" step="5">%</label>
+<label data-wt="light-bowgun heavy-bowgun">主に使う弾 <select id="part-shot"><option value="normal">通常弾（通常弾・通常矢強化が効く）</option><option value="pierce">貫通弾（貫通弾・竜の一矢強化が効く）</option><option value="spread">散弾（散弾・剛射強化が効く）</option><option value="sticky">徹甲榴弾（砲術が効く。会心は乗らない）</option><option value="cluster">拡散弾（会心は乗らない。砲術は効かない）</option><option value="slicing">斬裂弾（弾の強化は効かない）</option><option value="other">そのほか（属性弾など。弾の強化は数えない）</option></select></label>
+<label data-wt="bow">主に使う矢 <select id="part-arrow"><option value="rapid">連射（通常弾・通常矢強化が効く）</option><option value="pierce">貫通（弾の強化は数えない）</option><option value="spread">拡散（弾の強化は数えない）</option></select></label>
+<label data-wt="bow">剛射の割合（散弾・剛射強化が効く） <input type="number" id="part-power" min="0" max="90" step="5">%</label>
+<label data-wt="bow">ビン <select id="part-coating"><option value="none">なし</option><option value="power">強撃ビン（物理 1.35 倍）</option><option value="close">接撃ビン（物理 1.18 倍）</option></select></label>
+<label data-wt="light-bowgun heavy-bowgun bow">特殊弾・竜の一矢・竜の千々矢の割合（特殊射撃強化が効く） <input type="number" id="part-special" min="0" max="90" step="5">%</label>
+<label data-wt="insect-glaive great-sword long-sword sword-and-shield dual-blades hammer hunting-horn lance gunlance switch-axe charge-blade">ジャンプ攻撃の割合（飛燕が効く） <input type="number" id="part-jump" min="0" max="100" step="5">%</label>
 </div>
-<p class="muted">武器の種類を変えると、作者が決めた初めの値に戻ります（ガンランスは爆発 30%、チャージアックスは爆発 20%、ボウガンは爆発 5%・特殊弾 10%、弓は竜の一矢など 10%、操虫棍はジャンプ 50%）。この割合はゲームのデータではなく、計算のための見込みです。</p>
+<p class="muted">武器の種類を変えると、作者が決めた初めの値に戻ります。割合はゲームのデータではなく、計算のための見込みです。どの攻撃にどのスキルが効くかと倍率は、検索で調べた結果です（「点数の付け方」に出典があります）。</p>
 </fieldset>
-<fieldset><legend>カスタム強化（ゲームの画面で見た数値を入れる）</legend>
-<p class="muted">カスタム強化の決まり（強化できる回数・上がる量）は調べきれなかったため、強化や覚醒のあとにゲームの画面に出る数値を、そのまま入れてください。空のところは、データの数値を使います。</p>
+<fieldset><legend>カスタム強化</legend>
+<p class="muted">武器のカスタム強化は、調べた結果（攻撃力強化は 1 回で基礎攻撃力 +5、会心率強化は 1 回目 +10%・2 回目から +5%）で数値を入れられます。覚醒武器など、ほかの強化は、ゲームの画面に出る数値をそのまま入れてください。空のところは、データの数値を使います。</p>
 <div class="row"><span class="muted">選んだ武器：</span>
+<label>攻撃力強化 <select id="aug-atk"><option value="0">なし</option><option value="1">Ⅰ</option><option value="2">Ⅱ</option><option value="3">Ⅲ</option><option value="4">Ⅳ</option></select></label>
+<label>会心率強化 <select id="aug-aff"><option value="0">なし</option><option value="1">1 回</option><option value="2">2 回</option><option value="3">3 回</option></select></label>
+<span class="muted" id="aug-note"></span>
+</div>
+<div class="row">
 <label>表示攻撃力 <input type="number" id="wo-attack" min="0" step="1" placeholder="データのまま"></label>
 <label>会心率 <input type="number" id="wo-aff" min="-100" max="100" step="5" placeholder="データのまま">%</label>
 <label>属性 <select id="wo-etype"><option value="">データのまま</option><option value="fire">火</option><option value="water">水</option><option value="thunder">雷</option><option value="ice">氷</option><option value="dragon">龍</option></select><input type="number" id="wo-eval" min="0" step="10" placeholder="属性値"></label>
@@ -183,11 +197,7 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <label>防御ボーナス <input type="number" id="wo-def" min="0" step="5" placeholder="データのまま"></label>
 </div>
 <label><input type="checkbox" id="armor-augmax"> 防具の防御力を、カスタム強化の最大（データの defense_augment_max）で計算する</label>
-<div class="row"><span class="muted">強化した防具：</span><input id="ao-input" list="armor-list" placeholder="防具の名前" aria-label="強化した防具">
-<label>強化のあとのスロット <select id="ao-s1"><option value="">データのまま</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select><select id="ao-s3"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
-<label>足したスキル <input id="ao-skill" list="skill-list" placeholder="なし" aria-label="足したスキル"></label><label>Lv <select id="ao-lv"><option>1</option><option>2</option><option>3</option></select></label>
-<button type="button" id="add-ao">追加</button></div>
-<div class="chips" id="ao-chips"></div>
+<p class="muted">調べた結果、アイスボーンの防具のカスタム強化は、強化の上限を上げる（防御力が上がる）だけで、スロットやスキルは増えません。そのため、防具は防御力だけを計算に入れます。</p>
 </fieldset>
 <fieldset><legend>入手しやすさと計算</legend>
 <label>防具・護石のレア度の上限 <select id="max-rarity"><option>12</option><option>11</option><option>10</option><option>9</option><option>8</option><option>7</option><option>6</option><option>5</option><option>4</option></select></label>

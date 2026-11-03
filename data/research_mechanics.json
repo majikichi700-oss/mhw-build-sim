@@ -1,0 +1,1689 @@
+{
+ "how": "WebSearch（検索の道具）の結果から、調べ役の AI がまとめた事実です（2026-11-03）。ページは開いていません（このセッションのネットワークの決まりで開けないため）。説明の文は調べ役の言葉で、記事の文章を写したものではありません。",
+ "topics": {
+  "charge-blade": {
+   "facts": [
+    {
+     "key": "artillery_level_multipliers",
+     "statement_ja": "砲術は爆発を伴う攻撃の威力をレベルに応じて上げ、竜撃砲の冷却時間も縮める。Lv4とLv5は砲術・極意（シリーズスキル）で上限を上げたときだけ使える。",
+     "value": "威力: Lv1 1.1倍 / Lv2 1.2倍 / Lv3 1.3倍 / Lv4 1.4倍 / Lv5 1.5倍。竜撃砲の冷却時間短縮: Lv1 15% / Lv2 30% / Lv3 50% / Lv4 60% / Lv5 70%",
+     "applies_to": "ガンランスの砲撃・竜撃砲、チャージアックスのビン攻撃、徹甲榴弾などの爆発系攻撃。Lv4・Lv5は砲術・極意の発動が必要",
+     "confidence": "high",
+     "conflict": "Lv1〜3は game8 で確認した。Lv4はアルテマと Fandom（表の行の名前が崩れている）、Lv5はアルテマと Monster Hunter Wiki で確認した。食い違いは見つからなかった。旧作 MHXX の資料には別の値（Novice 1.3倍 / Expert 1.35倍）があるが、これは MHWI の値ではない。",
+     "sources": [
+      "https://game8.jp/mhw/199508",
+      "https://altema.jp/mhw/skill/155",
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)",
+      "https://www.monsterhunterwiki.org/wiki/Artillery_Secret_(MHWI)",
+      "https://monsterhunter.fandom.com/wiki/MHWI:_Skill_List"
+     ]
+    },
+    {
+     "key": "artillery_applies_cb_phial",
+     "statement_ja": "砲術はチャージアックス（盾斧）のビン攻撃に効く。スキル説明には「盾斧のビン攻撃」が対象としてはっきり書かれている。",
+     "value": "ビン攻撃の威力 × 砲術の倍率（上の表）",
+     "applies_to": "チャージアックスのビン爆発（ビンの種類による区別は次の項目を参照）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://gamewith.jp/mhw/173325",
+      "https://game8.jp/mhw/199508",
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)"
+     ]
+    },
+    {
+     "key": "artillery_impact_phial_only",
+     "statement_ja": "砲術が効くのは榴弾ビンの爆発だけで、強属性ビンの爆発は砲術で伸びない、という報告がある。強属性ビンは属性値で、榴弾ビンは攻撃力で伸びる。",
+     "value": "榴弾ビン: 砲術の倍率がかかる / 強属性ビン: 砲術の倍率はかからない（1.0倍）",
+     "applies_to": "榴弾ビン（効く）、強属性ビン（効かない）",
+     "confidence": "medium",
+     "conflict": "どちらの Steam 投稿がどの発言をしたのかは、検索の要約からははっきり分からない。根拠はプレイヤーの投稿が中心。日本語サイトの記述（属性ビンは砲術の影響を受けない）も検索の要約に出たが、それが MHWI の記事なのかワイルズの記事なのかを確かめきれなかった。",
+     "sources": [
+      "https://steamcommunity.com/app/582010/discussions/0/1744519865923703595",
+      "https://steamcommunity.com/app/582010/discussions/0/1737715419902807216",
+      "https://game8.jp/mhw/157920"
+     ]
+    },
+    {
+     "key": "impact_phial_fixed_damage_hitzone_ignored",
+     "statement_ja": "榴弾ビンの爆発は固定ダメージで、肉質に左右されない。気絶（KO）値と減気値を与える。",
+     "value": "肉質補正なし（どの部位でも同じダメージ）。スタン値・減気値あり",
+     "applies_to": "榴弾ビンの爆発すべて（剣の強化攻撃、属性解放斬り、高出力・超高出力属性解放斬りなど）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/charge-blade",
+      "https://mobalytics.gg/mhw/charge-blade-guide",
+      "https://steamcommunity.com/app/582010/discussions/0/1797403972746391860",
+      "https://cal1.lr.ggtyler.dev/r/MonsterHunter/comments/7c4aam/mhxx_charge_blade_compendium"
+     ]
+    },
+    {
+     "key": "impact_phial_scales_with_raw_patch200",
+     "statement_ja": "榴弾ビンの爆発ダメージは武器の攻撃力（物理）で伸びる。ただし無印 MHW の Ver.2.00（2018年3月22日）で、砲術以外の攻撃力アップ効果がビン爆発にかかる度合いが下げられた。",
+     "value": "攻撃力に比例（係数は見つからなかった）。砲術以外の攻撃力アップの効きは Ver.2.00 で下がった（下げ幅の数値は見つからなかった）",
+     "applies_to": "榴弾ビンの爆発。攻撃力アップのスキル・アイテムなど、砲術以外の攻撃力アップ",
+     "confidence": "medium",
+     "conflict": "榴弾ビンは攻撃力で伸びる、という資料（Steam、旧作の Reddit 資料）と、攻撃スキルではほとんど変わらなかったという Inven の検証が食い違う。Ver.2.00 で砲術以外の攻撃力アップの効きが下がったためと考えられる。予告の段階では「調整」としか書かれず、実際のパッチノートでは「下げた」と書かれた。",
+     "sources": [
+      "https://www.thesixthaxis.com/?p=312310",
+      "https://invenglobal.com/articles/4561/charge-blade-using-impact-phial-nerfed-a-major-weapon-balance-patch-coming-to-monster-hunter-world-on-march-22nd",
+      "https://invenglobal.com/monsterhunterworld/articles/6278/the-most-fascinating-weapon-of-the-series-monster-hunter-world-charge-blade-build-guide",
+      "https://steamcommunity.com/app/582010/discussions/0/1735509281937441985"
+     ]
+    },
+    {
+     "key": "phial_no_affinity_no_sharpness",
+     "statement_ja": "ビン爆発のダメージは会心率（会心・超会心）の影響を受けず、切れ味補正もかからない、という報告がある。",
+     "value": "会心補正なし / 切れ味補正なし（1.0倍として扱う）",
+     "applies_to": "榴弾ビンの爆発（強属性ビンについては確かめられていない）",
+     "confidence": "medium",
+     "conflict": "Steam の投稿者は「記憶では」と書いていて、言い切ってはいない。",
+     "sources": [
+      "https://invenglobal.com/monsterhunterworld/articles/6278/the-most-fascinating-weapon-of-the-series-monster-hunter-world-charge-blade-build-guide",
+      "https://steamcommunity.com/app/582010/discussions/0/1735509281937441985"
+     ]
+    },
+    {
+     "key": "element_phial_element_based",
+     "statement_ja": "強属性ビンの爆発は、武器の属性のダメージを与える。属性の肉質に左右されるので、当てる部位が大事。属性の高い武器では強属性ビン、低い武器では榴弾ビンが有利とされる。",
+     "value": "属性値で決まり、属性の肉質で補正される（係数は見つからなかった）",
+     "applies_to": "強属性ビン（属性解放斬り・超高出力などの強属性ビン爆発）",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/charge-blade?ver=0",
+      "https://mobalytics.gg/mhw/charge-blade-guide",
+      "https://steamcommunity.com/app/582010/discussions/0/1797403972746391860",
+      "https://reddit.birdcat.cafe/r/MonsterHunter/wiki/charge_blade_manual"
+     ]
+    },
+    {
+     "key": "element_attack_on_element_phial",
+     "statement_ja": "属性攻撃強化は強属性ビンの火力を伸ばす、とされる。ただし MHWI での根拠は、プレイヤーのすすめ（強属性ビンなら属性攻撃強化 Lv6）と、他の作品（ワイルズ）の記事しか見つからなかった。",
+     "value": "属性攻撃強化の属性値アップがビン爆発にも効く（MHWI で確かめた数値はない）",
+     "applies_to": "強属性ビン",
+     "confidence": "low",
+     "conflict": "ワイルズの記事には「ビンのダメージには会心撃【属性】は乗らない」とあるが、MHWI について同じことを確かめられる資料は見つからなかった。",
+     "sources": [
+      "https://steamcommunity.com/app/582010/discussions/0/1737715419902807216",
+      "https://gamepedia.jp/mh-wilds/archives/10643"
+     ]
+    },
+    {
+     "key": "focus_gauge_fill",
+     "statement_ja": "集中はチャージアックスなどのゲージのたまる速さを上げる（チャアクではビンのたまり方にあたると考えられる）。溜め時間が縮むのは大剣・ハンマー・弓で、チャアクは対象外。",
+     "value": "ゲージ上昇: Lv1 +5% / Lv2 +10% / Lv3 +20%。溜め時間短縮（大剣・ハンマー・弓）: Lv1 5% / Lv2 10% / Lv3 15%",
+     "applies_to": "太刀・双剣・スラッシュアックス・チャージアックスのゲージ。溜め時間は大剣・ハンマー・弓",
+     "confidence": "medium",
+     "conflict": "Lv3 の溜め時間短縮は、game8 では 15%、Inven Global の防具ページでは 20% と書かれている（Inven のほうは無印のデータかもしれない）。ゲージ上昇の 5%（Lv1）と 20%（Lv3）は両方のサイトで同じ。ゲージが『ビンの本数』と『剣のエネルギー』のどちらを指すかははっきり書かれていない。",
+     "sources": [
+      "https://game8.jp/mhw/199547",
+      "https://www.invenglobal.com/monsterhunterworld/armor/damascus-mailb",
+      "https://www.invenglobal.com/monsterhunterworld/armor/death-stench-grip",
+      "https://monsterhunterwiki.org/wiki/Focus_(MHWI)"
+     ]
+    },
+    {
+     "key": "cb_boost_states_iceborne",
+     "statement_ja": "アイスボーンのチャージアックスには、属性強化（盾）、剣強化、アイスボーンで追加された斧強化の 3 つの強化状態がある。剣強化は剣の攻撃にビンの効果をつけ、斧強化は斧の攻撃を強くする。属性強化中は超高出力属性解放斬りが使え、ガードポイントで自動的にビンのカウンターが出る。",
+     "value": "MHWI での倍率の数値は見つからなかった（ワイルズの盾強化は斧のビンダメージ約1.2倍・斧の攻撃約1.1倍だが、MHWI の値ではない）",
+     "applies_to": "チャージアックスの属性強化（盾強化）・剣強化・斧強化（アイスボーン）",
+     "confidence": "medium",
+     "conflict": "MHWI の強化状態の倍率を書いた資料はなかった。ワイルズの値（1.2倍 / 1.1倍）を MHWI に使ってはいけない。",
+     "sources": [
+      "https://altema.jp/mhw/chaajiakkusu",
+      "https://game8.jp/mhwilds/686256"
+     ]
+    },
+    {
+     "key": "capacity_boost_extra_phial",
+     "statement_ja": "ボトル装填数UP（Capacity Boost）をつけると、ビンの爆発が 1 回増える、という投稿がある。",
+     "value": "ビンの爆発 +1 回（本数の細かい決まりは確かめていない）",
+     "applies_to": "チャージアックスのビン（ボトル装填数UP）",
+     "confidence": "low",
+     "conflict": "Monster Hunter Wiki のページは検索結果に名前が出ただけで、中身は確かめられていない。",
+     "sources": [
+      "https://steamcommunity.com/app/582010/discussions/0/1735509281937441985",
+      "https://monsterhunterwiki.org/wiki/Capacity_Boost_(MHWI)"
+     ]
+    }
+   ],
+   "not_found": [
+    "榴弾ビン 1 回の爆発ダメージの係数（攻撃力の何倍か）と、攻撃ごとの爆発の回数・値（高出力・超高出力属性解放斬り、属性解放斬り、盾突き、属性強化回転斬り、高圧属性斬り、斧強化中の攻撃）",
+    "強属性ビン 1 回の爆発ダメージの係数（属性値の何倍か）と、攻撃ごとの値",
+    "MHWI で会心撃【属性】が強属性ビンの爆発に効くかどうか（ワイルズの記事には効かないとあるが、MHWI では確かめられなかった）",
+    "MHWI で属性攻撃強化が強属性ビンの爆発に効くかどうかの、はっきりした資料（プレイヤーのすすめしかない）",
+    "無印 Ver.2.00 で砲術以外の攻撃力アップの効きをどれだけ下げたかの数値。アイスボーンで変わったかどうか",
+    "MHWI の剣強化・盾強化（属性強化）・斧強化の倍率",
+    "集中がチャアクのビンの本数にもかかるのか、剣のエネルギーだけなのかの区別。高圧属性斬りなどの溜め時間に効くかどうか",
+    "無印とアイスボーンで、ビン爆発の値・砲術の値が変わったかどうか（砲術 Lv4・Lv5 はアイスボーンの極意で増えたもの）"
+   ]
+  },
+  "gunlance": {
+   "facts": [
+    {
+     "key": "gl_artillery_levels",
+     "statement_ja": "砲術はレベルごとに対象の攻撃の威力を1.1〜1.5倍にし、竜撃砲の冷却時間を短くする。Lv4とLv5は砲術の極意（Artillery Secret）でレベル上限を上げたときだけ使える。",
+     "value": "Lv1: 1.1倍・冷却-15% / Lv2: 1.2倍・-30% / Lv3: 1.3倍・-50% / Lv4: 1.4倍・-60%（極意が要る） / Lv5: 1.5倍・-70%（極意が要る）",
+     "applies_to": "ガンランスの砲撃と竜撃砲、チャージアックスのビン攻撃、徹甲榴弾など爆発する攻撃",
+     "confidence": "high",
+     "conflict": "game8 は Lv4・Lv5 に『極意のみ』と書いているが、アルテマの表にはその書き添えがない。Monster Hunter Wiki は Lv4・5 に Artillery Secret が要るとしており、game8 と同じ。",
+     "sources": [
+      "https://game8.jp/mhw/199508",
+      "https://altema.jp/mhw/skill/85",
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)",
+      "https://www.monsterhunterwiki.org/wiki/Artillery_Secret_(MHWI)"
+     ]
+    },
+    {
+     "key": "gl_artillery_targets",
+     "statement_ja": "砲術が効くのは爆発系の攻撃で、ガンランスの砲撃と竜撃砲は 3 つのサイトがはっきり対象に挙げている。溜め砲撃・フルバースト・竜杭砲・起爆竜杭をひとつずつ対象と書いた出典は見つからなかった。",
+     "value": "砲撃: 対象 / 竜撃砲: 対象 / 溜め砲撃・フルバースト・竜杭砲・起爆竜杭: 出典で個別に確かめられず",
+     "applies_to": "ガンランス（砲撃、竜撃砲）。ほかの武器ではチャージアックスのビン、徹甲榴弾",
+     "confidence": "high",
+     "conflict": "起爆竜杭の爆発に砲術が直接かかるかどうかは、どの出典にも書かれていなかった。",
+     "sources": [
+      "https://game8.jp/mhw/199508",
+      "https://altema.jp/mhw/skill/85",
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)"
+     ]
+    },
+    {
+     "key": "gl_shell_capacity_base",
+     "statement_ja": "砲撃タイプごとの砲弾の数（もとの装填数）は、通常型5発、放射型3発、拡散型2発。射程は放射型が長く、範囲は拡散型が広い。",
+     "value": "通常型: 5 / 放射型: 3 / 拡散型: 2",
+     "applies_to": "ガンランスの全砲撃タイプ（スキルなしの値）",
+     "confidence": "high",
+     "conflict": "アルテマの検索結果で確かめられたのは通常型の5発だけ。放射型3・拡散型2は game8 だけで確かめた。",
+     "sources": [
+      "https://game8.jp/mhw/157902",
+      "https://altema.jp/mhw/gannrannsu"
+     ]
+    },
+    {
+     "key": "gl_capacity_boost",
+     "statement_ja": "砲弾装填数UP は、ガンランスの砲弾の数とチャージアックスのビンの数を 1 増やす。どの砲撃タイプでも 1 発増える（もとの値と合わせると通常型6・放射型4・拡散型3 になる）。",
+     "value": "装填数 +1（スキルは Lv1 だけ）",
+     "applies_to": "ガンランス（通常型・放射型・拡散型）、チャージアックスのビン",
+     "confidence": "medium",
+     "conflict": "足した後の 6/4/3 は、もとの装填数（game8）に +1 して出した値で、6/4/3 そのものを書いた出典はない。Nexus Mods の改造ページの『全ガンランス3発（装填数UPで4）』は改造後の値なので使わない。",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Capacity_Boost_(MHWI)",
+      "https://www.invenglobal.com/monsterhunterworld/armor/high-metal-coil",
+      "https://steamcommunity.com/app/582010/discussions/0/4208119548515630556"
+     ]
+    },
+    {
+     "key": "gl_shell_fixed_damage",
+     "statement_ja": "砲撃は肉質を無視する固定ダメージで、ふつうの攻撃より斬れ味を多く減らす。",
+     "value": "固定ダメージ（物理肉質を無視）",
+     "applies_to": "ガンランスの砲撃全般",
+     "confidence": "high",
+     "conflict": "Mobalytics のガイドは『砲弾が攻撃力に比例して強くなる』と書いているが、どの作品の話か書かれておらず、ほかの出典とも合わない。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/gunlance",
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/%E7%A0%B2%E6%92%83",
+      "https://altema.jp/mhw/gannrannsu"
+     ]
+    },
+    {
+     "key": "gl_shell_fire_component",
+     "statement_ja": "砲撃にはもともと火属性の部分があり、その部分はモンスターの火の肉質で増減する。ある武器の溜めなし砲撃 1 発を測った例では、火肉質0 で62、火肉質25 で65 だった。",
+     "value": "例: 溜めなし砲撃1発 火肉質0→62 / 火肉質25→65（特定の武器での測定）",
+     "applies_to": "ガンランスの砲撃（火属性の部分）",
+     "confidence": "medium",
+     "conflict": "測定値は Steam の利用者 1 人の投稿だけで、武器・砲撃Lv・ランクは結果からは分からない。Lv別の火属性の値は見つからなかった。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/%E7%A0%B2%E6%92%83",
+      "https://steamcommunity.com/app/582010/discussions/0/1743357605559794473"
+     ]
+    },
+    {
+     "key": "gl_shell_skill_scaling",
+     "statement_ja": "砲撃のダメージに効くスキルは、砲術とネコの砲撃術などごく一部だけとされ、攻撃力・会心・属性のスキルで変わるとは書かれていない。覚醒武器の解説でも、砲撃には属性の倍率がかからないとしている。",
+     "value": "攻撃力・会心・属性スキル: 効かないとされる（直接の検証は見つからず） / 砲術・ネコの砲撃術: 効く",
+     "applies_to": "ガンランスの砲撃",
+     "confidence": "medium",
+     "conflict": "Mobalytics は砲弾が攻撃力に比例すると書いている（作品が書かれておらず、ほかの出典と食い違う）。Steam の投稿は無印 MHW の時期のもの。会心・属性強化が火属性の部分に効くかどうかを確かめた出典はなかった。",
+     "sources": [
+      "https://steamcommunity.com/app/582010/discussions/0/2530372519572907415/?l=swedish",
+      "https://game8.jp/mhw/307644",
+      "https://mhworld.kiranico.com/guide/gunlance"
+     ]
+    },
+    {
+     "key": "gl_shell_sharpness_modifier",
+     "statement_ja": "MHW では、斬れ味が黄色まで落ちると砲撃の威力が下がり、その倍率は 0.85 倍とされる。",
+     "value": "斬れ味が黄色以下: 0.85倍",
+     "applies_to": "ガンランスの砲撃",
+     "confidence": "low",
+     "conflict": "出典は 1 つだけで、ほかのサイトでは確かめられなかった。アイスボーンでも同じかどうかは分からない。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/%E7%A0%B2%E6%92%83"
+     ]
+    },
+    {
+     "key": "gl_shell_mr_multiplier",
+     "statement_ja": "マスターランクでは固定ダメージに 1.5 倍がかかるが、ガンランスの砲撃にはかからない、と改造ページに書かれている。同じページの例では、通常型Lv7 の砲撃 1 発がドスジャグラスに下位60・上位72・MR89 だった。",
+     "value": "MR の固定ダメージ1.5倍: 砲撃にはかからない / 例: 通常Lv7 1発 = 下位60 / 上位72 / MR89",
+     "applies_to": "ガンランスの砲撃（MR）",
+     "confidence": "low",
+     "conflict": "出典は改造（mod）の説明ページ 1 つだけ。ランクで値が上がっているのに『1.5倍はかからない』とあり、ランクの補正が別にあるのかは分からない。",
+     "sources": [
+      "https://www.nexusmods.com/monsterhunterworld/mods/7384"
+     ]
+    },
+    {
+     "key": "gl_shell_level_max_iceborne",
+     "statement_ja": "アイスボーンで砲撃Lv の上限が上がった。どこまで上がるかは出典によって違う。",
+     "value": "説A: 通常型 Lv7・放射型/拡散型 Lv6 / 説B: 通常型・拡散型 Lv7、放射型 Lv6 / Lv8 についての書き込み: Lv7→Lv8 で約20%または22%強くなる",
+     "applies_to": "ガンランスの砲撃Lv（アイスボーン）",
+     "confidence": "low",
+     "conflict": "『Lv6（通常型はLv7）』とする書き方と『拡散型・通常型がLv7、放射型（ミラボレアス）はLv6』とする書き方がある。Lv7→8 の伸びも 20% と 22% で分かれ、どちらも出典のはっきりしない書き込み。",
+     "sources": [
+      "https://www.highgroundgaming.com/best-gunlance-build-mhw/",
+      "https://www.highgroundgaming.com/?p=26937",
+      "https://widergy.com/alm6qnmsq/gunlance-shelling-level-7.html"
+     ]
+    },
+    {
+     "key": "gl_shell_type_traits",
+     "statement_ja": "通常型はフルバーストがいちばん強く、拡散型は砲撃 1 発がいちばん強いが弾が少ない。放射型は射程が長く、竜杭砲（起爆竜杭）の威力がほかの型より高い。",
+     "value": "通常型: フルバースト最強 / 拡散型: 1発の威力最高・範囲広い / 放射型: 射程長い・竜杭砲が強い",
+     "applies_to": "ガンランスの砲撃タイプ",
+     "confidence": "medium",
+     "conflict": "竜撃砲と竜杭砲が強いのはどの型かで食い違う。Mobalytics は放射型（溜め砲撃も）とし、Highground Gaming と掲示板の書き込みは拡散型としている。game8 は放射型の竜杭が強いとしている。",
+     "sources": [
+      "https://game8.jp/mhw/157902",
+      "https://altema.jp/mhw/gannrannsu",
+      "https://mobalytics.gg/mhw/gunlance-guide",
+      "https://www.highgroundgaming.com/best-gunlance-build-mhw/"
+     ]
+    },
+    {
+     "key": "gl_wyrmstake_blast",
+     "statement_ja": "起爆竜杭は当てた部位に一定時間刺さったままになり、そこへ砲撃を当てると爆発する。爆発の威力は当てた砲撃の種類と砲撃Lvで決まり、竜撃砲を当てるといちばん大きくなる。",
+     "value": "爆発の威力 = 当てた砲撃（と砲撃Lv）しだい / 竜撃砲で起爆すると最大（具体的な数値は見つからず）",
+     "applies_to": "ガンランス 起爆竜杭（アイスボーン）",
+     "confidence": "medium",
+     "conflict": "砲術が爆発そのものにかかるのか、起爆に使った砲撃の分だけなのかは確かめられなかった。",
+     "sources": [
+      "https://game8.jp/mhw/157902",
+      "https://altema.jp/mhw/hougekigun"
+     ]
+    }
+   ],
+   "not_found": [
+    "砲撃タイプ（通常型・放射型・拡散型）と砲撃Lvごとの通常砲撃・溜め砲撃・フルバーストの固定ダメージと火属性部分の具体的な値（検索結果に数値表が出てこなかった。Kiranico はコミュニティの MHWI General Data Sheet を案内しているだけ）",
+    "竜撃砲の威力（Lvごとの固定ダメージ、火属性部分、ヒット数）",
+    "竜杭砲（溜め砲撃からの竜杭）と起爆竜杭の爆発の具体的な数値",
+    "ネコの砲撃術（Felyne Bombardier）の倍率と、砲術と合わせたときの上限（Monster Hunter Wiki にページはあるが、検索結果に本文が出てこなかった）",
+    "溜め砲撃・フルバースト・竜杭砲・起爆竜杭のそれぞれに砲術がかかるかを個別に書いた出典",
+    "攻撃力・会心・属性強化スキルが砲撃の火属性部分に効くかどうかを直接確かめた検証",
+    "無印 MHW とアイスボーンで砲撃の値がどう違うか（Lv上限が上がったこと以外）"
+   ]
+  },
+  "switch-axe": {
+   "facts": [
+    {
+     "key": "sa_phial_fixed_six_types",
+     "statement_ja": "スラッシュアックスのビンは武器ごとに決まっていて付け替えできない。種類は強撃・強属性・滅龍・毒・麻痺・減気の6つ。ビンの効果は剣モードのときだけ働く。",
+     "value": "6種類（強撃 / 強属性 / 滅龍 / 毒 / 麻痺 / 減気）、武器ごとに固定",
+     "applies_to": "スラッシュアックス全武器。ビン効果は剣モードのみ（斧モードには効かない）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/switch-axe",
+      "https://monsterhunterworld.wiki.fextralife.com/Switch+Axe",
+      "https://www.monsterhunterwiki.org/wiki/Peal_(MHWorld)"
+     ]
+    },
+    {
+     "key": "sa_power_phial_raw_mult",
+     "statement_ja": "強撃ビンの武器は、剣モードの攻撃の物理（生）ダメージが約2割増える。MHWIのものとして確かめられたのはコミュニティの投稿だけ。",
+     "value": "1.2（剣モードの物理ダメージ ×1.2）",
+     "applies_to": "強撃ビン武器の剣モードの攻撃。斧モードには効かない",
+     "confidence": "medium",
+     "conflict": "1.2倍はMHWIの公式の数字やデータ表では確かめられていない。別作品では値が違う：ライズ/サンブレイクの話とみられるフォーラム投稿は「15%」（https://forums.penny-arcade.com/discussion/240330/monster-hunter-breaking-the-sun-in-2022/p6）、ワイルズのgame8は「1.17倍」（https://game8.jp/mhwilds/675686）。どちらもMHWIの値ではない。",
+     "sources": [
+      "https://steamcommunity.com/app/582010/discussions/0/2260186248424792461",
+      "https://altema.jp/mhw/slashaxsaikyo"
+     ]
+    },
+    {
+     "key": "sa_element_phial_elem_mult",
+     "statement_ja": "強属性ビンの武器は、剣モードの攻撃の属性ダメージが上がる。上がるのは確かだが、MHWIでの倍率は確かめられなかった。",
+     "value": "未確定（候補: 1.25 または 1.45）",
+     "applies_to": "強属性ビン武器の剣モードの属性ダメージ",
+     "confidence": "low",
+     "conflict": "1.25倍とする記述（altema。ページに別シリーズの内容が混ざっている可能性あり）と、1.45倍とする記述（ライズ・サンブレイク向けの記事。検索結果の要約によるもので、元のURLは gamepedia.jp/mh-rise か appmedia.jp のどちらか特定できない）がある。MHWIの値はどちらとも確かめられていない。",
+     "sources": [
+      "https://altema.jp/mhw/slashaxsaikyo",
+      "https://www.famitsu.com/article/202412/27260"
+     ]
+    },
+    {
+     "key": "sa_power_element_phial_kiranico_desc",
+     "statement_ja": "Kiranicoのガイドは、強属性ビンを「攻撃力と武器の属性・状態異常の両方を上げる」と説明している。物理にも倍率がかかるかは、ほかのサイトで確かめられていない。",
+     "value": "記述のみ（数値なし）",
+     "applies_to": "強属性ビン（Power Element Phial）",
+     "confidence": "low",
+     "conflict": "日本のサイト（altema、ファミ通）は属性攻撃力が上がることしか書いていない。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/switch-axe"
+     ]
+    },
+    {
+     "key": "sa_exhaust_phial_effect",
+     "statement_ja": "減気ビンは、モンスターのスタミナを減らす（減気）効果がある。気絶値については、MHWIのものとして確かめられた数字はない。",
+     "value": "減気（スタミナを減らす）。数値は不明",
+     "applies_to": "減気ビン武器の剣モードの攻撃",
+     "confidence": "low",
+     "conflict": "気絶（スタン）値もたまるという説明は、ワイルズ（icy-veins）とライズ向けのガイドにしかない。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Switch+Axe"
+     ]
+    },
+    {
+     "key": "sa_amped_state_entry",
+     "statement_ja": "剣モードで攻撃を当てると覚醒ゲージがたまり、満タンになると覚醒（強化）状態になる。満タンまでに必要な攻撃の回数はビンの種類で違う。覚醒状態は攻撃力を上げ、零距離属性解放突きを使えるようにする。",
+     "value": "倍率は不明（必要な攻撃の回数はビンの種類によって違う）",
+     "applies_to": "剣モード（覚醒ゲージ）",
+     "confidence": "medium",
+     "conflict": "MHWIでの覚醒の倍率や追加ダメージの量は見つからなかった。ワイルズのgame8には「追撃は元のダメージの約36.3%」「縦斬りで強撃24回／滅龍8回で覚醒」などがあるが、ワイルズの値なので使えない。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/switch-axe",
+      "https://monsterhunterworld.wiki.fextralife.com/Switch+Axe"
+     ]
+    },
+    {
+     "key": "sa_zero_sum_discharge_condition",
+     "statement_ja": "零距離属性解放突きは、覚醒ゲージが満タンのときに使える。剣を刺してモンスターに取り付き、普通の属性解放突きと同じようにビンを爆発させる。",
+     "value": "条件: 覚醒ゲージが満タン",
+     "applies_to": "零距離属性解放突き（アイスボーンで追加）",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Switch+Axe",
+      "https://mhworld.kiranico.com/guide/switch-axe"
+     ]
+    },
+    {
+     "key": "sa_discharge_finish_hitzone",
+     "statement_ja": "属性解放突きは、最後の爆発も含めてすべて切断の攻撃として扱われる。MHW:Iまでは、最後の爆発も切断の肉質で計算され、肉質を無視しない。",
+     "value": "切断肉質で計算（肉質無視なし）",
+     "applies_to": "属性解放突き（最後の爆発を含む）",
+     "confidence": "medium",
+     "conflict": "出典は1つだけ。ライズではフィニッシュが肉質を無視するという記述がある（inside-games/Game*Spark）が、ライズの話。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/%E5%B1%9E%E6%80%A7%E8%A7%A3%E6%94%BE%E7%AA%81%E3%81%8D"
+     ]
+    },
+    {
+     "key": "sa_artillery_not_applicable",
+     "statement_ja": "砲術はスラッシュアックスには効かない、と考えられる。MHWIの砲術が強くするのはガンランスの砲撃・竜撃砲、チャージアックスのビンの攻撃、徹甲榴弾などで、スラアクは入っていない。",
+     "value": "効果なし",
+     "applies_to": "スラッシュアックスのビン爆発・属性解放突き・零距離属性解放突き（効かない）。効くもの: ガンランスの砲撃・竜撃砲、チャージアックスのビン、徹甲榴弾",
+     "confidence": "medium",
+     "conflict": "「効かない」とはっきり言っているのはフォーラムの返信だけで、公式の記述ではない。ライズ向けとみられるフォーラム投稿（penny-arcade）も「どのビンの爆発にも効かない」と言っている。",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)",
+      "https://steamcommunity.com/app/582010/discussions/0/3681064880122441845"
+     ]
+    },
+    {
+     "key": "focus_mhwi_gauge_rate",
+     "statement_ja": "MHWIの集中は、ゲージがある武器のゲージのたまり方を良くし、溜め攻撃の溜め時間を短くする。スラアクのスラッシュゲージと覚醒ゲージのそれぞれにどれだけ効くかは確かめられなかった。",
+     "value": "ゲージのたまり方: Lv1 +5% / Lv2 +10% / Lv3 +20%。溜め時間: Lv3 -15%（Lv1・Lv2の溜め時間の値は確認できず）",
+     "applies_to": "ゲージがある武器（スラアクでは覚醒ゲージ、たぶんスラッシュゲージも）、溜め攻撃",
+     "confidence": "medium",
+     "conflict": "MHWIの値は出典1つだけ。スラアクの覚醒ゲージが速くたまるという説明はワイルズ向けのガイド（deltiasgaming）にしかない。ライズ（Fextralife）はLv1が5%で、Lv3の値が違う可能性がある。",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Focus_(MHWI)"
+     ]
+    }
+   ],
+   "not_found": [
+    "強属性ビンのMHWIでの属性の倍率（1.25倍と1.45倍の記述があるが、どちらもMHWIの値として確かめられなかった）",
+    "強撃ビン1.2倍のMHWIでの公式・データ表の出典（確かめられたのはコミュニティの投稿だけ）",
+    "滅龍ビンのMHWIでの効果と数値（龍属性を足す量、覚醒前でも効くか。ワイルズの情報しか見つからなかった）",
+    "毒ビン・麻痺ビンのMHWIでの効果と数値（状態異常を足す量、覚醒中だけ効くか。ワイルズの情報しか見つからなかった）",
+    "減気ビンの減気値・気絶値の数値（MHWI）",
+    "覚醒（剣モードの強化）の倍率や追加ダメージ（MHWI）",
+    "属性解放突き・零距離属性解放突きで、どのビンが爆発するかの決まりと爆発ダメージの式（MHWI）",
+    "集中がスラアクのスラッシュゲージと覚醒ゲージのそれぞれに効く量（MHWI）、集中Lv1・Lv2の溜め時間短縮の値",
+    "無印（アイスボーン前）とアイスボーンでのビンの数値の違い",
+    "検索の上限（20回）に達したので、同じ事実を別のドメインで確かめられなかった項目がある"
+   ]
+  },
+  "bowgun": {
+   "facts": [
+    {
+     "key": "bowgun_normal_shots",
+     "statement_ja": "通常弾・通常矢強化は、ボウガンの通常弾（と弓の通常矢）の威力に倍率をかける。Lv1で1.1倍、Lv2で1.2倍。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "ボウガンの通常弾（攻略サイトの書き方は『通常弾』。Lv1〜3を個別に区別した記述は検索結果になかった）、弓の通常矢。斬裂弾には効かない（『○○弾強化は斬裂弾には効かない』とする記述あり）",
+     "confidence": "high",
+     "conflict": "ドメイン2つ（game8、wikiwiki）で 1.1 / 1.2 を確認。アルテマは対象（ボウガンの通常弾）だけ確認でき、倍率は確認できなかった。無印からの違い（Lv2がアイスボーンで追加されたか）は、このスキルについては確かめられていない。",
+     "sources": [
+      "https://game8.jp/mhw/200217",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%EF%BD%9E%E5%BC%BE%E5%BC%B7%E5%8C%96",
+      "https://altema.jp/mhw/tsuujouhebili"
+     ]
+    },
+    {
+     "key": "bowgun_pierce_shots",
+     "statement_ja": "貫通弾・竜の一矢強化は、ボウガンの貫通弾と弓の竜の一矢の威力に倍率をかける。Lv1で1.1倍、Lv2で1.2倍。Lv2の値は有志の検証による。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "ボウガンの貫通弾（Lv1〜3を区別した記述はなかった）、弓の竜の一矢。属性の貫通弾（貫通火炎弾など）に効くかは確認できなかった",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/200483",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%EF%BD%9E%E5%BC%BE%E5%BC%B7%E5%8C%96"
+     ]
+    },
+    {
+     "key": "bowgun_spread_shots",
+     "statement_ja": "散弾・剛射強化は、散弾・剛射・竜の千々矢の威力に倍率をかける。Lv1で1.1倍、Lv2で1.15倍（Lv2はアイスボーンで追加され、有志の検証で1.15倍とされた。無印はLv1の1.1倍まで）。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.15倍",
+     "applies_to": "ボウガンの散弾（Lv1〜3を区別した記述はなかった）、弓の剛射、竜の千々矢",
+     "confidence": "high",
+     "conflict": "Lv2を1.2倍とする記述もあるが、ゲームエイトのコメント欄では、あるブログの誤記が広まったもので、正しくは1.15倍だと指摘されている。大辞典Wikiも1.15倍。",
+     "sources": [
+      "https://game8.jp/mhw/200214",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%EF%BD%9E%E5%BC%BE%E5%BC%B7%E5%8C%96",
+      "https://gamewith.jp/mhw/91137"
+     ]
+    },
+    {
+     "key": "bowgun_special_ammo_boost",
+     "statement_ja": "特殊射撃強化は、ボウガンの特殊弾と弓の竜の一矢・竜の千々矢の威力に倍率をかける。Lv1で1.1倍、Lv2で1.2倍。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "ヘビィボウガンの特殊弾（機関竜弾・狙撃竜弾。ゲームウィズの特殊弾一覧に出ている）、弓の竜の一矢・竜の千々矢。ライトボウガンのワイバーンブラストに効くかは、検索結果では確かめられなかった",
+     "confidence": "high",
+     "conflict": "竜の千々矢は、散弾・剛射強化の対象（ゲームウィズ）と特殊射撃強化の対象（アルテマ）の両方に書かれている。どちらか片方だけなのか、両方乗るのかはわからない。",
+     "sources": [
+      "https://game8.jp/mhw/199524",
+      "https://altema.jp/mhw/skill/56",
+      "https://gamewith.jp/mhw/88002"
+     ]
+    },
+    {
+     "key": "bowgun_artillery_multiplier",
+     "statement_ja": "砲術は爆発する攻撃の威力に倍率をかけ、竜撃砲の冷却時間も短くする。Lv4・Lv5は砲術の極意（シリーズスキル）があるときだけ。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍 / Lv3: 1.3倍 / Lv4: 1.4倍 / Lv5: 1.5倍（冷却時間短縮 15% / 30% / 50% / 60% / 70%）",
+     "applies_to": "ボウガンでは徹甲榴弾と竜撃弾（下の2つの事実を参照）。拡散弾には効かない",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/199508",
+      "https://gamewith.jp/mhw/article/show/88186",
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)"
+     ]
+    },
+    {
+     "key": "bowgun_artillery_sticky",
+     "statement_ja": "徹甲榴弾の爆発ダメージには、砲術とハンターの攻撃力が効く。",
+     "value": "砲術の倍率（上の事実）がそのままかかる",
+     "applies_to": "徹甲榴弾 Lv1〜3",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Artillery_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Sticky+Ammo",
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/%E5%BE%B9%E7%94%B2%E6%A6%B4%E5%BC%BE"
+     ]
+    },
+    {
+     "key": "bowgun_artillery_wyvern_ammo",
+     "statement_ja": "ヘビィボウガンの竜撃弾には砲術が効く（MHX以降の仕様で、MHW:Iでも同じ）。",
+     "value": "砲術の倍率がかかる",
+     "applies_to": "竜撃弾（ヘビィボウガン）",
+     "confidence": "medium",
+     "conflict": "竜撃弾に効くとはっきり書いてあったのは大辞典Wiki（wikiwiki.jp）だけ。ゲームエイトの砲術ページの要約にも竜撃弾は出てくるが、ゲームエイトのはっきりした『効く』という記述はライズ版のページ（game8.jp/mhrise/379287）のものだった。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%E7%A0%B2%E8%A1%93",
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/%E7%AB%9C%E6%92%83%E5%BC%BE",
+      "https://game8.jp/mhw/199508"
+     ]
+    },
+    {
+     "key": "bowgun_artillery_cluster_excluded",
+     "statement_ja": "拡散弾には砲術が効かない。肉質を無視する爆発と小さい火属性ダメージがあるが、砲術の対象外。ヘビィの近接射撃強化パーツも拡散弾には効かない（竜撃弾には効く）。",
+     "value": "砲術の倍率なし（1.0）",
+     "applies_to": "拡散弾 Lv1〜3",
+     "confidence": "medium",
+     "conflict": "確かめられたのは大辞典Wiki（wikiwiki.jp）1つのサイトだけ。英語の Monster Hunter Wiki の砲術の説明でも、弾の中で名前が出ているのは徹甲榴弾だけ。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/%E6%8B%A1%E6%95%A3%E5%BC%BE",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%E7%A0%B2%E8%A1%93",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/%E3%82%AA%E3%83%97%E3%82%B7%E3%83%A7%E3%83%B3%E3%83%91%E3%83%BC%E3%83%84"
+     ]
+    },
+    {
+     "key": "bowgun_sticky_cluster_no_crit",
+     "statement_ja": "徹甲榴弾と拡散弾には会心が効かない。だから弱点特効などの会心率スキルは、この2つには意味がない。",
+     "value": "会心補正なし",
+     "applies_to": "徹甲榴弾、拡散弾",
+     "confidence": "medium",
+     "conflict": "徹甲榴弾が会心率の影響を受けないことは2つのサイトで確認できた。拡散弾はゲームエイトの記述だけ。",
+     "sources": [
+      "https://game8.jp/mhw/279017",
+      "https://gamewith.jp/mhw/91228"
+     ]
+    },
+    {
+     "key": "bowgun_elemental_ammo_structure",
+     "statement_ja": "属性弾のダメージは、物理の部分と属性の部分を別々に計算する。会心（会心率）が効くのは物理の部分だけ。ボウガン本体には属性値がなく、MHWの属性弾の属性値は、武器の基礎攻撃力（武器倍率）から決まる。",
+     "value": "属性ダメージ = 武器倍率 × 弾ごとの係数（くわしい係数はアイスボーンについては確認できなかった）",
+     "applies_to": "火炎弾・水冷弾・電撃弾・氷結弾・滅龍弾（と、その貫通版）",
+     "confidence": "medium",
+     "conflict": "確かめられたのは大辞典Wiki（wikiwiki.jp）1つのサイトだけ。『火炎弾は武器倍率×0.45』という注記もあったが、どの作品の値なのか書かれていなかった。旧作（MH〜MH4G）では火炎弾が武器倍率×0.4。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/%E5%B1%9E%E6%80%A7%E5%BC%BE",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/%E5%B1%9E%E6%80%A7"
+     ]
+    },
+    {
+     "key": "bowgun_elemental_ammo_element_cap",
+     "statement_ja": "MHWでは属性攻撃強化の上限が変わり、武器が本来持つ属性値の1.3倍が上限になった。ライトボウガンの属性弾はこの上限にすぐ届く。",
+     "value": "上限 = 本来の属性値 × 1.3",
+     "applies_to": "属性攻撃強化（火・水・雷・氷・龍）と属性弾",
+     "confidence": "low",
+     "conflict": "確かめられたのは1つのサイトだけ。『MHWでは』と書かれていて、アイスボーンで上限の仕組みが変わったかどうかは確かめられなかった。属性攻撃強化のLvごとの加算値・倍率も、この検索では出てこなかった。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%E5%B1%9E%E6%80%A7%E6%94%BB%E6%92%83"
+     ]
+    },
+    {
+     "key": "bowgun_elemental_ammo_crit_element",
+     "statement_ja": "会心撃【属性】は、会心が出たときに属性ダメージを上げるスキル。ライトボウガンの属性弾構成では必須とされているので、属性弾の属性部分に効く。",
+     "value": "ボウガンでの倍率は確認できなかった",
+     "applies_to": "属性弾（ライトボウガン・ヘビィボウガン）",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/278990",
+      "https://altema.jp/mhw/raitobouganntenple"
+     ]
+    },
+    {
+     "key": "bowgun_elemental_ammo_no_crit_distance",
+     "statement_ja": "属性弾にはクリティカル距離がない。だから弾導強化は属性弾には意味がない。",
+     "value": "距離補正なし",
+     "applies_to": "属性弾",
+     "confidence": "low",
+     "conflict": "確かめられたのは1つのサイトだけ。",
+     "sources": [
+      "https://gamewith.jp/mhw/83254"
+     ]
+    },
+    {
+     "key": "bowgun_weakness_exploit_values",
+     "statement_ja": "弱点特効Lv3の会心率は、サイトによって値が違う。",
+     "value": "アルテマ: Lv3 弱点部位 +30%（傷ついた部位でさらに +20%） / ゲームウィズ: Lv3 +50%",
+     "applies_to": "弱点特効（物理の部分の会心率）。徹甲榴弾・拡散弾には意味がない",
+     "confidence": "low",
+     "conflict": "アルテマは Lv3 で +30%（傷ついた部位で +20% 追加）、ゲームウィズは Lv3 で +50%。合計の 50% のことを言っているだけかもしれないが、確かめられなかった。属性弾の属性の部分に弱点特効がどう関わるか（会心撃【属性】の会心判定に使われるか）をはっきり書いた記述もなかった。",
+     "sources": [
+      "https://altema.jp/mhw/skill/28",
+      "https://gamewith.jp/mhw/93039"
+     ]
+    },
+    {
+     "key": "bowgun_critical_distance_spare_shot",
+     "statement_ja": "弾導強化（心眼/弾導強化）は、弾と矢のクリティカル距離を広げる（それと、攻撃が弾かれなくなる）。弾には威力が最大になる距離（クリティカル距離）があり、近すぎると威力が下がる。",
+     "value": "クリティカル距離の倍率（1.5倍など）は検索結果では確認できなかった",
+     "applies_to": "通常弾・貫通弾など、クリティカル距離がある弾。属性弾・斬裂弾にはクリティカル距離がない",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/skill/302",
+      "https://gamewith.jp/mhw/91228",
+      "https://mhworld.kiranico.com/en/guide/light-bowgun"
+     ]
+    },
+    {
+     "key": "lbg_rapid_fire_multiplier",
+     "statement_ja": "ライトボウガンの速射は、弾1発で何発か撃つ。1発目は補正なし（1.0倍）、2発目からは0.5倍。全部当たれば、普通に撃つより合計ダメージは高い。",
+     "value": "1発目: 1.0倍 / 2発目以降: 0.5倍（例: 3発の速射なら 1.0 + 0.5 + 0.5 = 2.0 発分）",
+     "applies_to": "ライトボウガンの速射できる弾（例: 通常弾Lv2は3発の速射）",
+     "confidence": "medium",
+     "conflict": "1.0 / 0.5 という数値は大辞典Wikiの記述。ゲームエイトとSteamの書き込みは『2発目以降は約半分』という言い方。弾の種類ごとの細かい値は確認できなかった。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0/%E9%80%9F%E5%B0%84",
+      "https://game8.jp/mhw/157987",
+      "https://steamcommunity.com/app/582010/discussions/0/1743392068391437399"
+     ]
+    },
+    {
+     "key": "bowgun_slicing_ammo",
+     "statement_ja": "斬裂弾は、着弾したあと刃で切るダメージを与える。切断の肉質で計算され、攻撃力が効く。着弾の爆発のダメージはとても小さい。クリティカル距離はなく、○○弾強化系のスキルは効かない。攻撃力を上げるか超会心がすすめられている（会心が効く）。",
+     "value": "アイスボーンでの計算式・固定値は確認できなかった",
+     "applies_to": "斬裂弾（ライトボウガン・ヘビィボウガン）",
+     "confidence": "medium",
+     "conflict": "『攻撃力と肉質が効く』という記述は、大辞典Wikiでは旧作（MH3〜MH4G）の説明。ワールドでも切断で計算されることはゲームウィズで確認できた。大辞典Wikiによると、MHWのVer1.05でヒット数と威力が下げられた（くわしい値は確認できなかった）。",
+     "sources": [
+      "https://gamewith.jp/mhw/87953",
+      "https://wikiwiki.jp/nenaiko/%E3%82%A2%E3%82%A4%E3%83%86%E3%83%A0/%E6%96%AC%E8%A3%82%E5%BC%BE",
+      "https://game8.jp/mhw/196229"
+     ]
+    }
+   ],
+   "not_found": [
+    "特殊射撃強化がライトボウガンのワイバーンブラストに効くか",
+    "ボウガンでの会心撃【属性】の倍率（ライト・ヘビィ）",
+    "クリティカル距離（会心距離）にいるときのダメージ倍率の値と、弾導強化でその倍率が変わるか（距離が広がることだけ確認できた）",
+    "属性弾の属性係数（火炎・水冷・電撃・氷結・滅龍、通常版と貫通版）のアイスボーンでの値と、物理の部分の値",
+    "属性攻撃強化のLvごとの値と、アイスボーンでの属性弾の上限（MHWでは本来の値の1.3倍という記述だけ）",
+    "弱点特効が属性弾の属性部分に関わるか（会心撃【属性】と組み合わせたときの会心判定）をはっきり書いた記述",
+    "貫通弾・竜の一矢強化が属性の貫通弾（貫通火炎弾など）に効くか",
+    "通常弾・貫通弾・散弾の各スキルが、弾のLv1〜3すべてに同じ倍率で効くとはっきり書いた記述（攻略サイトはLvを区別せず『通常弾』『貫通弾』『散弾』と書いていた）",
+    "通常弾・通常矢強化と貫通弾・竜の一矢強化のLv2がアイスボーンで追加されたものか（散弾・剛射強化ではLv2がアイスボーンで追加されたと確認できた）",
+    "斬裂弾のアイスボーンでの正確な計算式（刃1回のダメージ、ヒット数、爆発が固定値かどうか）",
+    "速射の弾の種類ごとの細かい補正値（1.0 / 0.5 以外の例外があるか）"
+   ]
+  },
+  "bow": {
+   "facts": [
+    {
+     "key": "bow_normal_shots_skill",
+     "statement_ja": "アイスボーンのスキル名は「通常弾・通常矢強化」（ライズの「通常弾・連射矢強化」とは別）。弓では連射タイプの溜め射撃（英語版の Rapid Shot、日本語版の通常矢）の威力が上がる。貫通・拡散タイプの矢が対象だと書いたページは見つからなかった。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "弓：連射タイプの溜め射撃（通常矢）。ボウガン：通常弾。貫通タイプ・拡散タイプの矢、剛射、竜の一矢は対象外と考えられる（対象一覧に載っていない）",
+     "confidence": "high",
+     "conflict": "倍率は 2 サイトで同じ（game8・Fextralife: 10%/20%）。Steam の古い掲示板には「7〜10%か分からない」という書き込みもあるが、根拠はない。Fextralife は「生（物理）ダメージ」に +10%/+20% と書いている。Steam の掲示板では弓の属性部分には効かないという声が多いが、効くという声もあり、確認できていない。",
+     "sources": [
+      "https://game8.jp/mhw/200217",
+      "https://monsterhunterworld.wiki.fextralife.com/Normal+Shots",
+      "https://monsterhunterwiki.org/wiki/Normal_Shots_(MHWI)"
+     ]
+    },
+    {
+     "key": "bow_piercing_shots_skill",
+     "statement_ja": "「貫通弾・竜の一矢強化」は、弓では竜の一矢の威力を上げる。弓で載っている対象は竜の一矢だけで、貫通タイプの溜め射撃は対象に入っていない。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "弓：竜の一矢。ボウガン：貫通弾Lv1/2/3（Fextralife では生ダメージに乗ると書かれている）。弓の貫通タイプの溜め射撃は対象一覧にない",
+     "confidence": "high",
+     "conflict": "Fextralife のページは無印のころの記述かもしれない、と検索要約は注意している。ただ、アイスボーンの game8 と値は同じ。",
+     "sources": [
+      "https://game8.jp/mhw/200483",
+      "https://monsterhunterworld.wiki.fextralife.com/Piercing+Shots"
+     ]
+    },
+    {
+     "key": "bow_spread_power_shots_skill",
+     "statement_ja": "「散弾・剛射強化」は、弓では剛射の威力を上げる。Lv2 は 1.2倍ではなく 1.15倍。竜の千々矢も対象だと書くサイトがある。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.15倍",
+     "applies_to": "弓：剛射（竜の千々矢も対象とする出典あり）。ボウガン：散弾Lv1/2/3。弓の拡散タイプの溜め射撃が対象だと書いた出典は見つからなかった",
+     "confidence": "high",
+     "conflict": "Lv2 には 1.2倍という書き込みもあったが、game8 のコメント欄と Wiki の検証で誤りとされ、1.15倍が正しい。竜の千々矢が対象かどうか：Fextralife のスキル個別ページとアルテマは対象としている。Fextralife のスキル一覧ページは「散弾と剛射」だけを挙げている。Steam の掲示板には「散弾部分は弓に関係なく、剛射の矢が増える」という記憶ベースの書き込みがあるが、確認できていない。",
+     "sources": [
+      "https://game8.jp/mhw/200214",
+      "https://monsterhunterworld.wiki.fextralife.com/Spread_Power_Shots",
+      "https://altema.jp/mhw/skill/280",
+      "https://gamewith.jp/mhw/article/show/91137"
+     ]
+    },
+    {
+     "key": "bow_special_ammo_boost",
+     "statement_ja": "「特殊射撃強化」は弓の竜の一矢の威力を上げる。アイスボーンでは、新しく増えた竜の千々矢にも効くようになった。",
+     "value": "Lv1: 1.1倍 / Lv2: 1.2倍",
+     "applies_to": "弓：竜の一矢、竜の千々矢（アイスボーンから）。ボウガン：特殊弾（Fextralife のユーザーコメントには、ボウガンでは特殊攻撃だけに効いて装填した弾には効かない、とある）",
+     "confidence": "high",
+     "conflict": "倍率はどのサイトも同じ。竜の千々矢が対象になるのはアイスボーンからで、無印には千々矢そのものがない。",
+     "sources": [
+      "https://game8.jp/mhw/199524",
+      "https://altema.jp/mhw/skill/56",
+      "https://gamewith.jp/mhw/88002",
+      "https://monsterhunterworld.wiki.fextralife.com/Special+Ammo+Boost",
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%E5%A4%89%E5%89%87%E5%B0%84%E6%92%83"
+     ]
+    },
+    {
+     "key": "bow_dragon_piercer_skill_stack",
+     "statement_ja": "竜の一矢には「貫通弾・竜の一矢強化」と「特殊射撃強化」の両方が効き、重ねて掛けられる。",
+     "value": "それぞれ Lv1: 1.1倍 / Lv2: 1.2倍（重ねたときに掛け算か足し算かは確認できなかった）",
+     "applies_to": "弓：竜の一矢",
+     "confidence": "medium",
+     "conflict": "重ね掛けできるとはっきり書いているのは大辞典 Wiki だけ。Fextralife は 2 つのスキルの両方で竜の一矢を対象に挙げているが、重ねたときの計算方法は書いていない。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%E5%A4%89%E5%89%87%E5%B0%84%E6%92%83",
+      "https://monsterhunterworld.wiki.fextralife.com/Special+Ammo+Boost"
+     ]
+    },
+    {
+     "key": "bow_thousand_dragons_skills",
+     "statement_ja": "竜の千々矢は「散弾・剛射強化」と「特殊射撃強化」の 2 つで強化できる。",
+     "value": "散弾・剛射強化 Lv1 1.1倍 / Lv2 1.15倍、特殊射撃強化 Lv1 1.1倍 / Lv2 1.2倍",
+     "applies_to": "弓：竜の千々矢（アイスボーンで追加）",
+     "confidence": "medium",
+     "conflict": "Fextralife のスキル一覧ページは、散弾・剛射強化の対象に千々矢を入れていない。ゲームエイトのワイルズ版の記事には「千々矢に散弾・剛射強化は乗らない」とあるが、これは別の作品の話なので、アイスボーンの根拠にはしない。",
+     "sources": [
+      "https://wikiwiki.jp/nenaiko/%E3%82%B9%E3%82%AD%E3%83%AB/%EF%BD%9E%E5%BC%BE%E5%BC%B7%E5%8C%96",
+      "https://monsterhunterworld.wiki.fextralife.com/Spread_Power_Shots",
+      "https://monsterhunterworld.wiki.fextralife.com/Special+Ammo+Boost"
+     ]
+    },
+    {
+     "key": "bow_dragon_piercer_charge_dependency",
+     "statement_ja": "竜の一矢の威力は、直前の射撃の溜め段階で変わる。溜め3の射撃から竜の一矢につなげても、溜め3の射撃をキャンセルしても、溜め段階による威力の上がり分は残る。抜刀術【技】の効果は、弓では溜めから竜の一矢に移っても続く。",
+     "value": "溜め段階による（段階ごとの値は見つからなかった）",
+     "applies_to": "弓：竜の一矢",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://mhworld.kiranico.com/de/guide/bow",
+      "https://altema.jp/mhw/yumi",
+      "https://monsterhunterworld.wiki.fextralife.com/Critical_Draw"
+     ]
+    },
+    {
+     "key": "bow_charge_plus",
+     "statement_ja": "「弓溜め段階解放」を付けると、弓の溜め段階の上限が 1 つ上がる。溜め4 にはこのスキルがないと届かない。",
+     "value": "最大溜め段階 +1（たとえば溜め3 までの弓が溜め4 まで溜められる）",
+     "applies_to": "弓のみ",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://mhworld.kiranico.com/en/skilltrees/ABzBA/bow-charge-plus",
+      "https://monsterhunterwiki.org/wiki/Bow_Charge_Plus_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Bow"
+     ]
+    },
+    {
+     "key": "bow_charge_step_mechanics",
+     "statement_ja": "溜めステップの直後に R2 を押すと、前の射撃より 1 段階上の溜めから始まる。剛射は溜め段階を 1 段階上げて撃ち、すでに最大段階ならその段階のまま撃つ。",
+     "value": "+1 段階（最大段階なら変わらない）",
+     "applies_to": "弓：溜めステップの後の溜め射撃、剛射",
+     "confidence": "medium",
+     "conflict": "剛射についての記述は hanakin wiki だけ。検索要約は MHW のころの記述だとしているが、アイスボーンでも同じかは確認できていない。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/bow",
+      "https://wikiwiki.jp/hanakin/%E5%BC%93"
+     ]
+    },
+    {
+     "key": "bow_power_coating",
+     "statement_ja": "強撃ビンを付けると弓の射撃の攻撃力が上がる。Kiranico（アイスボーン対応のデータベース）では倍率は 1.35倍。",
+     "value": "1.35倍",
+     "applies_to": "弓の射撃（矢）。強撃ビンは持てる数が 50 本",
+     "confidence": "medium",
+     "conflict": "倍率を書いているのは Kiranico だけで、ゲームエイトは「威力が上がる」と書いているだけ。Fandom のユーザーブログ（古い作品のもの）には 1.5倍とある。無印からアイスボーンで倍率が変わったと書いたパッチノートや記事は見つからなかった。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/bow",
+      "https://game8.jp/mhw/196191"
+     ]
+    },
+    {
+     "key": "bow_close_range_coating",
+     "statement_ja": "接撃ビンを付けると射程が短くなるかわりに、近い距離で当てたときの攻撃力が上がる。会心距離も短くなる。Kiranico では 1.18倍。持てる数は無限。",
+     "value": "1.18倍",
+     "applies_to": "弓の射撃（近い距離で当たったとき）",
+     "confidence": "low",
+     "conflict": "倍率を書いているのは Kiranico だけ。Fandom のユーザーブログ（古い作品）には「2 ホップより近いとき 1.3倍」とある。ワイルズ版の 1.4倍は別の作品の値。アイスボーンで変わったかは確認できなかった。",
+     "sources": [
+      "https://mhworld.kiranico.com/guide/bow",
+      "https://game8.jp/mhw/196212"
+     ]
+    },
+    {
+     "key": "crit_element_bow",
+     "statement_ja": "「会心撃【属性】」は、会心が出たときの属性ダメージに倍率を掛ける。基本は 1.35倍で、大剣・狩猟笛・ハンマーだけ高い値になっている。弓はその例外に入っていないので 1.35倍だと考えられるが、弓の値をそのまま書いた出典は見つからなかった。",
+     "value": "基本 1.35倍（大剣・狩猟笛 1.5倍、ハンマー 1.7倍）",
+     "applies_to": "弓（例外の武器ではないので基本値）、双剣 1.35倍（Steam の書き込み）",
+     "confidence": "medium",
+     "conflict": "真・会心撃【属性】（シルバーソル 4 部位）の値が出典で違う。Steam：双剣 1.55倍。Fextralife：大剣・ハンマー・狩猟笛・ヘビィボウガンが 1.7倍。弓の真・会心撃【属性】の値は確認できなかった。",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Critical_Element_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Critical+Element",
+      "https://steamcommunity.com/app/582010/discussions/0/1743392068395307545"
+     ]
+    },
+    {
+     "key": "focus_bow",
+     "statement_ja": "「集中」を付けると弓の溜め時間が短くなる。",
+     "value": "Lv1: 5%短縮 / Lv2: 10%短縮 / Lv3: 15%短縮",
+     "applies_to": "弓の溜め（大剣・ハンマーの溜めにも効く）",
+     "confidence": "low",
+     "conflict": "確かめられたのは検索要約の 1 か所だけで、どのページの値かも分からない。Lv3 が本当に 15% か、別のサイトでは確認できていない。",
+     "sources": [
+      "https://game8.jp/mhw/199547"
+     ]
+    },
+    {
+     "key": "bow_charged_shot_mv_sample",
+     "statement_ja": "参考：Kiranico のある弓（Bow of Vice & Violence）のページでは、溜め1・2・3 の射撃のモーション値が 7・9・10、属性の補正が 0.20・0.35・0.70 と読み取れた。どの射撃タイプの矢 1 本あたりの値なのかは分からない。",
+     "value": "溜め1: MV7・属性×0.20 / 溜め2: MV9・属性×0.35 / 溜め3: MV10・属性×0.70（矢 1 本あたりかどうかは不明）",
+     "applies_to": "Kiranico の弓 1 本のページだけの値。すべての弓や射撃タイプに当てはまるかは不明",
+     "confidence": "low",
+     "conflict": "出典は 1 つだけで、検索要約から読み取った値。計算に使う前に、ちゃんとした表で確かめる必要がある。",
+     "sources": [
+      "https://mhworld.kiranico.com/en/weapons/Vvhp8fqb/bow-of-vice-violence"
+     ]
+    }
+   ],
+   "not_found": [
+    "溜め段階ごと・射撃タイプ（連射・貫通・拡散）ごとの矢の本数とモーション値の表（Kiranico のモーション値の欄は検索結果に出てこなかった）",
+    "溜め段階ごとの属性の補正・状態異常の補正の正式な表（Kiranico の表は空欄や「?」ばかりで読めなかった）",
+    "剛射・竜の一矢・竜の千々矢のモーション値（溜め段階ごとの値も含む）",
+    "弓の拡散タイプの溜め射撃に「散弾・剛射強化」が効くかどうか、貫通タイプの溜め射撃に「貫通弾・竜の一矢強化」が効くかどうかを、はっきり書いた出典（どちらも対象一覧に載っていない、ということしか確かめられなかった）",
+    "強撃ビン・接撃ビンの倍率が無印からアイスボーンで変わったかどうか（パッチノートや記事が見つからなかった）",
+    "強撃ビン・接撃ビンの倍率が属性ダメージにも掛かるかどうか",
+    "「属性攻撃強化」の弓での扱い（上限値や弓だけの補正）",
+    "弓の「真・会心撃【属性】」の倍率",
+    "弓溜め段階解放が溜め段階の上限を上げる以外の効果を持つか（スタミナなど）",
+    "集中の Lv2・Lv3 の値を確かめる 2 つ目の出典",
+    "通常弾・通常矢強化と散弾・剛射強化が弓の属性ダメージにも掛かるかどうか（掲示板では意見が割れていて、確かな出典はない）",
+    "今回の検索は 20 回（エラーになった 1 回を含む）で上限に達したため、これ以上は調べていない"
+   ]
+  },
+  "element-rules": {
+   "facts": [
+    {
+     "key": "element_cap_iceborne",
+     "statement_ja": "属性値の上限は武器の元の属性値（基礎属性値）から決まる。アイスボーンでは『元の属性値の1.6倍』と『元の属性値+150（内部値では+15）』の大きいほうが上限、という説が複数ある。ガンナー武器（ボウガン）では倍率が1.57倍という記載もある。",
+     "value": "上限 = max(元の属性値 × 1.6, 元の属性値 + 150)（ボウガンは 1.57倍 / +150）",
+     "applies_to": "アイスボーンの全武器の表示属性値（属性攻撃強化・装飾品などで上げた分）。会心による属性の上昇（会心撃【属性】）は上限の対象外とする投稿がある。",
+     "confidence": "low",
+     "conflict": "game8 の属性攻撃強化ページ（水・龍）は『元の属性値の約1.3倍が上限』と書いている（https://game8.jp/mhw/199502 , https://game8.jp/mhw/199498）。Steam の2018年の投稿（無印時代）も『(元の属性値/10)×1.3 を丸めて ×10』としている。無印は1.3倍、アイスボーンで1.6倍/+150 に緩和された可能性が高いが、公式の資料では確かめられなかった。1.6倍 / +150 の出どころは改造版の変更履歴（バニラ側の値として記載）と掲示板の投稿だけ。",
+     "sources": [
+      "https://github.com/AsteriskAmpersand/Ice-Stable",
+      "https://gamefaqs.gamespot.com/boards/211368-monster-hunter-world/78237444",
+      "https://steamcommunity.com/app/582010/discussions/0/1743392068395307545"
+     ]
+    },
+    {
+     "key": "element_cap_base_world",
+     "statement_ja": "無印（アイスボーンより前）では、属性値の上限は元の属性値の約1.3倍（10の位で丸める）とされていた。",
+     "value": "上限 ≈ round(元の属性値 / 10 × 1.3) × 10",
+     "applies_to": "無印 MHW の属性攻撃強化などによる属性値の上昇。アイスボーンの値とは違う可能性が高い（element_cap_iceborne を参照）。",
+     "confidence": "medium",
+     "conflict": "game8 はアイスボーンのページでも1.3倍と書いており、アイスボーンでの値と食い違う（element_cap_iceborne を参照）。",
+     "sources": [
+      "https://game8.jp/mhw/199498",
+      "https://game8.jp/mhw/199502",
+      "https://steamcommunity.com/app/582010/discussions/0/1743392068395307545"
+     ]
+    },
+    {
+     "key": "element_cap_base_includes_augments",
+     "statement_ja": "カスタム強化（属性強化）や覚醒能力で上がる属性は『元の属性値』に入るため、上限そのものも上がる。上限に達したかどうかは、装備画面で属性値の数字がオレンジ色になることで分かる。",
+     "value": "上限の計算に使う元の属性値 = 武器の属性値 + カスタム強化・覚醒能力の属性",
+     "applies_to": "マスターランク武器のカスタム強化、ムフェト武器の覚醒能力（属性強化）",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://nexusmods.com/monsterhunterworld/mods/6217?tab=posts",
+      "https://steamcommunity.com/app/582010/discussions/0/1743392068395941555"
+     ]
+    },
+    {
+     "key": "element_attack_boost_levels",
+     "statement_ja": "属性攻撃強化（火・水・雷・氷・龍）は Lv3 までが加算だけで、Lv3 は +100。Lv4 以上は属性値に倍率をかけてから +100 する。Lv6 はアイスボーンで追加されたレベル。",
+     "value": "Lv3: +100 / Lv4: ×1.05 +100 / Lv5: ×1.1 +100 / Lv6: ×1.2 +100（Lv1・Lv2 の加算値は確かめられなかった）",
+     "applies_to": "各属性の属性攻撃強化スキル。上がった後の値は属性値の上限を超えない。",
+     "confidence": "medium",
+     "conflict": "game8 には Lv5 までしか載っていない。Lv6（×1.2 +100）が確かめられたのはアルテマだけ。",
+     "sources": [
+      "https://altema.jp/mhw/skill/116",
+      "https://game8.jp/mhw/199498"
+     ]
+    },
+    {
+     "key": "element_acceleration",
+     "statement_ja": "属性加速（溟龍の神秘 2部位）：モンスターを続けて攻撃すると（およそ5〜7回当てると）、45秒の間、属性解放/装填拡張 Lv2 が付き、属性値が +60 上がる。",
+     "value": "属性値 +60（加算）、属性解放/装填拡張 Lv2、効果時間 45秒",
+     "applies_to": "属性のある武器（無属性には属性値の上昇はない）。防具の属性解放/装填拡張と重ねられ、上限は Lv3。",
+     "confidence": "medium",
+     "conflict": "効果時間について、GameFAQs の古いスレッド（https://gamefaqs.gamespot.com/boards/211368-monster-hunter-world/78006614）ではプレイヤーの見立てで約30秒としている。poedb のパラメータは見出しがなく、+60（内部値6×10）という読み方は推測を含む。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Element+Acceleration",
+      "https://mhw.poedb.tw/eng/skill/Namielle%20Divinity",
+      "https://www.monsterhunterwiki.org/wiki/Namielle_Divinity_(MHWI)"
+     ]
+    },
+    {
+     "key": "true_element_acceleration",
+     "statement_ja": "真・属性加速（溟龍の神秘 4部位）：続けて攻撃すると、45秒の間、属性解放/装填拡張 Lv3 が付き、属性値が +150 上がる。",
+     "value": "属性値 +150（加算）、属性解放/装填拡張 Lv3、効果時間 45秒",
+     "applies_to": "属性のある武器",
+     "confidence": "medium",
+     "conflict": "+150 を文章ではっきり書いているのは Fextralife だけ。poedb はパラメータの数字（15）だけ。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/True+Element+Acceleration",
+      "https://mhw.poedb.tw/eng/skill/Namielle%20Divinity",
+      "https://www.monsterhunterwiki.org/wiki/Namielle_Divinity_(MHWI)"
+     ]
+    },
+    {
+     "key": "element_conversion_formula",
+     "statement_ja": "耐性変換【属性】（煌黒龍の真髄）：防具の属性耐性（火・水・雷・氷・龍）の合計の5%が内部の属性値に足される（ボウガンは2%）。表示の属性値に直すと、耐性の合計 × 0.5（ボウガンは × 0.2）が足される。",
+     "value": "表示属性値 + 耐性合計 × 0.5（ボウガン: × 0.2）。内部値では 耐性合計 × 5%（ボウガン 2%）",
+     "applies_to": "属性のある武器。ボウガンだけ係数が低い。",
+     "confidence": "low",
+     "conflict": "Digital Trends の例では耐性が +92 で属性が +40 で、0.5倍の式（+46）と合わない（上限・丸め・別の制限がある可能性）。Fandom には Lv1 の値しかなく、上限の有無も確かめられなかった。なお、ワイルズの『耐性変換』は別物（耐性10ごとに一定量増える）で、アイスボーンには使えない。",
+     "sources": [
+      "https://monsterhunter.fandom.com/wiki/Element_Conversion_(Skill_Tree)",
+      "https://www.digitaltrends.com/gaming/mhw-iceborne-alatreon-guide-strategy-element-armor/"
+     ]
+    },
+    {
+     "key": "dragonvein_awakening",
+     "statement_ja": "龍脈覚醒（赤龍の封印 3部位）：抜刀中に会心率と属性値・状態異常値が上がる。攻撃すると体力が減るが、攻撃を続けると回復する。",
+     "value": "会心率 +20%、属性値 +80（+75 という報告もある）、状態異常値 +60（+80 とする出典もある）",
+     "applies_to": "抜刀中の全武器。属性値は属性武器、状態異常値は状態異常武器に効く。",
+     "confidence": "medium",
+     "conflict": "属性値は +80（Fandom・Steam 2020）と +75（Steam の別の投稿）で食い違う。状態異常値は Fandom が属性と同じ +80 と読める書き方で、Steam 2020 は +60。",
+     "sources": [
+      "https://monsterhunter.fandom.com/wiki/Dragonvein_Awakening_(Skill_Tree)",
+      "https://steamcommunity.com/app/582010/discussions/0/3824163317772181610",
+      "https://monsterhunterwiki.org/wiki/Dragonvein_Awakening_(MHWI)",
+      "https://steamcommunity.com/app/582010/discussions/0/1863867579001037060/"
+     ]
+    },
+    {
+     "key": "true_dragonvein_awakening",
+     "statement_ja": "真・龍脈覚醒（赤龍の封印 5部位）：抜刀中に会心率 +40%、属性値 +150、状態異常値 +120。体力の減り方と回復は3部位と同じで、違うのは上昇量だけ。",
+     "value": "会心率 +40%、属性値 +150、状態異常値 +120",
+     "applies_to": "抜刀中の全武器",
+     "confidence": "medium",
+     "conflict": "Steam の2023年のコメントは状態異常値 +120・会心率 40% と書いており同じ値。改造版の変更履歴（https://github.com/AsteriskAmpersand/Ice-Stable）には、龍脈覚醒では属性値の上限が別に決められている（元の値として 2.2倍 / 2.55倍 の記載）とあるが、バニラの値かどうかはっきりしない。",
+     "sources": [
+      "https://monsterhunter.fandom.com/wiki/True_Dragonvein_Awakening_(Skill_Tree)",
+      "https://steamcommunity.com/app/582010/discussions/0/3824163317772181610",
+      "https://monsterhunterworld.wiki.fextralife.com/Safi'jiiva+Seal"
+     ]
+    },
+    {
+     "key": "non_elemental_boost",
+     "statement_ja": "無属性強化は武器の元の攻撃力に倍率をかける。アイスボーンで 1.1倍 から 1.05倍 に下げられた。属性・状態異常が働いている武器（ボウガンの属性弾を含む）では効かない。",
+     "value": "アイスボーン: 元の攻撃力 × 1.05（無印: × 1.1）",
+     "applies_to": "無属性の武器（属性・状態異常が働いていない武器）のみ",
+     "confidence": "medium",
+     "conflict": "アイスボーンと無印で値が違う（無印は1.1倍）。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Non-elemental_Boost",
+      "https://www.windowscentral.com/monster-hunter-world-iceborne-guide-all-balance-changes-fixes-and-updates",
+      "https://github.com/noahbachmann/mh-builder/issues/12"
+     ]
+    },
+    {
+     "key": "punishing_draw",
+     "statement_ja": "抜刀術【力】は抜刀攻撃に気絶の効果を付け、攻撃力を少し上げる。無印 MHW の資料では、全武器で抜刀攻撃の攻撃力（表示ではない内部値）が +5。",
+     "value": "抜刀攻撃のみ 攻撃力（内部値）+5、気絶値の付加",
+     "applies_to": "抜刀攻撃（全武器）",
+     "confidence": "low",
+     "conflict": "確かめられたのは1サイトだけ。アイスボーンで値が変わったかどうかは確かめられなかった（Monster Hunter Wiki の MHWI ページには数値がない）。ライズ（+3〜+7）とワイルズの値は別のゲームのもの。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Punishing+Draw"
+     ]
+    },
+    {
+     "key": "element_damage_formula",
+     "statement_ja": "属性ダメージは、表示の属性値を10で割り、斬れ味の属性補正、攻撃ごとの属性補正、モンスターの属性肉質（÷100）をかけて出す。さらにクエスト・怒りの補正と、会心時は会心撃【属性】の補正がかかる。モーション値は物理ダメージ側にだけ使う。",
+     "value": "属性ダメージ = 表示属性値 / 10 × 斬れ味属性補正 × 攻撃の属性補正 × 属性肉質 / 100 (× 会心属性補正 × 全体防御率など)",
+     "applies_to": "全武器の属性ダメージ（画面のダメージの数字は物理と属性の合計）",
+     "confidence": "medium",
+     "conflict": "Game8 の記事には『属性ダメージはモーション値に影響されない』とあるが、同じ記事のコメントで『影響される』と反論がある。Game8 の記事はワイルズ向けで、アイスボーン用ではない。",
+     "sources": [
+      "https://monsterhunter.fandom.com/f/p/4400000000000145724/r/4400000000001047419",
+      "https://game8.co/games/Monster-Hunter-Wilds/archives/499631"
+     ]
+    }
+   ],
+   "not_found": [
+    "飛燕【属性】の倍率：アイスボーンのスキルとして載っている資料が検索結果に見つからず、存在も数値も確かめられなかった（飛燕（ジャンプ攻撃強化）の属性版は確認できない）。",
+    "武器の種類ごとの属性補正（双剣・弓・ボウガンの属性弾などの補正値）：数値を載せた資料は見つからなかった。耐性変換のボウガン係数（2%）と、属性上限のボウガン倍率（1.57倍）だけは別の項目に書いた。",
+    "属性攻撃強化 Lv1・Lv2 の加算値（Lv3 +100 と Lv4〜6 だけ確かめられた）。",
+    "アイスボーンの属性上限についてのカプコン公式の資料（パッチノートなど）：見つからなかった。",
+    "耐性変換【属性】の上限の有無と、Lv2 以上・真・耐性変換の値。",
+    "抜刀術【力】のアイスボーンでの値（無印の +5 だけ、1サイトで確認）。"
+   ]
+  },
+  "melee-specific": {
+   "facts": [
+    {
+     "key": "focus_charge_time_gs_hammer_bow",
+     "statement_ja": "集中は大剣・ハンマー・弓の溜め時間を短くする。Lv1が5%、Lv2が10%なのはどの出典も同じだが、Lv3はサイトによって15%と20%に分かれる。",
+     "value": "Lv1: 5%短縮 / Lv2: 10%短縮 / Lv3: 15%短縮（game8）または20%短縮（altema。InvenGlobalの防具一覧でもゲージ量と溜め短縮が同じ値で10%・20%と並ぶ）",
+     "applies_to": "大剣・ハンマー・弓の溜め時間。大剣なら溜め斬り系の溜めに効く。ダメージ倍率は上がらず、溜めの速さだけが変わる",
+     "confidence": "medium",
+     "conflict": "Lv3の溜め短縮: game8は15%、altemaは20%（InvenGlobalの防具一覧も20%寄り）。ライズ版の数値（Lv3: ゲージ20%・溜め15%）がgame8と同じなので、どちらかが別作品の値と混ざっている可能性がある。確定はできていない",
+     "sources": [
+      "https://game8.jp/mhw/199547",
+      "https://altema.jp/mhw/skill/187",
+      "https://www.invenglobal.com/monsterhunterworld/armor/jyura-greavesb",
+      "https://monsterhunterwiki.org/wiki/Focus_(MHWI)"
+     ]
+    },
+    {
+     "key": "focus_gauge_fill",
+     "statement_ja": "集中は太刀の練気ゲージ、双剣の鬼人ゲージ、スラッシュアックスとチャージアックスのゲージが溜まる速さを上げる。",
+     "value": "Lv1: 5%UP（game8） / Lv3: 20%UP（altema） / Lv2: 10%UP（InvenGlobalの防具一覧から読める値。ほかでは確かめられず）",
+     "applies_to": "太刀・双剣・スラッシュアックス・チャージアックスのゲージ。火力の倍率ではない",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/199547",
+      "https://altema.jp/mhw/skill/187",
+      "https://www.invenglobal.com/monsterhunterworld/armor/jyura-greavesb"
+     ]
+    },
+    {
+     "key": "critical_draw_affinity",
+     "statement_ja": "抜刀術【技】は、武器を抜くときの攻撃（抜刀攻撃）だけの会心率を上げる。Lv3では会心率が+100%になる。",
+     "value": "Lv1: +30% / Lv2: +60% / Lv3: +100%",
+     "applies_to": "抜刀攻撃（武器出し攻撃）だけ。抜刀したあとの攻撃には効かない。抜刀大剣で使うのが主な例",
+     "confidence": "medium",
+     "conflict": "Lv1の+30%はMonster Hunter Wikiでも確かめられた。Lv2の+60%とLv3の+100%は日本語の攻略サイトの表でだけ確かめられた",
+     "sources": [
+      "https://game8.jp/mhw/199516",
+      "https://altema.jp/mhw/battoutaikenn",
+      "https://monsterhunterwiki.org/wiki/Critical_Draw_(MHWI)"
+     ]
+    },
+    {
+     "key": "punishing_draw",
+     "statement_ja": "抜刀術【力】は抜刀攻撃に気絶（スタン）の効果を加え、攻撃力も少し上げる。Fextralifeによるとワールド版はレベルが1つだけ。",
+     "value": "レベル1つ: 抜刀攻撃に気絶値が付く ＋ 攻撃力+5（攻撃力の値はFextralifeだけ）",
+     "applies_to": "抜刀攻撃だけ（大剣の抜刀で頭を狙ってスタンを取る使い方が紹介されている）。武器の種類は問わない",
+     "confidence": "medium",
+     "conflict": "ワイルズ版はLv1〜3で攻撃力が+3/+5/+7になり段階もあるが、ワールド版の値ではない。減気（スタミナを奪う効果）が付くかは確かめられなかった",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Punishing+Draw",
+      "https://steamcommunity.com/app/582010/discussions/0/1737715419904639041",
+      "https://game8.jp/mhw/657488"
+     ]
+    },
+    {
+     "key": "ko_stun_multiplier",
+     "statement_ja": "KO術は与える気絶値（スタン値）を何倍かにする。ダメージは上がらない。Lv4とLv5は極意があるときだけ。",
+     "value": "Lv1: 1.2倍 / Lv2: 1.3倍 / Lv3: 1.4倍 / Lv4: 1.5倍・Lv5: 1.6倍（極意のみ。game8）",
+     "applies_to": "気絶値だけ（ハンマーなど気絶値のある攻撃）。ダメージ計算には入らない",
+     "confidence": "medium",
+     "conflict": "Lv4とLv5の値はgame8でだけ確かめられた",
+     "sources": [
+      "https://game8.jp/mhw/199558",
+      "https://altema.jp/mhw/skill/114"
+     ]
+    },
+    {
+     "key": "hh_self_improvement",
+     "statement_ja": "狩猟笛の旋律「自分強化」は、武器を出しているあいだの移動速度を上げる。重ねて吹くと効果時間が延び、攻撃をはじかれなくなる。攻撃力を上げる効果は見つからなかった。",
+     "value": "抜刀中の移動速度UP ／ 重ね掛けで時間延長＋はじかれ無効（攻撃力の倍率は見つからず）",
+     "applies_to": "狩猟笛を使う本人だけ。自分強化は火力の倍率に入れない（攻撃力UPの旋律は別にある）",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/weapon/300",
+      "https://altema.jp/mhw/weapon/301",
+      "https://game8.jp/mhw/290771"
+     ]
+    },
+    {
+     "key": "hh_attack_up_melody",
+     "statement_ja": "狩猟笛の攻撃力UPの旋律の倍率は、出典ごとに値が違い、アイスボーンの値は確定できなかった。",
+     "value": "攻撃力UP【大】: 1.2倍・60秒、重ね掛けで1.25倍・+30秒（Monster Hunter Wikiの狩猟笛ページ。どの作品の値かはっきりしない） ／ 【小】10%・【大】15%・【特大】20%（Steamの書き込み） ／ 【大】1.15倍（MH3Gの表）",
+     "applies_to": "攻撃力UPの旋律（自分強化とは別のもの）",
+     "confidence": "low",
+     "conflict": "1.2倍（Wiki）、1.15倍（MH3Gの表、Steamの書き込み）、1.25倍（Wikiの重ね掛け）と値がそろわない。アイスボーンの値と言い切れる出典はない",
+     "sources": [
+      "https://www.monsterhunterwiki.org/wiki/HH",
+      "https://steamcommunity.com/app/582010/discussions/0/1863867579000572642"
+     ]
+    },
+    {
+     "key": "horn_maestro",
+     "statement_ja": "笛吹き名人は旋律の効果時間を延ばす。Fextralifeによると、Lv1は回復の旋律の回復量も上がり、Lv2は効果時間がさらに大きく延びる。秒数は見つからなかった。",
+     "value": "Lv1: 効果時間延長＋回復量UP / Lv2: 効果時間を大きく延長（秒数は不明）",
+     "applies_to": "狩猟笛の旋律の時間（と回復量）。攻撃の倍率は変わらない",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Horn_Maestro_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Horn+Maestro"
+     ]
+    },
+    {
+     "key": "offensive_guard",
+     "statement_ja": "攻めの守勢は、ちょうどよいタイミングでガードする（ジャストガード：攻撃を受ける直前にガードを出す）と、しばらく攻撃力が上がる。普通のガードでは発動しない。",
+     "value": "Lv1: 1.05倍 / Lv2: 1.1倍 / Lv3: 1.15倍（効果が続く時間は見つからず）",
+     "applies_to": "ガードできる武器（ランス・ガンランス・片手剣・チャージアックス・大剣など）でジャストガードしたとき。Steamの書き込みでは、ガードポイントでも直前に受ければよいとされている",
+     "confidence": "medium",
+     "conflict": "Lv1とLv2は日本語サイトと英語サイトで同じ値。Lv3の1.15倍は英語のスキル一覧でだけ確かめられた",
+     "sources": [
+      "https://samurai-gamers.com/monsterhunterworld/skills-list",
+      "https://altema.jp/mhw/skill/172",
+      "https://game8.jp/mhw/278205",
+      "https://steamcommunity.com/app/582010/discussions/0/597393167077091961"
+     ]
+    },
+    {
+     "key": "guard_skill",
+     "statement_ja": "ガード性能は、ガードしたときののけぞりと削りダメージを減らし、スタミナの減りも少なくする。のけぞりが軽くなるのは奇数のレベル、スタミナが減りにくくなるのは偶数のレベル。",
+     "value": "Lv1: 威力をわずかに軽減 / Lv2: ＋スタミナ15%減 / Lv3: 威力を大きく軽減・スタミナ15%減 / Lv4: ＋スタミナ30%減（Lv5は確かめられず）",
+     "applies_to": "ガードできる武器全部（ランス・片手剣など）。火力には関係しない",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/skill/5",
+      "https://game8.jp/mhw/199542"
+     ]
+    },
+    {
+     "key": "guard_up",
+     "statement_ja": "ガード強化は、ふつうはガードできない攻撃をガードできるようにするスキルとされている。ただし出典のページは見出しと表の対応があいまいで、レベルごとの効果は確かめられなかった。",
+     "value": "ガードできない攻撃をガードできるようにする（レベル別の値は不明）",
+     "applies_to": "ガードできる武器。火力には関係しない",
+     "confidence": "low",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/278205"
+     ]
+    },
+    {
+     "key": "airborne_jump_attack",
+     "statement_ja": "飛燕はジャンプ攻撃のダメージを30%上げる。Fextralifeによると、更新で変わり、今は操虫棍の空中攻撃すべてに効く。ただし急襲突き（Descending Thrust）と乗り（マウント）のダメージには効かないという利用者の報告がある。",
+     "value": "ジャンプ攻撃のダメージ 1.3倍（Lv1のみ）",
+     "applies_to": "ジャンプ攻撃（操虫棍の空中攻撃すべて、段差から跳んだときの攻撃）。急襲突き（低い確度）と乗りのダメージは除く",
+     "confidence": "high",
+     "conflict": "Fextralifeの値の注記に「30%は更新で変わった」とあり、最終更新でも同じ値かは確かめきれていない。急襲突きが除外されるというのは利用者のコメントだけで、確度は低い。ワイルズでは10%に下がっているが、ワールドの値ではない",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Airborne_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Airborne",
+      "https://progameguides.com/monster-hunter/monster-hunter-world-insect-glaive-build-guide/"
+     ]
+    },
+    {
+     "key": "ig_red_extract",
+     "statement_ja": "操虫棍の赤エキスは攻撃力を上げ、強化された技を使えるようにする。赤・白・橙がそろうと攻撃（大）と防御（小）が上がる。攻撃力の倍率そのものは見つからなかった。",
+     "value": "赤白橙: 攻撃（大）・防御（小）UP（倍率は不明） ／ 緑以外の3色がそろうと効果時間が延び、赤は1分30秒→2分15秒（猟虫の強化状態の説明として書かれていた）",
+     "applies_to": "操虫棍を使う本人",
+     "confidence": "low",
+     "conflict": "時間が延びる条件が三色そろえたときなのか、猟虫の能力によるものなのか、文からははっきりしない",
+     "sources": [
+      "https://altema.jp/mhw/ryoutyu",
+      "https://game8.jp/mhw/157925",
+      "https://monsterhunterworld.wiki.fextralife.com/Insect+Glaive"
+     ]
+    },
+    {
+     "key": "ig_red_extract_motion_values",
+     "statement_ja": "Fextralifeでは、赤エキスのときの技のモーション値として、強化斬り上げ連携が16＋14＋15、旋回斬り（Tornado Slash）が24＋42と書かれている。",
+     "value": "強化斬り上げ連携: 16+14+15 / 旋回斬り: 24+42",
+     "applies_to": "操虫棍の赤エキス状態の技",
+     "confidence": "low",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Insect+Glaive"
+     ]
+    },
+    {
+     "key": "kinsect_red_powder_mod_claim",
+     "statement_ja": "猟虫の赤の強化について、MODのページに「属性ダメージ3.5倍・物理ダメージ1.5倍」という記述があった。猟虫のダメージに自分のスキルが効くかどうかの説明はどこにもなかった。",
+     "value": "（MODの説明）属性×3.5 ／ 物理×1.5",
+     "applies_to": "猟虫の攻撃（ゲームの元の仕様ではなくMODの説明の可能性がある）",
+     "confidence": "low",
+     "conflict": "出典がMODのページだけで、元のゲームの仕様かどうか分からない。計算には使わないほうがよい",
+     "sources": [
+      "https://nexusmods.com/monsterhunterworld/mods/4518"
+     ]
+    },
+    {
+     "key": "ls_spirit_gauge_levels",
+     "statement_ja": "太刀の練気ゲージは白→黄→赤の順に上がり、段階が上がるほど攻撃力が上がる。減る速さは白が一番遅く、赤が一番速い。切れると1つ前の段階に戻る。",
+     "value": "アイスボーンの倍率は確かめられず（ほかの作品では MHアウトランダーズ: 白105%・黄110%・赤120% ／ MH4: 白+5%・黄+10%・赤+30%）",
+     "applies_to": "太刀だけ",
+     "confidence": "low",
+     "conflict": "赤の倍率がアウトランダーズでは120%、MH4では+30%と違う。アイスボーンの値を書いた出典は見つからなかった",
+     "sources": [
+      "https://mobalytics.gg/mhw/long-sword-guide",
+      "https://monsterhunterworld.wiki.fextralife.com/Long+Sword",
+      "https://gamewith.ai/monster-hunter-outlanders/en/articles/long-sword-guide",
+      "https://www.gamerguides.com/monster-hunter-4/equipment/weapons/long-sword"
+     ]
+    }
+   ],
+   "not_found": [
+    "大剣の溜め斬りの段階（溜め1〜3・強溜め）ごとの倍率や補正（検索の回数が足りず、調べられなかった）",
+    "太刀の練気ゲージ（白・黄・赤）ごとのアイスボーンの攻撃力の倍率（3回検索したが、アイスボーンの数値は出てこなかった）",
+    "双剣の鬼人化・鬼人強化のときに属性の補正があるかどうかと、その倍率",
+    "ハンマーの溜めの段階ごとの倍率（集中で溜めが速くなることは上のとおり）",
+    "狩猟笛の自分強化に攻撃力の倍率があるか（移動速度UPとはじかれ無効だけが確かめられた）と、笛吹き名人の延長の秒数",
+    "アイスボーンの攻撃力UP旋律の確かな倍率",
+    "ガード性能Lv5の効果と、ガード強化のレベル別の効果",
+    "攻めの守勢の効果が続く時間",
+    "操虫棍の赤エキス（赤白・赤白橙）の攻撃力の倍率",
+    "猟虫のダメージに自分のスキル（攻撃・会心など）が効くかどうか",
+    "抜刀術【力】に減気（スタミナを奪う効果）が付くかどうか"
+   ]
+  },
+  "augments": {
+   "facts": [
+    {
+     "key": "wpn_aug_slots_by_rarity",
+     "statement_ja": "マスターランク武器のカスタム強化枠はレア度で決まり、レア度が高いほど枠が少ない。枠は追加の解放（スロット拡張）で最大2倍まで増やせる。",
+     "value": "レア10: 初期5枠→最大10枠 / レア11: 初期4枠→最大8枠 / レア12: 初期3枠→最大6枠",
+     "applies_to": "MR武器（レア10〜12）のカスタム強化。カスタム強化のできない一部の固有武器は除く",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/custom",
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list",
+      "https://samurai-gamers.com/monsterhunterworld/augmenting-equipment-guide/",
+      "https://steamcommunity.com/app/582010/discussions/0/1744520287980042119"
+     ]
+    },
+    {
+     "key": "wpn_aug_hr_count_base_game",
+     "statement_ja": "無印（上位）ではレア度6・7・8の武器に付けられる強化の数がそれぞれ3・2・1つで、仕組みが違う（アイスボーンMRは枠消費式）。",
+     "value": "上位: レア6=3個 / レア7=2個 / レア8=1個",
+     "applies_to": "上位（HR）武器のみ。MR武器には当てはまらない",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list"
+     ]
+    },
+    {
+     "key": "wpn_aug_rollback",
+     "statement_ja": "MRのカスタム強化は、枠の拡張（スロット追加）以外は素材を払わずに巻き戻せる。ただし使った研究ポイントは戻らない。枠の拡張は巻き戻し不可。",
+     "value": "枠拡張: 巻き戻し不可 / それ以外: 巻き戻し可（研究ポイントは返還なし）",
+     "applies_to": "MR武器のカスタム強化",
+     "confidence": "high",
+     "conflict": "上位の強化について『一度付けると外せない』とするガイドもあるが、これは無印／上位の話と思われる",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Augmentations+and+Upgrades",
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list",
+      "https://altema.jp/mhw/custom"
+     ]
+    },
+    {
+     "key": "wpn_aug_attack_value",
+     "statement_ja": "攻撃力強化は1回ごとに武器の基礎攻撃力（真の攻撃力、表示倍率をかける前の値）を5上げ、重ねて付けられる。",
+     "value": "+5（基礎攻撃力）/ 1回",
+     "applies_to": "MR武器のカスタム強化・攻撃力強化（全武器種共通の基礎値加算）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://samurai-gamers.com/monsterhunterworld/augmenting-equipment-guide/",
+      "https://monsterhunterworld.wiki.fextralife.com/Augmentations+and+Upgrades",
+      "https://mein-mmo.de/en/monster-hunter-world-iceborne-how-improvements-and-augmentation-work,409402/"
+     ]
+    },
+    {
+     "key": "wpn_aug_attack_slot_cost",
+     "statement_ja": "攻撃力強化は1回目に3枠を使い、2回目以降は1回ごとに2枠ずつ追加で使う（合計で Ⅰ=3, Ⅱ=5, Ⅲ=7, Ⅳ=9 枠）。レア10（最大10枠）なら Ⅳ まで付けられる計算になる。",
+     "value": "累計枠: Ⅰ 3 / Ⅱ 5 / Ⅲ 7 / Ⅳ 9",
+     "applies_to": "MR武器の攻撃力強化。GameLeap の表はレア10の行",
+     "confidence": "medium",
+     "conflict": "アルテマはレア10の例として「回復能力付与Ⅰ(3枠)+会心率強化Ⅰ(2枠)+攻撃力強化Ⅱ(5枠)=10枠」を載せており Ⅱ=累計5枠と合う。Ⅲ・Ⅳ の値は GameLeap の表だけで確かめた（表の読み取りがやや曖昧）",
+     "sources": [
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list",
+      "https://altema.jp/mhw/custom"
+     ]
+    },
+    {
+     "key": "wpn_aug_affinity",
+     "statement_ja": "会心率強化は1回目に2枠を使う。1回目は会心率+10%、2回目以降は1回ごとに+5%とする出典が多い。",
+     "value": "初期必要枠 2 / 1回目 +10%、2回目以降 +5%ずつ",
+     "applies_to": "MR武器のカスタム強化・会心率強化",
+     "confidence": "medium",
+     "conflict": "samurai-gamers は『1段階ごとに +10%』と書いている（https://samurai-gamers.com/monsterhunterworld/augmenting-equipment-guide/）。アルテマの +10%/+5% は無印の記事の値の可能性がある。2回目以降の必要枠は確認できなかった",
+     "sources": [
+      "https://altema.jp/mhw/custom",
+      "https://monsterhunterworld.wiki.fextralife.com/Augmentations+and+Upgrades",
+      "https://mein-mmo.de/en/monster-hunter-world-iceborne-how-improvements-and-augmentation-work,409402/"
+     ]
+    },
+    {
+     "key": "wpn_aug_defense",
+     "statement_ja": "防御力強化は1枠で付けられる。上位の説明では、武器を装備している間の防御力+10と、受けるダメージをときどき減らす効果がある。",
+     "value": "必要枠 1 / 防御力+10（上位での説明）",
+     "applies_to": "武器のカスタム強化・防御力強化。+10 は上位の値で、MRでの値は未確認",
+     "confidence": "low",
+     "conflict": "必要枠1は2つのサイトで一致。+10 は1つのガイドだけで、上位の話",
+     "sources": [
+      "https://altema.jp/mhw/custom",
+      "https://steamcommunity.com/app/582010/discussions/0/1740015418084708185",
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list"
+     ]
+    },
+    {
+     "key": "wpn_aug_slot_upgrade_cost",
+     "statement_ja": "スロット強化（装飾品スロットの強化）は1回目に3枠を使う。",
+     "value": "初期必要枠 3",
+     "applies_to": "MR武器のカスタム強化・スロット強化（強化枠そのものを増やす『枠の拡張』とは別物）",
+     "confidence": "low",
+     "conflict": "確かめられたのは1サイトだけ。上がり方（どのレベルのスロットになるか）は確認できなかった",
+     "sources": [
+      "https://altema.jp/mhw/custom"
+     ]
+    },
+    {
+     "key": "wpn_aug_health_regen_cost",
+     "statement_ja": "回復能力付与は1回目に3枠を使い、武器で与えたダメージに応じて体力が回復する。",
+     "value": "初期必要枠 3",
+     "applies_to": "MR武器のカスタム強化・回復能力付与",
+     "confidence": "medium",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/custom",
+      "https://mein-mmo.de/en/monster-hunter-world-iceborne-how-improvements-and-augmentation-work,409402/"
+     ]
+    },
+    {
+     "key": "wpn_aug_element_status_cost",
+     "statement_ja": "属性/状態異常強化は1回目に1枠を使う。属性・状態異常値の上昇量は確認できなかった。",
+     "value": "初期必要枠 1",
+     "applies_to": "属性値・状態異常値を持つMR武器",
+     "confidence": "medium",
+     "conflict": "アルテマのレア10おすすめ例に『属性状態異常強化Ⅲ』が載っているので3回以上重ねられると読めるが、累計枠は確認できなかった",
+     "sources": [
+      "https://altema.jp/mhw/custom",
+      "https://mein-mmo.de/en/monster-hunter-world-iceborne-how-improvements-and-augmentation-work,409402/",
+      "https://steamcommunity.com/app/582010/discussions/0/1740015418084708185"
+     ]
+    },
+    {
+     "key": "wpn_aug_parts_upgrade",
+     "statement_ja": "パーツ強化はカスタム強化の枠を使わない別の強化で、例えば『会心率上昇』は会心率+1%。",
+     "value": "会心率上昇 +1%（枠消費なし）",
+     "applies_to": "MR武器のパーツ強化（カスタム強化の枠とは別）",
+     "confidence": "low",
+     "conflict": "確かめられたのは1サイトだけ",
+     "sources": [
+      "https://game8.jp/mhw/292922"
+     ]
+    },
+    {
+     "key": "safi_awaken_slots_rules",
+     "statement_ja": "赤龍（覚醒）武器には覚醒能力を最大5つ付けられる。同じ能力で、出てきた方のレア度が高いと上書きになり、同じか低いと追加になる。★6の能力は1つだけで、付けるには同じ能力の★5が武器に付いている必要がある。能力を見送ると蓄積が増え（上限20回）、強い能力が出やすくなる。",
+     "value": "最大5枠 / ★6は1つまで（同じ能力の★5が条件）/ 蓄積上限20",
+     "applies_to": "ムフェト・ジーヴァの覚醒武器（全武器種）",
+     "confidence": "medium",
+     "conflict": "最大5枠と上書き／追加のルールは2サイト以上で一致。★6の条件と蓄積20回は1サイトの記述",
+     "sources": [
+      "https://altema.jp/mhw/kakuseinouryoku",
+      "https://game8.jp/mhw/307949",
+      "https://gamewith.jp/mhw/179387"
+     ]
+    },
+    {
+     "key": "safi_awaken_attack",
+     "statement_ja": "覚醒能力の攻撃力強化の上昇値は武器種によって違う。例として、大剣は表示攻撃力1296が攻撃力強化Ⅵで1363（+67。大剣の倍率4.8で割ると基礎で約+14）、太刀は891が941（+50。倍率3.3で割ると約+15）。",
+     "value": "Ⅵの例: 大剣 表示+67（基礎≒+14）/ 太刀 表示+50（基礎≒+15）。Ⅰ〜Ⅴは未確認",
+     "applies_to": "覚醒武器の攻撃力強化Ⅰ〜Ⅵ（武器種ごとに値が違う）",
+     "confidence": "low",
+     "conflict": "検索の要約では、ゲームエイトの一覧に『約2・4・6・8・10・15』とあるとされたが、何の単位か（基礎値か）がはっきりせず、上の大剣・太刀の例とも合うか確かめきれない。太刀の例を載せたゲームエイトのページの正確なURLは特定できなかった。ゲームウィズは『武器種で値が違う』とだけ書いている",
+     "sources": [
+      "https://game8.jp/mhw/307611",
+      "https://gamewith.jp/mhw/179989"
+     ]
+    },
+    {
+     "key": "safi_awaken_affinity",
+     "statement_ja": "覚醒能力の会心率強化は、Ⅰ〜Ⅵで武器の会心率がそれぞれ2・4・6・8・10・15%上がる。",
+     "value": "Ⅰ 2% / Ⅱ 4% / Ⅲ 6% / Ⅳ 8% / Ⅴ 10% / Ⅵ 15%",
+     "applies_to": "覚醒武器の会心率強化（Ⅰ=★1 … Ⅵ=★6）",
+     "confidence": "medium",
+     "conflict": "『会心率強化Ⅱ（★2）= 会心率+4%』は複数の結果で確かめられたが、全段階の表は主にゲームエイトの1つ",
+     "sources": [
+      "https://game8.jp/mhw/307949",
+      "https://altema.jp/mhw/kakuseinouryoku"
+     ]
+    },
+    {
+     "key": "safi_awaken_element",
+     "statement_ja": "覚醒能力の属性強化（属性攻撃強化）の段階ごとの値はサイトで食い違う。",
+     "value": "ゲームエイト: Ⅰ〜Ⅵ = 10/30/50/70/90/120 / アルテマ: 10/20/30/50/70/100",
+     "applies_to": "属性・状態異常を持つ覚醒武器の属性強化",
+     "confidence": "low",
+     "conflict": "ゲームエイト 10/30/50/70/90/120 と アルテマ 10/20/30/50/70/100 で食い違う。表示値か内部値かも不明。また大剣（爆破）のページでは属性値が『300』と『150（属性強化表の初期値）』の両方で書かれており、表示値と内部値（1/2?）の違いと思われるが未確認",
+     "sources": [
+      "https://game8.jp/mhw/307949",
+      "https://altema.jp/mhw/kakuseinouryoku"
+     ]
+    },
+    {
+     "key": "safi_awaken_slot",
+     "statement_ja": "覚醒能力のスロット強化はⅠ〜Ⅳ（★3〜★6）で、それぞれ武器スロットをLv1〜Lv4にする。初めからLv4スロットの太刀にスロット強化Ⅳを付けてもLv4のままなので、スロットを増やすのではなく既存スロットのレベルを上げる仕組みと読める。",
+     "value": "Ⅰ(★3)=Lv1 / Ⅱ(★4)=Lv2 / Ⅲ(★5)=Lv3 / Ⅳ(★6)=Lv4",
+     "applies_to": "覚醒武器のスロット強化",
+     "confidence": "low",
+     "conflict": "要約では『スロットが1つ増える』という書き方もあり、『既存スロットのレベルが上がる』のか『スロットが増える』のかがはっきりしない",
+     "sources": [
+      "https://game8.jp/mhw/307949",
+      "https://gamewith.jp/mhw/180532"
+     ]
+    },
+    {
+     "key": "safi_awaken_series_skill",
+     "statement_ja": "覚醒能力のシリーズスキル付与は、武器に防具1部位分のシリーズスキルを持たせる能力で、★3〜★5のものがある。",
+     "value": "防具1部位分として数える / ★3〜★5",
+     "applies_to": "覚醒武器のシリーズスキル付与（各モンスターのシリーズ）",
+     "confidence": "medium",
+     "conflict": "どのシリーズが何レア度で出るかの一覧は確認できなかった",
+     "sources": [
+      "https://altema.jp/mhw/kakuseinouryoku",
+      "https://game8.jp/mhw/307949"
+     ]
+    },
+    {
+     "key": "safi_base_affinity",
+     "statement_ja": "赤龍武器の初期会心率は5%。",
+     "value": "5%",
+     "applies_to": "ムフェト・ジーヴァの覚醒武器（覚醒前の状態）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Safi'jiiva+Weapons",
+      "https://game8.jp/mhw/307611"
+     ]
+    },
+    {
+     "key": "safi_seal_dragonvein",
+     "statement_ja": "赤龍の封印（ムフェト・ジーヴァのシリーズスキル）の龍脈覚醒（3部位）と真・龍脈覚醒（5部位）では、会心率・属性値・状態異常値が上がる（ほかの効果もあるが、数値はユーザー投稿だけ）。",
+     "value": "3部位: 会心+20%、属性+80、状態異常+60（または+80） / 5部位: 会心+40%、属性+150、状態異常+120",
+     "applies_to": "赤龍の封印シリーズスキル。覚醒能力のシリーズスキル付与で武器から1部位分を数えられる",
+     "confidence": "low",
+     "conflict": "3部位の状態異常値が Steam の投稿では+60、Fextralife のユーザーコメントでは+80と食い違う。どちらも公式値ではなくユーザー投稿",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Dragonvein_Awakening_(MHWI)",
+      "https://monsterhunterworld.wiki.fextralife.com/Safi'jiiva+Seal"
+     ]
+    },
+    {
+     "key": "armor_aug_what_it_does",
+     "statement_ja": "アイスボーンの防具のカスタム強化でできるのは、防具の強化レベルの上限を上げることだけ。上限を上げても防御力はそのままで、鎧玉で実際にレベルを上げて初めて防御力が上がる。ストーリークリア後（導きの地の素材が必要）。",
+     "value": "強化レベル上限の解放のみ（防御力は鎧玉で強化して上がる）",
+     "applies_to": "MR防具（レア10〜12）",
+     "confidence": "medium",
+     "conflict": "容量・スロット強化・スキル追加のような仕組みはどの出典にもなかった。解放のタイミングもサイトによって書き方が違う",
+     "sources": [
+      "https://altema.jp/mhw/mastercustom",
+      "https://game8.jp/mhw/292922",
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list"
+     ]
+    },
+    {
+     "key": "armor_aug_materials",
+     "statement_ja": "防具の上限解放に必要な素材とお金はレア度で違う。",
+     "value": "レア10: 霊脈玉×1・純結晶×2・40,000z / レア11: 霊脈玉×1・竜玉（大）系×1・50,000z / レア12: 大霊脈玉×1・純龍血×2・60,000z",
+     "applies_to": "MR防具の強化上限解放",
+     "confidence": "low",
+     "conflict": "確かめられたのは1サイトだけ（日本語の素材名は英語名から当てはめたもの）。アルテマは霊脈玉・大霊脈玉と大量の鎧玉が要るとだけ書いている",
+     "sources": [
+      "https://www.gameleap.com/articles/mhw-iceborne-augment-materials-complete-list"
+     ]
+    }
+   ],
+   "not_found": [
+    "会心率強化・防御力強化・スロット強化・回復能力付与・属性/状態異常強化の2回目以降に要る枠（累計枠）。攻撃力強化以外は確定できなかった",
+    "各カスタム強化を何回まで重ねられるか（攻撃力強化はⅣまでの表を見たが、ほかは不明）",
+    "MRでの属性/状態異常強化の上昇値、防御力強化の値",
+    "カスタム強化のスロット強化の上がり方（何レベルのスロットになるか、何回まで付けられるか）",
+    "回復能力付与の回復割合。1つのガイドに Lv1 7.5%・Lv2 9% とあったがページを特定できず、Steam の投稿の『2段階で計5枠（3+2）』も未確認",
+    "覚醒能力の攻撃力強化Ⅰ〜Ⅴの武器種ごとの確定値（分かったのはⅥの大剣・太刀の例だけ）",
+    "覚醒能力の属性強化の正しい値（ゲームエイトとアルテマで食い違う）",
+    "覚醒能力の斬れ味強化・回復能力付与の値",
+    "防具カスタム強化の『容量』『各強化の容量』『スロットの上がり方』『スキル追加の条件』。アイスボーンの防具カスタム強化は強化レベル上限の解放だけで、こういう仕組みはどの出典にもなかった（MHRサンブレイクの傀異錬成のような仕組みはMHWIにはないと思われるが、ないことを確かめた出典もない）",
+    "防具の上限解放でのレア度ごとの最大強化レベル・防御力の上昇量（『Lv17→27』『+20』の記述を見たが、どのレア度の値か特定できず）"
+   ]
+  },
+  "constants": {
+   "facts": [
+    {
+     "key": "weapon_bloat_multipliers",
+     "statement_ja": "表示攻撃力を武器種ごとの武器倍率で割ると基礎攻撃力になる。調べた14種の倍率は、依頼の値とすべて一致した。",
+     "value": "大剣 4.8 / 太刀 3.3 / 片手剣 1.4 / 双剣 1.4 / ハンマー 5.2 / 狩猟笛 4.2 / ランス 2.3 / ガンランス 2.3 / スラッシュアックス 3.5 / チャージアックス 3.6 / 操虫棍 3.1 / ライトボウガン 1.3 / ヘビィボウガン 1.5 / 弓 1.2",
+     "applies_to": "全14武器種の表示攻撃力→基礎攻撃力の換算（例: 大剣で表示480なら基礎100）",
+     "confidence": "high",
+     "conflict": "2つのドメインで値の食い違いはない。ただしどちらもファンサイト・コミュニティの情報で、カプコン公式の資料は見つからなかった。",
+     "sources": [
+      "https://game8.jp/mhw/190216",
+      "https://steamcommunity.com/app/582010/discussions/0/2783738583641368871/?ctp=2",
+      "https://steamcommunity.com/app/582010/discussions/0/1651043958642071803/"
+     ]
+    },
+    {
+     "key": "crit_multiplier_base",
+     "statement_ja": "会心が出たとき、物理ダメージは1.25倍になる（超会心なしの場合）。",
+     "value": "1.25",
+     "applies_to": "物理ダメージの会心（会心率が正のとき）。超会心があると倍率が置き換わる（別の fact 参照）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://game8.jp/mhw/191151",
+      "https://steamcommunity.com/app/582010/discussions/0/597398551725624184",
+      "https://mhworld.kiranico.com/guide/damage"
+     ]
+    },
+    {
+     "key": "crit_multiplier_negative",
+     "statement_ja": "会心率がマイナスのときに出るマイナス会心では、物理ダメージが0.75倍になる。",
+     "value": "0.75",
+     "applies_to": "会心率がマイナスの武器での物理ダメージ",
+     "confidence": "medium",
+     "conflict": "MHW についてはっきり 0.75 と書いてあったのは日本語サイト1つだけ。英語で 0.75（75%）と書いていたのはワイルズの記事で、別作品の情報になる。",
+     "sources": [
+      "https://game8.jp/mhw/191151",
+      "https://www.sportskeeda.com/esports/what-is-affinity-in-monster-hunter-wilds"
+     ]
+    },
+    {
+     "key": "critical_boost_levels",
+     "statement_ja": "超会心スキルは会心時の倍率を上げる。レベルごとに1.25からそれぞれの値に置き換わる（参考として取った）。",
+     "value": "なし: 1.25 / Lv1: 1.30 / Lv2: 1.35 / Lv3: 1.40",
+     "applies_to": "物理の会心時ダメージ（スキル: 超会心）",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://altema.jp/mhw/skill/323",
+      "https://steamcommunity.com/app/582010/discussions/0/597398551725624184"
+     ]
+    },
+    {
+     "key": "sharpness_raw_modifiers",
+     "statement_ja": "斬れ味の色ごとに物理ダメージへかかる補正。アイスボーンで紫が加わった。",
+     "value": "赤 0.50 / 橙 0.75 / 黄 1.00 / 緑 1.05 / 青 1.20 / 白 1.32 / 紫 1.39",
+     "applies_to": "近接武器の物理ダメージ",
+     "confidence": "high",
+     "conflict": "Game8 (game8.jp/mhw/189992) の表は青を 1.25 としているが、同じページに『MHXX（ダブルクロス）の値』と注記がある。Fextralife と Fandom の表はどちらも青 1.20（Fandom は紫 1.39 を Iceborne として載せている）。アイスボーンの値は青 1.20 とした。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Sharpness",
+      "https://steamcommunity.com/app/582010/discussions/0/1735510333042121069",
+      "https://game8.jp/mhw/189992"
+     ]
+    },
+    {
+     "key": "sharpness_elem_modifiers_blue_white",
+     "statement_ja": "斬れ味が青と白のときに属性ダメージへかかる補正。",
+     "value": "青 1.0625 / 白 1.15",
+     "applies_to": "近接武器の属性ダメージ",
+     "confidence": "medium",
+     "conflict": "白の値が割れている。白 1.15 としているのは Fextralife、Steam の投稿、GameWith。白 1.125 としているのは別の Steam 投稿（https://steamcommunity.com/app/582010/discussions/0/1735510333042121069）と、無印 MHW を扱う 3DM の攻略記事（https://www.3dmgame.com/gl/3744288_2.html、緑 1.0・青 1.0625・白 1.125）。無印が 1.125、アイスボーンが 1.15 という版の違いかもしれないが、それを確かめる出典はなかった。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Sharpness",
+      "https://steamcommunity.com/app/582010/discussions/0/3106892150606682283",
+      "https://gamewith.net/monster-hunter-wilds/52570"
+     ]
+    },
+    {
+     "key": "sharpness_elem_modifier_purple",
+     "statement_ja": "斬れ味が紫のときに属性ダメージへかかる補正。出典ごとに値が違う。",
+     "value": "1.25（Fextralife）/ 1.27（GameWith）/ 1.30（Steam の投稿）",
+     "applies_to": "近接武器の属性ダメージ（紫はアイスボーンから）",
+     "confidence": "low",
+     "conflict": "Fextralife は 1.25、GameWith は 1.27、Steam の投稿は 1.30 で、2つの出典で同じ値になったものがない。いま使うなら 1.25（Fextralife）。",
+     "sources": [
+      "https://monsterhunterworld.wiki.fextralife.com/Sharpness",
+      "https://gamewith.net/monster-hunter-wilds/52570",
+      "https://steamcommunity.com/app/582010/discussions/0/1735510333042121069"
+     ]
+    },
+    {
+     "key": "sharpness_elem_modifiers_red_to_green",
+     "statement_ja": "斬れ味が赤〜緑のときに属性ダメージへかかる補正。",
+     "value": "赤 0.25 / 橙 0.50 / 黄 0.75 / 緑 1.00",
+     "applies_to": "近接武器の属性ダメージ",
+     "confidence": "low",
+     "conflict": "3DM は赤〜黄に『?』を付けて『資料サイトでも正しさを確かめられていない』としている。Fandom の表は見出しと中身が合っていない。緑 1.00 だけは複数の出典で合っている。",
+     "sources": [
+      "https://www.3dmgame.com/gl/3744288_2.html",
+      "https://monsterhunter.fandom.com/wiki/File:Gunlance_Icon_White.png"
+     ]
+    },
+    {
+     "key": "weakness_exploit_condition",
+     "statement_ja": "物理肉質が45以上の部位が弱点として扱われ、弱点特効が働く。肉質40の部位は、斬れ味が高いとダメージ数字がオレンジになることがあるが、弱点特効は働かない。",
+     "value": "物理肉質 >= 45",
+     "applies_to": "弱点特効（アイスボーン）。肉質45以上の部位への攻撃",
+     "confidence": "high",
+     "conflict": "",
+     "sources": [
+      "https://monsterhunterwiki.org/wiki/Weakness_Exploit_(MHWI)",
+      "https://gamestegy.com/post/monster-hunter-world-iceborne/275/hit-zone-values.-how-do-they-work",
+      "https://steamcommunity.com/app/582010/discussions/0/2805074491021265466"
+     ]
+    },
+    {
+     "key": "weakness_exploit_levels_iceborne",
+     "statement_ja": "アイスボーンの弱点特効は、弱点（肉質45以上）への会心率アップに加えて、傷がついた部位ではさらに会心率が上がる。傷の上乗せはアイスボーンで別枠として加わった（クラッチクローの傷つけを使ってもらうための変更）。",
+     "value": "Lv1: +10%（傷ならさらに+5%、合計15%）/ Lv2: +15%（さらに+15%、合計30%）/ Lv3: +30%（さらに+20%、合計50%）",
+     "applies_to": "弱点特効スキル（アイスボーン）。物理肉質45以上の部位への攻撃と、その部位に傷がついている場合",
+     "confidence": "high",
+     "conflict": "無印のころの値（弱点だけで決まる方式）は今回の検索では数値を確かめられなかった。Steam には『アイスボーンで弱くされ、傷つけて初めて元の値に戻る』という利用者の書き込みがある。",
+     "sources": [
+      "https://game8.jp/mhw/199546",
+      "https://monsterhunterwiki.org/wiki/Weakness_Exploit_(MHWI)",
+      "https://fextralife.com/monster-hunter-world-iceborne-decorations-charms-mantle-skills-adjustments/"
+     ]
+    },
+    {
+     "key": "attacks_without_crit",
+     "statement_ja": "ガンランスの砲撃、チャージアックスの榴弾・強属性ビンの爆発、狩猟笛の音波系の攻撃は、肉質を無視する代わりに会心が出ない。",
+     "value": "会心補正 1.0 で固定（会心も、マイナス会心も出ない）",
+     "applies_to": "ガンランス砲撃、チャージアックスのビンのダメージ、狩猟笛の音波系の攻撃",
+     "confidence": "low",
+     "conflict": "確かめられたのは1つの検索要約だけ。同じ検索の結果には別作品（ライズ）の wikiwiki も混ざっていて、どのサイトの記述かを特定しきれていない。",
+     "sources": [
+      "https://game8.jp/mhw/191151"
+     ]
+    }
+   ],
+   "not_found": [
+    "武器倍率についてカプコン公式の一次資料（見つかったのは Game8 と Steam コミュニティの情報だけ）",
+    "斬れ味が紫のときの属性補正の確定値（1.25 / 1.27 / 1.30 と出典ごとに違い、2つの出典で同じ値のものがない）",
+    "斬れ味が赤・橙・黄のときの属性補正（0.25 / 0.50 / 0.75）を、はっきり書いた信頼できる出典",
+    "斬れ味が白のときの属性補正が、無印とアイスボーンで 1.125 から 1.15 に変わったのかどうか",
+    "弱点特効の傷の上乗せが、肉質45未満の部位に傷がついたときにも働くかどうか",
+    "マイナス会心 0.75 を MHW について書いた2つ目のドメイン（英語の出典はワイルズのものだけ）",
+    "無印 MHW の弱点特効のレベルごとの数値（アイスボーンとの違いを数で比べること）"
+   ]
+  }
+ }
+}

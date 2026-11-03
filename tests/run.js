@@ -229,6 +229,50 @@ section('見直しで見つかった問題が直っていること');
   ok(!C1.list.some(c => c.w.series === fz.series), '外した武器のシリーズ（' + E.weaponSeriesLabel(game, fz.series) + '）は候補に出ない');
 }
 
+{
+  section('武器の種類ごとの決まり（検索で調べた結果）');
+  const W = (pred) => game.weapons.find(pred);
+  const sc = (w, parts, lv, extra) => { const q = Object.assign({ objective: 'fire', parts, weaponId: w.id }, extra || {}); return E.scoreParts(game, q, E.weaponInfo(game, q), lv, [], 0, [0, 0, 0, 0, 0]); };
+  const near = (x, y) => Math.abs(x - y) < 1e-6;
+  const hbg = W(w => w.type === 'heavy-bowgun' && w.rarity === 12);
+  // 通常弾：通常弾・通常矢強化 Lv2 で、ふつうの攻撃（85%）だけ 1.2 倍。特殊弾（10%）・竜撃弾（5%）には効かない
+  ok(near(sc(hbg, { shot: 'normal' }, { [sk('Normal Shots')]: 2 }).fire, 100 * (0.85 * 1.2 + 0.1 + 0.05)), 'ヘビィ・通常弾：通常弾・通常矢強化は通常弾だけに 1.2 倍');
+  ok(near(sc(hbg, { shot: 'normal' }, { [sk('Piercing Shots')]: 2 }).fire, 100), 'ヘビィ・通常弾：貫通弾・竜の一矢強化は効かない');
+  ok(near(sc(hbg, { shot: 'spread' }, { [sk('Spread/Power Shots')]: 2 }).fire, 100 * (0.85 * 1.15 + 0.15)), 'ヘビィ・散弾：散弾・剛射強化 Lv2 は 1.15 倍');
+  ok(near(sc(hbg, { shot: 'sticky' }, { [sk('Artillery')]: 3 }).fire, 100 * (0.9 * 1.3 + 0.1)), 'ヘビィ・徹甲榴弾：砲術 Lv3 が徹甲榴弾と竜撃弾（90%）に 1.3 倍');
+  ok(sc(hbg, { shot: 'cluster', special: 0, art: 0 }, { [sk('Critical Eye')]: 7 }).fire === 100, 'ヘビィ・拡散弾：会心は乗らない（見切りで点数が変わらない）');
+  ok(sc(hbg, { shot: 'normal', special: 0.1 }, { [sk('Special Ammo Boost')]: 2 }).fire > 100, '特殊射撃強化は特殊弾に効く');
+  // チャージアックス：榴弾ビンは砲術、強属性ビンは属性値
+  const cbI = W(w => w.type === 'charge-blade' && w.rarity === 12 && /impact/.test(w.phial || ''));
+  const cbE = W(w => w.type === 'charge-blade' && w.rarity === 12 && /element/.test(w.phial || '') && w.elements.length && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]));
+  ok(near(sc(cbI, {}, { [sk('Artillery')]: 3 }).fire, 100 * (0.8 + 0.2 * 1.3)), '榴弾ビンのチャアク：ビン爆発（20%）に砲術');
+  ok(near(sc(cbE, {}, { [sk('Artillery')]: 3 }).fire, 100), '強属性ビンのチャアク：砲術は効かない');
+  const eAtk = game.skills.find(x => x.en === { fire: 'Fire Attack', water: 'Water Attack', thunder: 'Thunder Attack', ice: 'Ice Attack', dragon: 'Dragon Attack' }[cbE.elements[0][0]]);
+  const ce1 = sc(cbE, {}, { [eAtk.id]: 3 });
+  ok(near(ce1.fire, 100 * (0.8 * (ce1.detail.phys + ce1.detail.elem) / (ce1.detail.phys0 + ce1.detail.elem0) + 0.2 * (cbE.elements[0][1] + 100) / cbE.elements[0][1])), '強属性ビンの爆発は属性値で伸びる（会心なし）');
+  // スラッシュアックス：強撃ビンは剣モードの物理 1.2 倍（いつもの倍率なので、属性のない武器なら点数は変わらない）
+  const saP = W(w => w.type === 'switch-axe' && w.rarity === 12 && w.phial === 'power');
+  ok(near(E.weaponInfo(game, { weaponId: saP.id }).parts.physConst, 1 + 0.5 * 0.2), '強撃ビンのスラアク：剣モード 50% で物理 1.1 倍');
+  // 弓：連射の矢に通常弾・通常矢強化、剛射に散弾・剛射強化、竜の一矢に貫通弾・竜の一矢強化
+  const bow = W(w => w.type === 'bow' && w.rarity === 12);
+  const b0 = sc(bow, { arrow: 'rapid', power: 0.1, special: 0.1 }, {});
+  const bN = sc(bow, { arrow: 'rapid', power: 0.1, special: 0.1 }, { [sk('Normal Shots')]: 2 });
+  ok(bN.fire > b0.fire && sc(bow, { arrow: 'pierce', power: 0.1, special: 0.1 }, { [sk('Normal Shots')]: 2 }).fire === 100, '弓：通常弾・通常矢強化は連射の矢だけ');
+  ok(sc(bow, { arrow: 'pierce', power: 0, special: 0.1 }, { [sk('Piercing Shots')]: 2 }).fire > 100, '弓：竜の一矢に貫通弾・竜の一矢強化');
+  ok(near(E.weaponInfo(game, { weaponId: bow.id, parts: { coating: 'power' } }).parts.physConst, 1.35), '弓：強撃ビンは物理 1.35 倍');
+  // 無属性強化・龍脈覚醒・属性加速・属性値の上限
+  const ne = W(w => w.type === 'great-sword' && w.rarity === 12 && !w.elements.length);
+  if (ne) ok(near(sc(ne, {}, { [sk('Non-elemental Boost')]: 1 }).fire, 105), '無属性の武器：無属性強化で元の攻撃力 1.05 倍');
+  const el = W(w => w.type === 'long-sword' && w.rarity === 12 && !w.elemHidden && w.elements.length === 1 && ['fire', 'water', 'thunder', 'ice', 'dragon'].includes(w.elements[0][0]));
+  ok(sc(el, {}, { [sk('Non-elemental Boost')]: 1 }).notCounted.indexOf(sk('Non-elemental Boost')) >= 0, '属性のある武器では無属性強化は数えない');
+  const dv = sc(el, {}, { [sk('Dragonvein Awakening')]: 1 });
+  ok(near(dv.detail.affinity, el.affinity + 20 * 0.8) && near(dv.detail.elemShown[0][1], el.elements[0][1] + 80 * 0.8), '龍脈覚醒：会心率 +20%・属性値 +80（割合 0.8）');
+  const capped = sc(el, {}, { [eAtk.id]: 6 }, { elemCap: '1.3' });
+  ok(capped.detail.elemShown[0][1] <= el.elements[0][1] * 1.3 + 1e-9, '属性値の上限（1.3 倍）を超えない');
+  // 武器倍率は検索で 2 つのサイトで確かめた値
+  ok(E.WEAPON_BLOAT['long-sword'] === 3.3 && E.WEAPON_BLOAT['great-sword'] === 4.8, '武器倍率');
+}
+
 // ---- 4. 小さな例で総当たりと比べる
 section('小さな例で総当たりと比べる');
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
