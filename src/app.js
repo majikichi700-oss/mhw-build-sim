@@ -174,7 +174,7 @@
     var nc = (sc.notCounted || []).map(skillName);
     return '<details class="score"><summary>点数の内訳（目的：' + esc(obj.ja) + '、合計 ' + fmt(sc.total) + '）</summary>' +
       '<table class="kv">' +
-      '<tr><th>火力点</th><td>' + fmt(sc.fire) + '（スキルなしを 100 とした期待値）</td></tr>' +
+      '<tr><th>火力点</th><td>' + fmt(sc.fire) + (b.mods && b.mods.fireRef ? '（武器はおまかせ：候補で一番強い武器のスキルなしを 100 とした期待値）' : '（スキルなしを 100 とした期待値）') + '</td></tr>' +
       '<tr><th>　物理期待値</th><td>' + fmt(d.phys0) + ' から ' + fmt(d.phys) + '（基礎攻撃力 ' + fmt(d.raw) + '、攻撃の倍率 ' + fmt(d.atkMul, 3) + '、会心率 ' + fmt(d.affinity, 0) + '%、会心の倍率 ' + fmt(d.critMul, 2) + '）</td></tr>' +
       '<tr><th>　属性期待値</th><td>' + elemText(d) + '</td></tr>' +
       partsText(d) +
@@ -257,12 +257,28 @@
   var wtSel = $('#weapon-type'), wSel = $('#weapon'), objSel = $('#objective');
   E.WEAPON_TYPES.forEach(function (t) { wtSel.insertAdjacentHTML('beforeend', '<option value="' + t + '">' + E.WEAPON_JA[t] + '</option>'); });
   function ranks() { return Array.prototype.slice.call(form.querySelectorAll('input[name=rank]:checked')).map(function (x) { return x.value; }); }
+  // 使わない武器のシリーズ（series の値）
+  var excludeWSeries = [];
+  function wExcluded() {
+    var x = excludeWSeries.slice();
+    if ($('#wx-kulve').checked) x.push('Kulve');
+    if ($('#wx-safi').checked) x.push('Safi');
+    return x;
+  }
   function fillWeapons() {
-    var t = wtSel.value, rk = ranks();
-    // 武器はレア度 11 と 12 だけを候補にします（依頼による）
-    var list = GAME.weapons.filter(function (w) { return w.type === t && w.rarity >= 11; });
+    var t = wtSel.value, rk = ranks(), prevVal = wSel.value;
+    var ex = {}; wExcluded().forEach(function (k) { ex[k] = 1; });
+    // 武器はレア度 11 と 12 だけを候補にします（依頼による）。使わないシリーズは一覧から外します
+    var list = GAME.weapons.filter(function (w) { return w.type === t && w.rarity >= 11 && !ex[w.series]; });
     list.sort(function (a, b) { return b.rarity - a.rarity || b.attack - a.attack; });
-    wSel.innerHTML = '<option value="">武器を選ばず、スロットだけ指定する</option>' + list.map(function (w) {
+    // 武器のシリーズの候補（名前を選ぶと、そのシリーズをまとめて外す）
+    var seen = {}, opts = [];
+    GAME.weapons.filter(function (w) { return w.type === t && w.rarity >= 11; }).forEach(function (w) {
+      if (seen[w.series]) return; seen[w.series] = 1;
+      opts.push('<option value="' + esc(E.weaponSeriesLabel(GAME, w.series) + '｜#' + w.series) + '">');
+    });
+    $('#wseries-list').innerHTML = opts.join('');
+    wSel.innerHTML = '<option value="auto">おまかせ（この種類の武器から、武器も探す）</option><option value="">武器を選ばず、スロットだけ指定する</option>' + list.map(function (w) {
       var el = w.elements.map(function (x) { return (w.elemHidden ? '(' : '') + (E.ELEM_JA[x[0]] || x[0]) + x[1] + (w.elemHidden ? ')' : ''); }).join(' ');
       // ボウガンは武器に属性値がなく、属性は弾で出します。撃てる属性の弾を書きます（データの弾の設定より）
       if (w.ammo && GAME.ammo[w.ammo]) {
@@ -272,8 +288,25 @@
       }
       return '<option value="' + w.id + '">' + esc(w.ja) + (w.jaMissing ? '［日本語名なし］' : '') + '｜レア' + w.rarity + '｜攻' + w.attack + (w.affinity ? '｜会心' + w.affinity + '%' : '') + (el ? '｜' + esc(el) : '') + '｜' + slotsLabel(w.slots) + '</option>';
     }).join('');
-    $('#weapon-slots').hidden = !!wSel.value;
+    if (prevVal && Array.prototype.some.call(wSel.options, function (o) { return o.value === prevVal; })) wSel.value = prevVal;
+    else wSel.value = '';
+    weaponModeUi();
   }
+  function weaponModeUi() {
+    $('#weapon-slots').hidden = !!wSel.value;
+    $('#weapon-auto-box').hidden = wSel.value !== 'auto';
+  }
+  function renderWx() {
+    $('#wx-chips').innerHTML = excludeWSeries.map(function (k, i) { return '<span class="chip">' + esc(E.weaponSeriesLabel(GAME, k)) + '<button type="button" data-rm-wx="' + i + '" aria-label="外す">×</button></span>'; }).join('') || '<span class="muted">なし</span>';
+  }
+  $('#add-wx').addEventListener('click', function () {
+    var m = /#([^#]+)$/.exec($('#wx-input').value || ''); if (!m) return;
+    var k = m[1]; if (!GAME.weapons.some(function (w) { return w.series === k; })) return;
+    if (excludeWSeries.indexOf(k) < 0) excludeWSeries.push(k);
+    $('#wx-input').value = ''; renderWx(); fillWeapons();
+  });
+  $('#wx-chips').addEventListener('click', function (ev) { var d = ev.target.dataset || {}; if (d.rmWx != null) { excludeWSeries.splice(+d.rmWx, 1); renderWx(); fillWeapons(); } });
+  ['#wx-kulve', '#wx-safi'].forEach(function (k) { $(k).addEventListener('change', fillWeapons); });
   function resetParts() {
     var d = E.PARTS_DEFAULT[wtSel.value] || { art: 0, special: 0, jump: 0 };
     $('#part-art').value = Math.round(d.art * 100); $('#part-special').value = Math.round(d.special * 100); $('#part-jump').value = Math.round(d.jump * 100);
@@ -281,7 +314,7 @@
   wtSel.addEventListener('change', function () { fillWeapons(); resetParts(); clearWeaponOverride(); });
   // 武器を変えたら、前の武器のために入れたカスタム強化の数値を消します
   function clearWeaponOverride() { ['#wo-attack', '#wo-aff', '#wo-eval', '#wo-def'].forEach(function (k) { $(k).value = ''; }); $('#wo-etype').value = ''; $('#wo-s1').value = ''; $('#wo-s2').value = '0'; $('#wo-s3').value = '0'; }
-  wSel.addEventListener('change', function () { $('#weapon-slots').hidden = !!wSel.value; clearWeaponOverride(); });
+  wSel.addEventListener('change', function () { weaponModeUi(); clearWeaponOverride(); });
   form.querySelectorAll('input[name=rank]').forEach(function (x) { x.addEventListener('change', fillWeapons); });
 
   // スキルの選択
@@ -354,7 +387,8 @@
     var ws = [+$('#ws1').value, +$('#ws2').value, +$('#ws3').value].filter(function (x) { return x > 0; });
     var minRes = Array.prototype.map.call(form.querySelectorAll('.minres'), function (x) { return x.value === '' ? null : +x.value; });
     return {
-      weaponType: wtSel.value, weaponId: wSel.value ? +wSel.value : null, weaponSlots: wSel.value ? [] : ws,
+      weaponType: wtSel.value, weaponId: wSel.value && wSel.value !== 'auto' ? +wSel.value : null, weaponSlots: wSel.value ? [] : ws,
+      weaponAuto: wSel.value === 'auto', excludeWeaponSeries: wExcluded(), weaponTop: +$('#weapon-top').value,
       ranks: ranks(), objective: objSel.value, skills: chosenSkills.slice(),
       fixedArmor: Object.assign({}, fixedArmor), excludeArmor: excludeArmor.slice(), excludeDecos: excludeDecos.slice(), excludeSets: excludeSets.slice(),
       minDefense: +$('#min-def').value || 0, minRes: minRes,
@@ -368,7 +402,7 @@
     };
   }
   function weaponOverride() {
-    if (!wSel.value) return null;
+    if (!wSel.value || wSel.value === 'auto') return null;
     var o = {};
     if ($('#wo-attack').value !== '') o.attack = +$('#wo-attack').value;
     if ($('#wo-aff').value !== '') o.affinity = +$('#wo-aff').value;
@@ -381,6 +415,11 @@
   var resultsEl = $('#results'), statusEl = $('#status');
   function describeStats(st) {
     var t = '調べた組み合わせ ' + st.leaves.toLocaleString() + ' 通り、条件を満たしたもの ' + st.feasible.toLocaleString() + ' 通り、' + fmt(st.timeMs / 1000) + ' 秒。';
+    if (st.weapons) {
+      if (!st.weapons.length && !st.poolSizes) return '候補の武器がありません（使わないシリーズで全部外れていないか確かめてください）。';
+      t += '武器はおまかせ：この種類の ' + st.weaponTotal + ' 本から、全部の点で劣る武器を外した ' + st.weaponKept + ' 本のうち、上位 ' + st.weapons.length + ' 本で探しました（' + st.weapons.map(function (w) { return w.ja + (w.best != null ? ' ' + fmt(w.best) : ' 案なし') + (w.truncated ? '・途中まで' : ''); }).join('、') + '）。';
+      if (!st.poolSizes) return t;
+    }
     t += '候補の防具（各部位、外せるものを外した後）：' + E.PARTS.map(function (p) { return E.PART_JA[p] + st.poolSizes[p]; }).join('・') + '、護石 ' + st.poolSizes.charm + '。';
     if (st.stoppedByUser) t += ' ⚠ 「止める」で途中で止めました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。ここまでに見つけた中の上位を出しています。';
     else if (st.truncated) t += ' ⚠ 時間切れで途中で打ち切りました（' + st.passTotal + ' 段のうち ' + st.passes + ' 段まで終わりました）。もっと良い案が残っているかもしれません。探す時間を長くするか、「最後まで」を選ぶと、さらに調べます。';
@@ -391,7 +430,8 @@
   function progressText(p) {
     if (p.refining) return 'このページの検索プログラムが、見つけた上位の案の装飾品の入れ方を磨き直しています（Claude ではありません）… ' + p.refined + ' / ' + p.total + ' 案（' + fmt(p.ms / 1000) + ' 秒）';
     // ここで考えているのは Claude ではなく、このページの検索プログラム（ブラウザの中の計算）です
-    return 'このページの検索プログラムが探しています（Claude ではありません）… 調べた枝 ' + p.nodes.toLocaleString() +
+    var wtxt = p.weaponCount ? '武器 ' + p.weaponIndex + ' / ' + p.weaponCount + '（' + p.weaponName + '）、' : '';
+    return 'このページの検索プログラムが探しています（Claude ではありません）… ' + wtxt + '調べた枝 ' + p.nodes.toLocaleString() +
       '、調べた組み合わせ ' + (p.leaves || 0).toLocaleString() + ' 通り、いまの上位の候補 ' + p.found + '（' + fmt(p.ms / 1000) + ' 秒、' + p.passes + ' 段のうち ' + p.pass + ' 段目）';
   }
   var searchCount = 0;
@@ -458,7 +498,7 @@
     $('#shared-out').innerHTML = buildCard(shared.b, { id: 'shared', title: '共有された案', query: shared.q });
   }
 
-  fillWeapons(); renderChips(); resetParts();
+  fillWeapons(); renderChips(); resetParts(); renderWx();
   $('#weapon-type').value = 'long-sword'; fillWeapons(); resetParts();
 
   /* ---------- 言葉で頼む（Claude の sample。使える場所だけ出す） ---------- */
@@ -506,7 +546,16 @@
     if (errs.length) throw new Error('見つからないスキル名: ' + errs.join(', ') + '。findSkills で正しい名前を確かめてください。');
     var t = String(input.weaponType || 'long-sword');
     if (!E.WEAPON_JA[t]) throw new Error('weaponType は次のどれか: ' + E.WEAPON_TYPES.join(', '));
+    // 使わない武器のシリーズ：画面で選んだものと、Claude が名前で指定したもの（皇金・赤龍、または武器の名前の一部）
+    var wxs = wExcluded();
+    (input.excludeWeaponSeries || []).forEach(function (nm) {
+      nm = String(nm || '').trim(); if (!nm) return;
+      if (/皇金|kulve/i.test(nm)) { if (wxs.indexOf('Kulve') < 0) wxs.push('Kulve'); return; }
+      if (/赤龍|safi/i.test(nm)) { if (wxs.indexOf('Safi') < 0) wxs.push('Safi'); return; }
+      GAME.weapons.forEach(function (w) { if (w.type === t && w.rarity >= 11 && w.ja.indexOf(nm) >= 0 && wxs.indexOf(w.series) < 0) wxs.push(w.series); });
+    });
     var q = {
+      weaponAuto: !!input.weaponAuto && input.weaponId == null, excludeWeaponSeries: wxs, weaponTop: 6,
       weaponType: t, weaponId: input.weaponId != null && I.weaponById[+input.weaponId] ? +input.weaponId : null,
       weaponSlots: (input.weaponSlots || []).map(Number).filter(function (x) { return x > 0 && x <= 4; }),
       objective: E.OBJECTIVES[input.objective] ? input.objective : 'fire',
@@ -547,7 +596,7 @@
   var TOOLS = [
     { name: 'findSkills', description: 'スキルを日本語名・英語名・説明文の一部で探し、正しい日本語名と最大レベルを返します。searchBuilds に渡す前に名前を確かめるために使います。', inputSchema: { type: 'object', properties: { query: { type: 'string', description: 'たとえば「見切り」「会心」「回避」' } }, required: ['query'] }, execute: function (i) { return limitSize(toolSkills(i)); } },
     { name: 'findWeapons', description: '武器種の中から、マスターランクの武器を攻撃力の高い順に最大 20 個返します（weaponId・名前・レア度・攻撃力・会心率・属性・スロット）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, maxRarity: { type: 'number' }, element: { type: 'string', description: '火・水・雷・氷・龍 など（任意）' } }, required: ['weaponType'] }, execute: function (i) { return limitSize(toolWeapons(i)); } },
-    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, minRarity: { type: 'number', description: '防具のレア度の下限。はじめは 10（マスターランク序盤の防具を外す）' }, excludeSeries: { type: 'array', items: { type: 'string' }, description: '使わない防具のシリーズの名前（日本語名の一部。例：EXドラゴン、EXエスカドラ）。α・β・γ のなかまもまとめて外します' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
+    { name: 'searchBuilds', description: 'ページの検索プログラムで、条件を満たす装備の組み合わせを点数の高い順に最大 10 案返します。buildId はこの答えの中のものだけが本物です。objective は fire（火力）・balance（守りとの両立）・defense（守り）・comfort（快適さ）。', inputSchema: { type: 'object', properties: { weaponType: { type: 'string', enum: E.WEAPON_TYPES }, weaponId: { type: 'number' }, weaponSlots: { type: 'array', items: { type: 'number' } }, objective: { type: 'string', enum: ['fire', 'balance', 'defense', 'comfort'] }, skills: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' }, level: { type: 'number' } }, required: ['name', 'level'] } }, ranks: { type: 'array', items: { type: 'string', enum: ['LR', 'HR', 'MR'] } }, minDefense: { type: 'number' }, maxRarity: { type: 'number', description: '防具・護石のレア度の上限（入手しやすさ）' }, minRarity: { type: 'number', description: '防具のレア度の下限。はじめは 10（マスターランク序盤の防具を外す）' }, excludeSeries: { type: 'array', items: { type: 'string' }, description: '使わない防具のシリーズの名前（日本語名の一部。例：EXドラゴン、EXエスカドラ）。α・β・γ のなかまもまとめて外します' }, weaponAuto: { type: 'boolean', description: 'true にすると、weaponId を指定せず、その種類の武器からも探します（時間は武器の数で分けます）' }, excludeWeaponSeries: { type: 'array', items: { type: 'string' }, description: '使わない武器のシリーズ。「皇金」「赤龍」、または武器の名前の一部' }, decoMaxRarity: { type: 'number' } }, required: ['weaponType', 'objective', 'skills'] }, execute: function (i) { return toolSearch(i).then(limitSize); } },
     { name: 'getBuild', description: 'searchBuilds が返した buildId の案の中身（装飾品の場所・シリーズスキル・点数の内訳）を返します。', inputSchema: { type: 'object', properties: { buildId: { type: 'string' } }, required: ['buildId'] }, execute: function (i) { return limitSize(toolGet(i)); } }
   ];
   function nlPrompt(text) {

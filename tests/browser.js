@@ -49,7 +49,7 @@ async function conditionSearch(p) {
     ok(await p.$eval('#nl', e => e.hidden), name + ': window.claude がないので言葉の入り口は隠れる');
     ok(!(await p.$eval('#nl-off', e => e.hidden)), name + ': 代わりの案内が出る');
     ok((await p.$$eval('#preset-out .card', e => e.length)) >= 3, name + ': 作っておいた案が出る');
-    const rar = await p.$$eval('#weapon option', os => os.slice(1).map(o => +(/レア(\d+)/.exec(o.textContent) || [0, 0])[1]));
+    const rar = await p.$$eval('#weapon option', os => os.filter(o => /^\d+$/.test(o.value)).map(o => +(/レア(\d+)/.exec(o.textContent) || [0, 0])[1]));
     ok(rar.length > 0 && rar.every(r => r === 11 || r === 12), name + ': 武器の一覧はレア度 11 と 12 だけ');
     const n = await conditionSearch(p);
     ok(n >= 1, name + ': 条件検索で案が出る（' + n + '）');
@@ -110,7 +110,7 @@ async function conditionSearch(p) {
     const { p, ctx, errors } = await page(browser, { width: 900, height: 900 });
     await p.waitForTimeout(500);
     await p.click('summary:has-text("くわしい条件")');
-    const wid = await p.$eval('#weapon', s => s.options[1].value);
+    const wid = await p.$eval('#weapon', s => Array.from(s.options).find(o => /^\d+$/.test(o.value)).value);
     await p.selectOption('#weapon', wid);
     await p.fill('#wo-attack', '1000');
     await p.selectOption('#wo-s1', '4'); await p.selectOption('#wo-s2', '4'); await p.selectOption('#wo-s3', '2');
@@ -134,7 +134,7 @@ async function conditionSearch(p) {
       ok(/武器（入力した値）：表示攻撃力 1000/.test(txt) && /カスタム強化の最大/.test(txt), '強化の入力と、防御力の書き方がカードに出る');
     }
     // 武器を変えたら、入れた数値は消える
-    const wid2 = await p.$eval('#weapon', s => s.options[2].value);
+    const wid2 = await p.$eval('#weapon', s => Array.from(s.options).filter(o => /^\d+$/.test(o.value))[1].value);
     await p.selectOption('#weapon', wid2);
     ok((await p.inputValue('#wo-attack')) === '', '武器を変えると、前の武器のための数値が消える');
     ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
@@ -159,6 +159,28 @@ async function conditionSearch(p) {
     ok((await p.$$eval('#results .card', e => e.length)) > 0 && !/EXドラゴン/.test(txt), '外したシリーズの防具が結果に出ない');
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);
     ok(sw <= 376, 'スマホの幅で横にはみ出さない（' + sw + 'px）');
+    ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
+    await ctx.close();
+  }
+
+  console.log('■ 武器もおまかせ・使わない武器のシリーズ');
+  {
+    const { p, ctx, errors } = await page(browser, { width: 375, height: 760 });
+    await p.waitForTimeout(500);
+    await p.check('#wx-kulve');
+    const hasKulve = await p.$$eval('#weapon option', os => os.some(o => /皇金/.test(o.textContent)));
+    ok(!hasKulve, '皇金の武器を外すと、武器の一覧から消える');
+    await p.selectOption('#weapon', 'auto');
+    ok(!(await p.$eval('#weapon-auto-box', e => e.hidden)), 'おまかせを選ぶと説明と候補の数が出る');
+    await p.selectOption('#weapon-top', '4');
+    await p.click('summary:has-text("くわしい条件")');
+    await p.evaluate(() => { const o = document.createElement('option'); o.value = '8'; document.getElementById('time-limit').appendChild(o); });
+    await p.selectOption('#time-limit', '8');
+    await p.click('#go');
+    await p.waitForSelector('#go:not([disabled])', { timeout: 90000 });
+    const st = await p.textContent('#status');
+    ok(/武器はおまかせ/.test(st) && (await p.$$eval('#results .card', e => e.length)) > 0, 'おまかせで探すと、武器ごとの結果と案が出る');
+    ok(!/皇金/.test(await p.textContent('#results')), '外した皇金の武器は案に出ない');
     ok(errors.length === 0, 'エラーがない ' + errors.join(' | '));
     await ctx.close();
   }

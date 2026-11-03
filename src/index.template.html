@@ -112,6 +112,19 @@ footer{margin-top:30px;padding:14px 0 30px;border-top:1px solid var(--line);colo
 <fieldset><legend>武器</legend>
 <label>武器の種類 <select id="weapon-type"></select></label>
 <div><select id="weapon" aria-label="武器"></select></div>
+<div id="weapon-auto-box" hidden>
+<p class="muted">「おまかせ」では、この種類のレア度 11・12 の武器から、ほかの武器より全部の点で劣る武器を外し、スキルなしの火力が高い順に選んだ武器で、それぞれ探します。探す時間は武器の数で分けます。火力点は、候補の中で一番強い武器のスキルなしを 100 とした値になります。</p>
+<label>候補にする武器の数 <select id="weapon-top"><option value="4">4 本</option><option value="8" selected>8 本</option><option value="12">12 本</option><option value="20">20 本</option></select></label>
+</div>
+<div id="weapon-series-box">
+<span class="muted">使わない武器のシリーズ：</span>
+<label><input type="checkbox" id="wx-kulve"> 皇金の武器（Kulve Taroth）</label>
+<label><input type="checkbox" id="wx-safi"> 赤龍の武器（Safi'jiiva）</label>
+<div class="row"><input id="wx-input" list="wseries-list" placeholder="武器の名前（そのシリーズをまとめて外す）" aria-label="使わない武器のシリーズ"><button type="button" id="add-wx">追加</button></div>
+<datalist id="wseries-list"></datalist>
+<div class="chips" id="wx-chips"></div>
+<p class="muted">武器のシリーズは、マスターランクの強化の道で、枝分かれのない所までをひとまとまりにしたものです（例：アイスウィング・氷翼セラフィード）。外したシリーズは、武器の一覧からも消えます。</p>
+</div>
 <div id="weapon-slots"><span class="muted">武器のスロット：</span>
 <label>1つ目 <select id="ws1"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
 <label>2つ目 <select id="ws2"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>

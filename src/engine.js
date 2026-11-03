@@ -301,6 +301,8 @@
     var normal = 1 - P.art - P.special;
     var ratio = hit / hit0;
     var fire = 100 * (normal * ratio * (1 + P.jump * (a.jump - 1)) + P.art * a.art + P.special * a.special * ratio);
+    // 武器もおまかせで探すとき：武器どうしを比べられるように、基準の武器（候補で一番強い武器）のスキルなしの期待値を 100 とします
+    if (q.fireRef) fire = fire * hit0 / q.fireRef;
     var defense = (baseDef + wi.defense) * a.defMul + a.def;
     var r0 = (baseRes[0] + a.resAll + a.res[0]) * a.resMul, r1 = (baseRes[1] + a.resAll + a.res[1]) * a.resMul, r2 = (baseRes[2] + a.resAll + a.res[2]) * a.resMul,
       r3 = (baseRes[3] + a.resAll + a.res[3]) * a.resMul, r4 = (baseRes[4] + a.resAll + a.res[4]) * a.resMul;
@@ -1005,7 +1007,83 @@
   }
 
   /* ---------- 検索（深さ優先の探索と枝刈り） ---------- */
+  /* ---------- 武器もおまかせで探す ---------- */
+  // 武器のシリーズの名前（画面に出す名前）
+  function weaponSeriesLabel(g, key) {
+    if (key === 'Kulve') return '皇金の武器（Kulve Taroth の武器、すべての種類）';
+    if (key === 'Safi') return '赤龍の武器（Safi\'jiiva の武器、すべての種類）';
+    return g.weapons.filter(function (w) { return w.series === key && w.rarity >= 9; }).sort(function (a, b) { return a.rarity - b.rarity; }).map(function (w) { return w.ja; }).join('・');
+  }
+  // 候補の武器：その種類のレア度 11・12 の武器のうち、使わないシリーズを除き、ほかの武器より全部の点で劣る物を外し、
+  // スキルなしの火力の高い順に並べて上位 weaponTop 本（はじめは 8 本）
+  function weaponCandidates(g, q) {
+    var exS = {}; (q.excludeWeaponSeries || []).forEach(function (k) { exS[k] = 1; });
+    var list = g.weapons.filter(function (w) { return w.type === q.weaponType && w.rarity >= 11 && !exS[w.series]; });
+    var info = list.map(function (w) {
+      var wi = weaponInfo(g, Object.assign({}, q, { weaponId: w.id, weaponOverride: null }));
+      var a = newAgg(wi);
+      var base = evalAgg(g, Object.assign({}, q, { fireRef: null }), wi, a, [], 0, 0, [0, 0, 0, 0, 0], true);
+      return { w: w, wi: wi, ev: base.detail.phys0 + base.detail.elem0 };
+    });
+    function covers(A, B) {
+      if (A.wi.raw < B.wi.raw || A.wi.aff < B.wi.aff || A.wi.defense < B.wi.defense) return false;
+      if (!slotsDominate(A.wi.slots, B.wi.slots)) return false;
+      var el = function (x) { return x.wi.elems.concat(x.wi.hidden.map(function (h) { return [h[0], h[1], 'h']; })); };
+      var ea = el(A), eb = el(B);
+      if (!eb.every(function (y) { return ea.some(function (x) { return x[0] === y[0] && x[1] >= y[1] && (!!x[2]) === (!!y[2]); }); })) return false;
+      if (ea.length !== eb.length || A.wi.elemDiv !== B.wi.elemDiv) return false;
+      if (!B.w.skills.every(function (y) { return A.w.skills.some(function (x) { return x[0] === y[0] && x[1] >= y[1]; }); })) return false;
+      if (B.w.bonus != null && A.w.bonus !== B.w.bonus) return false;
+      if (A.w.bonus != null && B.w.bonus == null) return false;
+      return true;
+    }
+    var keep = info.filter(function (B, i) {
+      return !info.some(function (A, j) { return j !== i && covers(A, B) && (!covers(B, A) || j < i); });
+    });
+    keep.sort(function (x, y) { return y.ev - x.ev || x.w.id - y.w.id; });
+    var top = q.weaponTop || 8;
+    return { list: keep.slice(0, top), total: list.length, pruned: keep.length };
+  }
+  function* searchAuto(g, q0) {
+    var t0 = Date.now();
+    var qn = normalizeQuery(g, q0);
+    var C = weaponCandidates(g, qn);
+    var cands = C.list;
+    var stats = { nodes: 0, leaves: 0, feasible: 0, pruned: 0, truncated: false, stoppedByUser: false, timeMs: 0, passes: 0, passTotal: 0,
+      poolSizes: null, weapons: [], weaponTotal: C.total, weaponKept: C.pruned };
+    if (!cands.length) { stats.timeMs = Date.now() - t0; return { builds: [], all: [], stats: stats, query: qn }; }
+    var fireRef = Math.max.apply(null, cands.map(function (c) { return c.ev; }));
+    var per = isFinite(qn.timeLimitMs) ? qn.timeLimitMs / cands.length : Infinity;
+    var all = [];
+    for (var i = 0; i < cands.length; i++) {
+      var qi = Object.assign({}, q0, { weaponAuto: false, weaponId: cands[i].w.id, weaponOverride: null, fireRef: fireRef, timeLimitMs: per, untilDone: !isFinite(per) });
+      var it = searchGen(g, qi), r;
+      while (true) {
+        r = it.next();
+        if (r.done) break;
+        var pr = r.value;
+        pr.weaponIndex = i + 1; pr.weaponCount = cands.length; pr.weaponName = cands[i].w.ja;
+        if (pr.snapshot) pr.snapshot = diversify(all.concat(pr.snapshot).sort(function (x, y) { return y.score.total - x.score.total; }), qn.resultCount).map(function (x, k) { return Object.assign({}, x, { rank: k + 1, id: 'b' + (k + 1) }); });
+        pr.ms = Date.now() - t0;
+        yield pr;
+      }
+      var res = r.value, st = res.stats;
+      all = all.concat(res.all);
+      stats.nodes += st.nodes; stats.leaves += st.leaves; stats.feasible += st.feasible; stats.pruned += st.pruned;
+      stats.truncated = stats.truncated || st.truncated; stats.stoppedByUser = stats.stoppedByUser || !!st.stoppedByUser;
+      stats.passes = st.passes; stats.passTotal = st.passTotal; stats.refined = (stats.refined || 0) + (st.refined || 0);
+      if (!stats.poolSizes) { stats.poolSizes = st.poolSizes; stats.poolSizesBefore = st.poolSizesBefore; }
+      stats.weapons.push({ id: cands[i].w.id, ja: cands[i].w.ja, truncated: st.truncated, leaves: st.leaves, best: res.builds[0] ? res.builds[0].score.total : null });
+      if (q0.stopSignal && q0.stopSignal()) { stats.stoppedByUser = true; stats.truncated = true; break; }
+    }
+    all.sort(function (x, y) { return y.score.total - x.score.total; });
+    stats.timeMs = Date.now() - t0;
+    var picked = diversify(all, qn.resultCount).map(function (b, k) { return Object.assign({}, b, { rank: k + 1, id: 'b' + (k + 1) }); });
+    return { builds: picked, all: all, stats: stats, query: qn, fireRef: fireRef };
+  }
+
   function* searchGen(g, q0) {
+    if (q0.weaponAuto) return yield* searchAuto(g, q0);
     var t0 = Date.now();
     var P = prepare(g, q0);
     var q = P.q;
@@ -1220,7 +1298,7 @@
   function diversify(list, n) {
     var out = [], rest = [];
     list.forEach(function (b) {
-      var ok = out.length < n && out.every(function (o) { var diff = 0; for (var i = 0; i < 5; i++) if (o.armor[i] !== b.armor[i]) diff++; return diff >= 2; });
+      var ok = out.length < n && out.every(function (o) { var diff = o.weapon !== b.weapon ? 2 : 0; for (var i = 0; i < 5; i++) if (o.armor[i] !== b.armor[i]) diff++; return diff >= 2; });
       if (ok) out.push(b); else rest.push(b);
     });
     for (var i = 0; out.length < n && i < rest.length; i++) out.push(rest[i]);
@@ -1246,6 +1324,7 @@
     }
     if (q.parts) m.parts = q.parts;
     if (q.elemWeight != null && +q.elemWeight !== 1) m.elemWeight = +q.elemWeight;
+    if (q.fireRef) m.fireRef = q.fireRef;
     return Object.keys(m).length ? m : null;
   }
   function evaluateBuild(g, spec, q0) {
@@ -1283,7 +1362,7 @@
   var API = {
     PARTS: PARTS, PART_JA: PART_JA, ELEMS: ELEMS, ELEM_JA: ELEM_JA, RANK_JA: RANK_JA, WEAPON_TYPES: WEAPON_TYPES, WEAPON_JA: WEAPON_JA,
     WEAPON_BLOAT: WEAPON_BLOAT, UPTIME: UPTIME, CRIT_ELEM: CRIT_ELEM, TRUE_CRIT_ELEM: TRUE_CRIT_ELEM, PARTS_DEFAULT: PARTS_DEFAULT, critElemMul: critElemMul, effContrib: effContrib, GUARD_WEAPONS: GUARD_WEAPONS, NEG_CRIT: NEG_CRIT, ELEM_DIV: ELEM_DIV, W: W, OBJECTIVES: OBJECTIVES, SURVIVAL: SURVIVAL, COMFORT: COMFORT, RANGED: RANGED,
-    indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
+    indexGame: indexGame, armorOf: armorOf, seriesFamily: seriesFamily, weaponCandidates: weaponCandidates, weaponSeriesLabel: weaponSeriesLabel, modsOf: modsOf, prepare: prepare, search: search, searchGen: searchGen, finishBuild: finishBuild, evaluateBuild: evaluateBuild,
     scoreParts: scoreParts, compileScorer: compileScorer, weaponInfo: weaponInfo, normalizeQuery: normalizeQuery, solveDecos: solveDecos, diversify: diversify, rankOfRarity: rankOfRarity
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = API;

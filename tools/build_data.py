@@ -411,6 +411,32 @@ def main():
     prev = {r['previous_en'] for r in read('weapons/weapon_base.csv') if r['previous_en']}
     for w in weapons:
         w['final'] = w['en'] not in prev
+    # 武器のシリーズ（v1.1）：データの category が Kulve（皇金）・Safi（赤龍）の武器は、それぞれ 1 つのシリーズ。
+    # ほかは、マスターランク（レア度 9 以上）の強化の道を、枝分かれのない所までさかのぼった最初の武器を「シリーズの元」とします。
+    wrows = read('weapons/weapon_base.csv')
+    cat = {(r['name_en'], r['weapon_type']): r['category'] for r in wrows}
+    key = {(w['en'], w['type']): w for w in weapons}
+    children = {}
+    for r in wrows:
+        if r['previous_en']:
+            children.setdefault((r['previous_en'], r['weapon_type']), []).append(r['name_en'])
+    prev_of = {(r['name_en'], r['weapon_type']): r['previous_en'] for r in wrows}
+    for w in weapons:
+        c = cat.get((w['en'], w['type'])) or ''
+        if c in ('Kulve', 'Safi'):
+            w['series'] = c
+            continue
+        cur = (w['en'], w['type'])
+        for _ in range(40):
+            pv = prev_of.get(cur)
+            if not pv:
+                break
+            pk = (pv, w['type'])
+            pw = key.get(pk)
+            if not pw or pw['rarity'] < 9 or len(children.get(pk, [])) != 1:
+                break
+            cur = pk
+        w['series'] = w['type'] + ':' + cur[0]
 
     game = {'commit': report['commit'], 'ammo': ammo, 'skills': skills, 'bonuses': bonuses, 'sets': sets, 'armors': armors,
             'decos': decos, 'charms': charms, 'weapons': weapons}

@@ -207,6 +207,28 @@ section('見直しで見つかった問題が直っていること');
   ok(rf.builds.length > 0 && rf.builds.every(b => b.armor[0] === dh.id), '外せない防具に入れた防具は、外したシリーズでも使う');
 }
 
+{
+  // 武器もおまかせ・使わない武器のシリーズ
+  section('武器もおまかせ・使わない武器のシリーズ');
+  const qa = { weaponType: 'long-sword', weaponAuto: true, weaponTop: 3, objective: 'fire', excludeWeaponSeries: ['Kulve', 'Safi'], minRarity: 10, timeLimitMs: 9000 };
+  const C0 = E.weaponCandidates(game, E.normalizeQuery(game, qa));
+  ok(C0.list.length === 3 && C0.list.every(c => c.w.series !== 'Kulve' && c.w.series !== 'Safi' && c.w.rarity >= 11), '候補の武器は、使わないシリーズを除いたレア度 11・12 の上位 3 本');
+  const ra = E.search(game, qa);
+  ok(ra.builds.length > 0 && ra.builds.every(b => C0.list.some(c => c.w.id === b.weapon)), 'おまかせの案は、候補の武器を使う');
+  ok(ra.builds.every(b => b.mods && b.mods.fireRef), 'おまかせの案は、基準の武器（fireRef）を持ち歩く');
+  checkResult(ra, qa, '武器おまかせ');
+  // 同じ武器に固定したときの点数を、基準の武器との比で直すと同じになる
+  const b0 = ra.builds[0];
+  const one = E.evaluateBuild(game, { armor: b0.armor, charm: b0.charm, weapon: b0.weapon, weaponType: b0.weaponType, weaponSlots: b0.weaponSlots, decos: b0.decos, mods: Object.assign({}, b0.mods, { fireRef: null }) }, { objective: 'fire' });
+  const wi0 = E.weaponInfo(game, { weaponId: b0.weapon });
+  const base0 = E.scoreParts(game, { objective: 'fire' }, wi0, {}, [], 0, [0, 0, 0, 0, 0]);
+  ok(Math.abs(one.score.fire * (base0.detail.phys0 + base0.detail.elem0) / b0.mods.fireRef - b0.score.fire) < 1e-6, '火力点は、基準の武器のスキルなしを 100 とした値になっている');
+  // 武器のシリーズ：Fatalis の太刀のシリーズを外すと、候補に出ない
+  const fz = game.weapons.find(w => w.en === 'Fatalis Zaggespanon');
+  const C1 = E.weaponCandidates(game, E.normalizeQuery(game, Object.assign({}, qa, { excludeWeaponSeries: ['Kulve', 'Safi', fz.series], weaponTop: 30 })));
+  ok(!C1.list.some(c => c.w.series === fz.series), '外した武器のシリーズ（' + E.weaponSeriesLabel(game, fz.series) + '）は候補に出ない');
+}
+
 // ---- 4. 小さな例で総当たりと比べる
 section('小さな例で総当たりと比べる');
 function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
